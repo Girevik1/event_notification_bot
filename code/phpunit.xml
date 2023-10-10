@@ -6,8 +6,8 @@
     </testsuites>
     <php>
         <env name="db_host" value="db" />
-        <env name="db_name" value="db_name" />
-        <env name="db_user" value="db_user" />
-        <env name="db_password" value="db_password" />
+        <env name="db_database" value="core" />
+        <env name="db_username" value="postgres" />
+        <env name="db_password" value="bot23" />
     </php>
 </phpunit>
