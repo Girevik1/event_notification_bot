@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    image: bot/nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./code:/data/event_bot
+    depends_on:
+      - php-fpm
+    networks:
+      - app-network
+
+  php-fpm:
+    build:
+      context: ./docker/php-fpm
+      dockerfile: Dockerfile
+    image: bot/php-fpm
+    container_name: php
+    volumes:
+      - ./code:/data/event_bot
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    restart: always
+    image: postgres:11.6-alpine
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - app-network
+
+volumes:
+  postgres_volume:
+
+networks:
+  app-network:
+    driver: bridge
