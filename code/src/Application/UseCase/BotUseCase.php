@@ -8,7 +8,7 @@ use Telegram\Bot\Api;
 
 class BotUseCase
 {
-    public function hook(Api $telegram)
+    public function hook(Api $telegram): void
     {
         $updates = $telegram->getWebhookUpdate();
         $message = $updates->getMessage();
