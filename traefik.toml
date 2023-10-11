@@ -1,0 +1,35 @@
+debug = false
+
+logLevel = "ERROR"
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+[entryPoints.http]
+  address = ":80"
+  compress = true
+  [entryPoints.http.redirect]
+    entryPoint = "https"
+    permanent = true
+[entryPoints.https]
+  address = ":443"
+  compress = true
+  [entryPoints.https.redirect]
+    regex = "^https://www.(.*)"
+    replacement = "https://$1"
+    permanent = true
+[entryPoints.https.tls]
+
+[retry]
+
+[docker]
+  endpoint = "unix:///var/run/docker.sock"
+  watch = true
+  exposedByDefault = false
+
+[acme]
+  email = "art.timerkhanov@gmail.com"
+  storage = "acme.json"
+  entryPoint = "https"
+  onHostRule = true
+[acme.httpChallenge]
+  entryPoint = "http"

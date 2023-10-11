@@ -14,6 +14,11 @@ services:
       - ./code:/data/event_bot
     depends_on:
       - php-fpm
+    labels:
+      - traefik.backend=web
+      - traefik.frontend.rule=Host:${APP_URL};PathPrefix:/
+      - traefik.frontend.priority=1
+      - traefik.port=80
     networks:
       - app-network
 
@@ -27,6 +32,8 @@ services:
       - ./code:/data/event_bot
     depends_on:
       - db
+    labels:
+      - traefik.enable=false
     networks:
       - app-network
 
@@ -39,8 +46,26 @@ services:
       - POSTGRES_DB=${DB_DATABASE}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+    labels:
+      - traefik.enable=false
     networks:
       - app-network
+
+  traefik:
+    image: traefik:1.7-alpine
+    depends_on:
+      - php-fpm
+      - nginx
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+    command: --docker
+    labels:
+      - traefik.enable=false
 
 volumes:
   postgres_volume:

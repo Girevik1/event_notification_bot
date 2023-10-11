@@ -6,6 +6,15 @@ services:
     image: adminer
     networks:
       - app-network
+#    ports:
+#      - "8080:8080"
+    labels:
+      - traefik.backend=adminer
+      - traefik.frontend.rule=Host:${APP_URL};PathPrefix:/adminer
+      - traefik.frontend.priority=2
+      - traefik.port=8080
+
+  traefik:
     ports:
       - "8080:8080"
-
+    command: --api --docker
