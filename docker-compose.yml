@@ -15,7 +15,7 @@ services:
     depends_on:
       - php-fpm
     labels:
-      - traefik.backend=web
+      - traefik.backend=nginx
       - traefik.frontend.rule=Host:${APP_URL};PathPrefix:/
       - traefik.frontend.priority=1
       - traefik.port=80
