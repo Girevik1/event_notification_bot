@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     image: bot/nginx
     container_name: nginx
-    ports:
-      - "80:80"
+#    ports:
+#      - "80:80"
     volumes:
       - ./code:/data/event_bot
     depends_on:
