@@ -57,8 +57,7 @@ services:
       - php-fpm
       - nginx
     networks:
-      - frontend
-      - backend
+      - app-network
     ports:
       - "80:80"
     volumes:
