@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Art\Code\Application\UseCase\BotUseCase;
+use Art\Code\Application\UseCase\Bot\BotUseCase;
 
 require '../vendor/autoload.php';
 
