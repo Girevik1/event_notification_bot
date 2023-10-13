@@ -9,7 +9,7 @@ use Art\Code\Domain\ValueObject\TelegramUser\TelegramUserId;
 
 class TelegramMessageRepository
 {
-    public function create(array $message): void
+    public function create($message): void
     {
        TelegramMessage::create([
             'telegram_user_id' => new TelegramUserId(1),
