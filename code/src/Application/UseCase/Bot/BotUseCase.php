@@ -88,9 +88,9 @@ class BotUseCase
 
     public function hook()
     {
-        $message = '';
+        $message = [];
 
-        if ($_ENV['APP_URL'] === 'prod') {
+        if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
