@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Art\Code\Domain\ValueObject;
+namespace Art\Code\Domain\ValueObject\TelegramUser;
 
 use Art\Code\Domain\Exception\Error;
 
-final class Id
+final class TelegramUserId
 {
     private string $value;
 
@@ -14,7 +14,7 @@ final class Id
     {
         assert(
             strlen(sprintf('%s', $value)) > 0,
-            new Error('ID cannot be empty.')
+            new Error('user_id cannot be empty.')
         );
 
         $this->value = (string) $value;
@@ -30,8 +30,8 @@ final class Id
         return $this->value;
     }
 
-    public function isEq(self $id): bool
+    public function isEq(self $user_id): bool
     {
-        return 0 === strcasecmp($this->value, $id->getValue());
+        return 0 === strcasecmp($this->value, $user_id->getValue());
     }
 }

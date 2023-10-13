@@ -8,8 +8,6 @@ services:
       dockerfile: Dockerfile
     image: bot/nginx
     container_name: nginx
-#    ports:
-#      - "80:80"
     volumes:
       - ./code:/data/event_bot
     depends_on:
@@ -41,6 +39,7 @@ services:
     restart: always
     image: postgres:11.6-alpine
     volumes:
+      - ./code/db_restore:/data/db_restore
       - postgres_volume:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_DATABASE}
