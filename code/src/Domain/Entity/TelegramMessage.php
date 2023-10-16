@@ -52,7 +52,7 @@ class TelegramMessage extends Model
                 $start += 4096;
             } while (mb_strlen($text, '8bit') > $start);
         }
-        TelegramSender::sendMessage($user->login, $text, '', '');
+
         try {
             foreach ($text_array as $textItem) {
                 if (

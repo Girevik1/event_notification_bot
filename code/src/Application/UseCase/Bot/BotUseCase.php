@@ -6,6 +6,7 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
+use Art\Code\Domain\Entity\TelegramSender;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -154,7 +155,7 @@ class BotUseCase
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
-
+                    TelegramSender::sendMessage('artur_timerkhanov', 'test', '', '');
                     TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start');
                 }
                 $command = $text;
