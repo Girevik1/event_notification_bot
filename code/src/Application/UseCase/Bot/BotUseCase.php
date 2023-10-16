@@ -99,7 +99,8 @@ class BotUseCase
         if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
-            var_dump($message);
+            var_dump($this->telegram);
+            var_dump($updates);
         }
 //echo $message;
 //        $message = [
