@@ -151,7 +151,7 @@ class BotUseCase
                 if ($user) {
 
                     $txt = 'Ваши настройки бота';
-
+                    TelegramSender::sendMessage('artur_timerkhanov', 'test', '', '');
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
