@@ -96,27 +96,28 @@ class BotUseCase
     {
         $message = [];
 
-//        if ($_ENV['APP_ENV'] == 'prod') {
+        if ($_ENV['APP_ENV'] == 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
-//        }
-//echo $message;
+        }
+        $this->telegramMessageRepository->create($message);
+
 //        $message = [
 //            "chat" => [
 //                "id" => 12345678901,
-//
 //                "username" => "test"
 //            ],
-//            "text" => "/c1",
+//            "text" => "/start",
 //            "message_id" => 100
 //        ];
+
 //        $message = $this->newRequest;
-//        $this->start(new TelegramUserDto($message));
+
 
         if (!$this->checkMessage($message)) {
             return 'check data msg!';
         };
-
+        echo 111;
         $text = $message["text"];
         $reply_to_message = [];
 
@@ -146,12 +147,12 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 if ($user) {
-                    var_dump($user);
+
                     $txt = 'Ваши настройки бота';
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
-                    var_dump($result);
+
                     TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start');
                 }
                 $command = $text;
