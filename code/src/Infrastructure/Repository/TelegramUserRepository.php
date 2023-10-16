@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Infrastructure\Repository;
 
+use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
 
@@ -17,16 +18,16 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 //    /**
 //     * @throws Exception
 //     */
-    public function nextId()
-    {
+//    public function nextId()
+//    {
 //        return new Id(
 //            $this->getEntityManager()
 //                ->getConnection()
 //                ->executeQuery('SELECT nextval(\'users_id_seq\')')
 //                ->fetchOne()
 //        );
-        return 0;
-    }
+//        return 0;
+//    }
 //
 //    public function firstByEmail(Email $email): ?User
 //    {
@@ -39,18 +40,33 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 //            ->getOneOrNullResult();
 //    }
 //
-    public function create(): void
+    public function create(TelegramUserDto $telegramUserDto): void
     {
         $telegramUser = new TelegramUser();
-        $telegramUser->login = 'test2';
+        $telegramUser->login = $telegramUserDto->username;
         $telegramUser->name = 'art';
         $telegramUser->information = 'artur test5';
-        $telegramUser->telegram_chat_id = '888812382131';
+        $telegramUser->telegram_chat_id = $telegramUserDto->chat_id;
         $telegramUser->save();
     }
 
     public function firstById($id): ?TelegramUser
     {
         return TelegramUser::where('id','=', $id)->first();
+    }
+
+    public function firstByChatId($chatId): ?TelegramUser
+    {
+        return TelegramUser::where('chat_id','=', $chatId)->first();
+    }
+
+    public function firstByLogin($login): ?TelegramUser
+    {
+        return TelegramUser::where('login','=', $login)->first();
+    }
+
+    public function isExistByLogin($login): bool
+    {
+        return TelegramUser::where('login','=', $login)->exist();
     }
 }

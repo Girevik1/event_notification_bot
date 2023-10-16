@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Art\Code\Infrastructure\Repository\Storage\Postgres;
 
-use Art\Code\Infrastructure\Repository\Contract\DatabaseConnectionAbstract;
+use Art\Code\Domain\Contract\DatabaseConnection;
 use Exception;
-use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;
-use Illuminate\Events\Dispatcher;
 
-class DatabaseConnection extends DatabaseConnectionAbstract
+class DatabasePostgresConnection extends DatabaseConnection
 {
     private static $dbInstance = null;
 
