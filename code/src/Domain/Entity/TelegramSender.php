@@ -27,12 +27,11 @@ class TelegramSender extends Model
      */
     public static function sendMessage($login, $message, string $typeBtn = '', $replyToMessageId = '')
     {
-//        $thisObj = new self();
-//        $user = $thisObj->telegramUserRepository->firstByLogin($login);
+        $thisObj = new self();
+        $user = $thisObj->telegramUserRepository->firstByLogin($login);
 
         $dataForSend = [
-            'chat_id' => '500264009',
-//            'chat_id' => $user->telegram_chat_id,
+            'chat_id' => (int)$user->telegram_chat_id,
             'parse_mode' => 'HTML',
             'text' => $message,
             'reply_to_message_id' => $replyToMessageId
@@ -45,7 +44,7 @@ class TelegramSender extends Model
         $telegram = new Api($_ENV['TELEGRAM_KEY']);
         $response = $telegram->sendMessage($dataForSend);
 
-//        return $response->getMessageId();
+        return $response->getMessageId();
     }
 
     public function deleteMessage($login, $msg_id)

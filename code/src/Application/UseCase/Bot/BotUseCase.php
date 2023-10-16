@@ -6,7 +6,6 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Art\Code\Domain\Entity\TelegramSender;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -149,13 +148,13 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 if ($user) {
-
+                    var_dump(3);
                     $txt = 'Ваши настройки бота';
-                    TelegramSender::sendMessage('artur_timerkhanov', 'test', '', '');
+
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
-                    TelegramSender::sendMessage('artur_timerkhanov', 'test', '', '');
+
                     TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start');
                 }
                 $command = $text;
@@ -179,10 +178,15 @@ class BotUseCase
 //                $command = $text;
 //                break;
 //
-//            case "/prepayment":
+            case "start":
 //                $answer = $this->prepayment($user);
 //                $command = $text;
-//                break;
+
+                var_dump(3);
+                $txt = 'Ваши настройки бота';
+
+                TelegramMessage::newMessage($user, $txt, '/settings');
+                break;
 //            case "/skip":
 //                $answer = $this->skipCFO(strtolower($message["chat"]["username"]), $chat_id, $reply_to_message);
 //                $command = $text;
@@ -228,8 +232,7 @@ class BotUseCase
 //            $user->telegram_chat_id = $telegramUserDto->chat_id;
 //            $user->save();
         return [
-            'text' => "ok",
-//            'text' => "Успех, теперь Вы можете начать авторизацию",
+            'text' => "Успех, теперь Вы можете начать авторизацию",
             'telegram_user' => $telegramUser
         ];
 //        } else {
