@@ -100,7 +100,7 @@ class BotUseCase
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
-//        $this->telegramMessageRepository->create($message);
+        $this->telegramMessageRepository->create($message);
 
 
 //        $message = [
