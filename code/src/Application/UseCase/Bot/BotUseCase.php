@@ -30,79 +30,77 @@ class BotUseCase
     /**
      * For test hook bot
      */
-    public static function testStart(): void
-    {
-        $message = [
-            "chat" => [
-                "id" => 12345678901,
-
-//                "username" => "",
-                "username" => "test"
-            ],
-            "text" => "/start",
-            "message_id" => 100
-        ];
-        $t = new BotUseCase();
-        $t->hook($message);
-        echo  111;
-    }
-
-    public static function testHook()
-    {
-        $message = [
-            "chat" => [
-                "id" => 12345678901,
-
-                "username" => "test"
-            ],
-            "text" => "/confidential",
-            "message_id" => 100
-        ];
-        $t = new BotUseCase();
-        $t->hook($message);
-    }
-
-    public static function testA1()
-    {
-        $message = [
-            "chat" => [
-                "id" => 12345678901,
-
-                "username" => "test"
-            ],
-            "text" => "/c1",
-            "message_id" => 100
-        ];
-        $t = new BotUseCase();
-        $t->hook($message);
-    }
-
-    public static function testA($text = '')
-    {
-        $message = [
-            "chat" => [
-                "id" => 12345678901,
-
-                "username" => "test"
-            ],
-            "text" => 'Торговля',
-            "message_id" => 100
-        ];
-        $t = new BotUseCase();
-        $t->hook($message);
-    } //
+//    public static function testStart(): void
+//    {
+//        $message = [
+//            "chat" => [
+//                "id" => 12345678901,
+//
+////                "username" => "",
+//                "username" => "test"
+//            ],
+//            "text" => "/start",
+//            "message_id" => 100
+//        ];
+//        $t = new BotUseCase();
+//        $t->hook($message);
+//        echo  111;
+//    }
+//
+//    public static function testHook()
+//    {
+//        $message = [
+//            "chat" => [
+//                "id" => 12345678901,
+//
+//                "username" => "test"
+//            ],
+//            "text" => "/confidential",
+//            "message_id" => 100
+//        ];
+//        $t = new BotUseCase();
+//        $t->hook($message);
+//    }
+//
+//    public static function testA1()
+//    {
+//        $message = [
+//            "chat" => [
+//                "id" => 12345678901,
+//
+//                "username" => "test"
+//            ],
+//            "text" => "/c1",
+//            "message_id" => 100
+//        ];
+//        $t = new BotUseCase();
+//        $t->hook($message);
+//    }
+//
+//    public static function testA($text = '')
+//    {
+//        $message = [
+//            "chat" => [
+//                "id" => 12345678901,
+//
+//                "username" => "test"
+//            ],
+//            "text" => 'Торговля',
+//            "message_id" => 100
+//        ];
+//        $t = new BotUseCase();
+//        $t->hook($message);
+//    } //
 
     public function hook()
     {
         $message = [];
 
         if ($_ENV['APP_ENV'] === 'prod') {
-            echo 123;
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
-            var_dump($message);
         }
-
+echo $message;
 //        $message = [
 //            "chat" => [
 //                "id" => 12345678901,
