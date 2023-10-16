@@ -25,7 +25,7 @@ class BotUseCase
         private $telegramMessageRepository
     )
     {
-        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test
+//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test
         $this->telegram = new Api($_ENV['TELEGRAM_KEY']);
     }
 
