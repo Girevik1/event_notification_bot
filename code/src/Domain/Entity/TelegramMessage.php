@@ -42,7 +42,7 @@ class TelegramMessage extends Model
     ): void
     {
 //        $thisObj = new self();
-        $text_array = [$text];
+//        $text_array = [$text];
 //
 //        if (mb_strlen($text, '8bit') > 4096) {
 //            $text_array = [];
@@ -53,13 +53,13 @@ class TelegramMessage extends Model
 //            } while (mb_strlen($text, '8bit') > $start);
 //        }
 
-        try {
-            foreach ($text_array as $textItem) {
+//        try {
+//            foreach ($text_array as $textItem) {
 //                if (
 //                    $_ENV['APP_ENV'] == 'prod' ||
 //                    $_ENV['APP_ENV'] == 'dev'
 //                ) {
-                    $msg_id = TelegramSender::sendMessage('artur_timerkhanov', $textItem, $typeBtn);
+                    $msg_id = TelegramSender::sendMessage('artur_timerkhanov', 'ttttt', '');
 //                } else {
 //                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
 //                    if ($last_message) {
@@ -86,7 +86,7 @@ class TelegramMessage extends Model
 //                $message->model_id = $model_id;
 //                $message->data_test = null;
 //                $message->save();
-            }
+//            }
 //            echo '<pre>';
 //            echo $user->login;
 //            echo '<pre>';
@@ -94,8 +94,8 @@ class TelegramMessage extends Model
 //            echo '<pre>';
 //            echo $typeBtn;
 //            echo '<pre>';
-        } catch (\Exception $e) {
-        }
+//        } catch (\Exception $e) {
+//        }
     }
 //    private ?string $data_test;
 
