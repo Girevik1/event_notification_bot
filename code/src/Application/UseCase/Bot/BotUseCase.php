@@ -101,7 +101,7 @@ class BotUseCase
             $message = $updates->getMessage();
         }
         $this->telegramMessageRepository->create($message);
-
+//json_decode($message, true);
 //        $message = [
 //            "chat" => [
 //                "id" => 12345678901,
@@ -117,7 +117,7 @@ class BotUseCase
         if (!$this->checkMessage($message)) {
             return 'check data msg!';
         };
-        echo 111;
+
         $text = $message["text"];
         $reply_to_message = [];
 

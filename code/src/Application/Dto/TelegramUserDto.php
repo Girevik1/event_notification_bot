@@ -11,7 +11,7 @@ class TelegramUserDto
     public string $last_name;
     public string|int $chat_id;
 
-    public function __construct(array $message)
+    public function __construct($message)
     {
         $this->username = strtolower($message["chat"]["username"]);
         $this->chat_id = $message["chat"]["id"];
