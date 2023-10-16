@@ -99,8 +99,9 @@ class BotUseCase
         if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
+            var_dump($message);
         }
-echo $message;
+//echo $message;
 //        $message = [
 //            "chat" => [
 //                "id" => 12345678901,
@@ -111,7 +112,7 @@ echo $message;
 //            "message_id" => 100
 //        ];
 //        $message = $this->newRequest;
-        $this->start(new TelegramUserDto($message));
+//        $this->start(new TelegramUserDto($message));
 
         if (!$this->checkMessage($message)) {
             return 'check data msg!';
