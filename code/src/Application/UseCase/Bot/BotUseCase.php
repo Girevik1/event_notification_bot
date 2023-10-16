@@ -100,6 +100,7 @@ class BotUseCase
             echo 123;
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
+            var_dump($message);
         }
 
 //        $message = [
