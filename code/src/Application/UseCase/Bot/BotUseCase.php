@@ -113,6 +113,7 @@ class BotUseCase
 //            "message_id" => 100
 //        ];
 //        $message = $this->newRequest;
+        $this->start(new TelegramUserDto($message));
 
         if (!$this->checkMessage($message)) {
             return 'check data msg!';
