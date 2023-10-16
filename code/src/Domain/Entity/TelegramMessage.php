@@ -24,10 +24,10 @@ class TelegramMessage extends Model
         parent::__construct($attributes);
     }
 
-//    public function setDataTestAttribute($value): void
-//    {
-//        $this->attributes['data_test'] = json_encode($value);
-//    }
+    public function setDataTestAttribute($value): void
+    {
+        $this->attributes['data_test'] = json_encode($value);
+    }
 
     public static function newMessage(
         $user,
