@@ -44,7 +44,7 @@ class TelegramSender extends Model
         $telegram = new Api($_ENV['TELEGRAM_KEY']);
         $response = $telegram->sendMessage($dataForSend);
 
-        return $response->getMessageId();
+//        return $response->getMessageId();
     }
 
     public function deleteMessage($login, $msg_id)

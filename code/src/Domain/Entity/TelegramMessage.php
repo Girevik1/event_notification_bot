@@ -41,52 +41,52 @@ class TelegramMessage extends Model
         $typeBtn = ''
     ): void
     {
-//        $thisObj = new self();
-//        $text_array = [$text];
-//
-//        if (mb_strlen($text, '8bit') > 4096) {
-//            $text_array = [];
-//            $start = 0;
-//            do {
-//                $text_array[] = mb_strcut($text, $start, 4096);
-//                $start += 4096;
-//            } while (mb_strlen($text, '8bit') > $start);
-//        }
+        $thisObj = new self();
+        $text_array = [$text];
 
-//        try {
-//            foreach ($text_array as $textItem) {
-//                if (
-//                    $_ENV['APP_ENV'] == 'prod' ||
-//                    $_ENV['APP_ENV'] == 'dev'
-//                ) {
-                    $msg_id = TelegramSender::sendMessage('artur_timerkhanov', 'ttttt', '');
-//                } else {
-//                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
-//                    if ($last_message) {
-//                        $msg_id = 1000001 + $last_message->message_id;
-//                    } else {
-//                        $msg_id = 1000000;
-//                    }
-//                }
-//                $message = new TelegramMessage();
-//                $message->telegram_user_id = $user->id;
-////                $message->is_from_bot = $is_from_bot;
-//                $message->message_id = $msg_id;
-//                $message->text = $textItem;
-//                if (count($reply_to_message) > 0) {
-//                    $message->reply_to = $reply_to_message['message_id'];
-//                } else {
-//                    $message->reply_to = 0;
-//                }
-////                $message->author = $author;
-//
-//                $message->command = $command;
-//                $message->model = $model;
-//                $message->is_deleted_from_chat = 0;
-//                $message->model_id = $model_id;
-//                $message->data_test = null;
-//                $message->save();
-//            }
+        if (mb_strlen($text, '8bit') > 4096) {
+            $text_array = [];
+            $start = 0;
+            do {
+                $text_array[] = mb_strcut($text, $start, 4096);
+                $start += 4096;
+            } while (mb_strlen($text, '8bit') > $start);
+        }
+        TelegramSender::sendMessage($user->login, $text, '', '');
+        try {
+            foreach ($text_array as $textItem) {
+                if (
+                    $_ENV['APP_ENV'] == 'prod' ||
+                    $_ENV['APP_ENV'] == 'dev'
+                ) {
+                    $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
+                } else {
+                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
+                    if ($last_message) {
+                        $msg_id = 1000001 + $last_message->message_id;
+                    } else {
+                        $msg_id = 1000000;
+                    }
+                }
+                $message = new TelegramMessage();
+                $message->telegram_user_id = $user->id;
+//                $message->is_from_bot = $is_from_bot;
+                $message->message_id = $msg_id;
+                $message->text = $textItem;
+                if (count($reply_to_message) > 0) {
+                    $message->reply_to = $reply_to_message['message_id'];
+                } else {
+                    $message->reply_to = 0;
+                }
+//                $message->author = $author;
+
+                $message->command = $command;
+                $message->model = $model;
+                $message->is_deleted_from_chat = 0;
+                $message->model_id = $model_id;
+                $message->data_test = null;
+                $message->save();
+            }
 //            echo '<pre>';
 //            echo $user->login;
 //            echo '<pre>';
@@ -94,8 +94,8 @@ class TelegramMessage extends Model
 //            echo '<pre>';
 //            echo $typeBtn;
 //            echo '<pre>';
-//        } catch (\Exception $e) {
-//        }
+        } catch (\Exception $e) {
+        }
     }
 //    private ?string $data_test;
 
