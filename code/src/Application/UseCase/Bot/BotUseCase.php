@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\Dto\TelegramUserDto;
-use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
-use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -147,10 +145,12 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 if ($user) {
+                    var_dump($user);
                     $txt = 'Ваши настройки бота';
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
+                    var_dump($result);
                     TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start');
                 }
                 $command = $text;
@@ -190,7 +190,7 @@ class BotUseCase
 //        $this->telegramUserRepository->create();
 //        $this->telegramMessageRepository->create($message);
 
-        return 'ok test';
+//        return 'ok test';
 //        $users = (new TelegramUserRepository())->firstById(new Id(1));
 //        var_dump($users);
 
