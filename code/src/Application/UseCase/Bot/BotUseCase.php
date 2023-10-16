@@ -227,7 +227,8 @@ class BotUseCase
 //            $user->telegram_chat_id = $telegramUserDto->chat_id;
 //            $user->save();
         return [
-            'text' => "Успех, теперь Вы можете начать авторизацию",
+            'text' => "ok",
+//            'text' => "Успех, теперь Вы можете начать авторизацию",
             'telegram_user' => $telegramUser
         ];
 //        } else {

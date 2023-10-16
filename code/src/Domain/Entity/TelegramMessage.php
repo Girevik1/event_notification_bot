@@ -41,17 +41,17 @@ class TelegramMessage extends Model
         $typeBtn = ''
     ): void
     {
-        $thisObj = new self();
+//        $thisObj = new self();
         $text_array = [$text];
-
-        if (mb_strlen($text, '8bit') > 4096) {
-            $text_array = [];
-            $start = 0;
-            do {
-                $text_array[] = mb_strcut($text, $start, 4096);
-                $start += 4096;
-            } while (mb_strlen($text, '8bit') > $start);
-        }
+//
+//        if (mb_strlen($text, '8bit') > 4096) {
+//            $text_array = [];
+//            $start = 0;
+//            do {
+//                $text_array[] = mb_strcut($text, $start, 4096);
+//                $start += 4096;
+//            } while (mb_strlen($text, '8bit') > $start);
+//        }
 
         try {
             foreach ($text_array as $textItem) {
@@ -59,7 +59,7 @@ class TelegramMessage extends Model
 //                    $_ENV['APP_ENV'] == 'prod' ||
 //                    $_ENV['APP_ENV'] == 'dev'
 //                ) {
-                    $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
+                    $msg_id = TelegramSender::sendMessage($user['login'], $textItem, $typeBtn);
 //                } else {
 //                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
 //                    if ($last_message) {
