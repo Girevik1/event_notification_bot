@@ -100,8 +100,9 @@ class BotUseCase
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
-        $this->telegramMessageRepository->create($message);
-//json_decode($message, true);
+//        $this->telegramMessageRepository->create($message);
+
+
 //        $message = [
 //            "chat" => [
 //                "id" => 12345678901,
@@ -149,6 +150,7 @@ class BotUseCase
                 if ($user) {
 
                     $txt = 'Ваши настройки бота';
+
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));

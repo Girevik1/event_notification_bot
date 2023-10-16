@@ -82,7 +82,9 @@ class TelegramMessage extends Model
 
                 $message->command = $command;
                 $message->model = $model;
+                $message->is_deleted_from_chat = 0;
                 $message->model_id = $model_id;
+                $message->data_test = null;
                 $message->save();
             }
 //            echo '<pre>';
