@@ -55,37 +55,37 @@ class TelegramMessage extends Model
 
         try {
             foreach ($text_array as $textItem) {
-                if (
-                    $_ENV['APP_ENV'] == 'prod' ||
-                    $_ENV['APP_ENV'] == 'dev'
-                ) {
+//                if (
+//                    $_ENV['APP_ENV'] == 'prod' ||
+//                    $_ENV['APP_ENV'] == 'dev'
+//                ) {
                     $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
-                } else {
-                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
-                    if ($last_message) {
-                        $msg_id = 1000001 + $last_message->message_id;
-                    } else {
-                        $msg_id = 1000000;
-                    }
-                }
-                $message = new TelegramMessage();
-                $message->telegram_user_id = $user->id;
-//                $message->is_from_bot = $is_from_bot;
-                $message->message_id = $msg_id;
-                $message->text = $textItem;
-                if (count($reply_to_message) > 0) {
-                    $message->reply_to = $reply_to_message['message_id'];
-                } else {
-                    $message->reply_to = 0;
-                }
-//                $message->author = $author;
-
-                $message->command = $command;
-                $message->model = $model;
-                $message->is_deleted_from_chat = 0;
-                $message->model_id = $model_id;
-                $message->data_test = null;
-                $message->save();
+//                } else {
+//                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
+//                    if ($last_message) {
+//                        $msg_id = 1000001 + $last_message->message_id;
+//                    } else {
+//                        $msg_id = 1000000;
+//                    }
+//                }
+//                $message = new TelegramMessage();
+//                $message->telegram_user_id = $user->id;
+////                $message->is_from_bot = $is_from_bot;
+//                $message->message_id = $msg_id;
+//                $message->text = $textItem;
+//                if (count($reply_to_message) > 0) {
+//                    $message->reply_to = $reply_to_message['message_id'];
+//                } else {
+//                    $message->reply_to = 0;
+//                }
+////                $message->author = $author;
+//
+//                $message->command = $command;
+//                $message->model = $model;
+//                $message->is_deleted_from_chat = 0;
+//                $message->model_id = $model_id;
+//                $message->data_test = null;
+//                $message->save();
             }
 //            echo '<pre>';
 //            echo $user->login;
