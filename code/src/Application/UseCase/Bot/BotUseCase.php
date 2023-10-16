@@ -8,24 +8,24 @@ use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
-use Art\Code\Infrastructure\Repository\TelegramUserRepository;
-use Laravel\Tinker\Console\TinkerCommand;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class BotUseCase
 {
     private Api $telegram;
-
+    public array $newRequest;
     /**
      * @throws TelegramSDKException
      */
     public function __construct(
-        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
-        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
+//        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
+//        private readonly TelegramMessageRepositoryInterface $telegramMessageRepositor
+        private $telegramUserRepository,
+        private $telegramMessageRepository
     )
     {
+        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test
         $this->telegram = new Api($_ENV['TELEGRAM_KEY']);
     }
 
@@ -112,14 +112,12 @@ class BotUseCase
 //            "text" => "/c1",
 //            "message_id" => 100
 //        ];
+//        $message = $this->newRequest;
 
         if (!$this->checkMessage($message)) {
             return 'check data msg!';
         };
 
-//        $testUser = Manager::table('telegram_user')->where('id', '=', 1)->get();
-//        $results = Manager::select('select * from telegram_user where id = ?', [1]);
-//        (new TelegramUserRepository())->create();
         $text = $message["text"];
         $reply_to_message = [];
 
@@ -141,7 +139,6 @@ class BotUseCase
                 $txt = "Вы сменили username в Telegram.";
                 $txt .= "\n\nВаш новый username перезаписан на @" . $username;
                 $txt .= "\nВаш логин в систему теперь " . strtolower($username);
-//                $txt .= "\nВ случае если это не Вы, тогда немедленно заблокируйте себя командой /block #np";
                 TelegramMessage::newMessage($user, $txt, '/change-username');
                 $was_message = true;
             }
@@ -153,8 +150,8 @@ class BotUseCase
                     $txt = 'Ваши настройки бота';
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
-                    $txt = $this->start(new TelegramUserDto($message));
-                    TelegramMessage::newMessage($user, $txt, '/start');
+                    $result = $this->start(new TelegramUserDto($message));
+                    TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start');
                 }
                 $command = $text;
                 break;
@@ -216,16 +213,19 @@ class BotUseCase
 
     }
 
-    private function start(TelegramUserDto $telegramUserDto): string
+    private function start(TelegramUserDto $telegramUserDto): array
     {
 //        $user = User::where('login', $telegramUserDto->username)->first();
 //        if ($this->telegramUserRepository->isExistByLogin($telegramUserDto->username)) {
 //            return "Вы уже запустили бота!";
 //        }
-        $this->telegramUserRepository->create($telegramUserDto);
+        $telegramUser = $this->telegramUserRepository->create($telegramUserDto);
 //            $user->telegram_chat_id = $telegramUserDto->chat_id;
 //            $user->save();
-        return "Успех, теперь Вы можете начать авторизацию";
+        return [
+            'text' => "Успех, теперь Вы можете начать авторизацию",
+            'telegram_user' => $telegramUser
+        ];
 //        } else {
 //            return "@" . $username . " не зарегестрирован в системе или неправильно указан Telegram login.\n\n Обратитесь к администратору.";
 //        }

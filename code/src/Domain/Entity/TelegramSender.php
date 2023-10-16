@@ -6,14 +6,19 @@ namespace Art\Code\Domain\Entity;
 
 //use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
+use Art\Code\Infrastructure\Repository\TelegramUserRepository;
 use Illuminate\Database\Eloquent\Model;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class TelegramSender extends Model
 {
-    public function __construct(public TelegramUserRepositoryInterface $telegramUserRepository, array $attributes = [])
+    public TelegramUserRepository $telegramUserRepository;
+
+//    public function __construct(public TelegramUserRepositoryInterface $telegramUserRepository, array $attributes = [])
+    public function __construct(array $attributes = [])
     {
+        $this->telegramUserRepository = new TelegramUserRepository();
         parent::__construct($attributes);
     }
 

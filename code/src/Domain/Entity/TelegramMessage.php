@@ -6,6 +6,7 @@ namespace Art\Code\Domain\Entity;
 
 //use Art\Code\Domain\ValueObject\TelegramUser\TelegramUserId;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
+use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
 use Illuminate\Database\Eloquent\Model;
 
 class TelegramMessage extends Model
@@ -14,8 +15,12 @@ class TelegramMessage extends Model
 
     protected $guarded = [];
 
-    public function __construct(public TelegramMessageRepositoryInterface $telegramMessageRepository, array $attributes = [])
+    private TelegramMessageRepository $telegramMessageRepository;
+
+    public function __construct(array $attributes = [])
+//    public function __construct(public TelegramMessageRepositoryInterface $telegramMessageRepository, array $attributes = [])
     {
+        $this->telegramMessageRepository = new TelegramMessageRepository();
         parent::__construct($attributes);
     }
 
@@ -49,12 +54,12 @@ class TelegramMessage extends Model
         }
 
         try {
-            foreach ($text_array as $text) {
+            foreach ($text_array as $textItem) {
                 if (
                     $_ENV['APP_ENV'] == 'prod' ||
                     $_ENV['APP_ENV'] == 'dev'
                 ) {
-                    $msg_id = TelegramSender::sendMessage($user->login, $text, $typeBtn);
+                    $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
                 } else {
                     $last_message = $thisObj->telegramMessageRepository->getLastMessage();
                     if ($last_message) {
@@ -67,7 +72,7 @@ class TelegramMessage extends Model
                 $message->telegram_user_id = $user->id;
 //                $message->is_from_bot = $is_from_bot;
                 $message->message_id = $msg_id;
-                $message->text = $text;
+                $message->text = $textItem;
                 if (count($reply_to_message) > 0) {
                     $message->reply_to = $reply_to_message['message_id'];
                 } else {
@@ -80,6 +85,13 @@ class TelegramMessage extends Model
                 $message->model_id = $model_id;
                 $message->save();
             }
+//            echo '<pre>';
+//            echo $user->login;
+//            echo '<pre>';
+//            echo $textItem;
+//            echo '<pre>';
+//            echo $typeBtn;
+//            echo '<pre>';
         } catch (\Exception $e) {
         }
     }
