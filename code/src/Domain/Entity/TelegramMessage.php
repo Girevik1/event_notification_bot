@@ -59,9 +59,8 @@ class TelegramMessage extends Model
                     $_ENV['APP_ENV'] == 'prod' ||
                     $_ENV['APP_ENV'] == 'dev'
                 ) {
-                    $t['test'] = 45;
-                    $repMsg =   new TelegramMessageRepository();
-                   $repMsg->create($t);
+
+
 
                     $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
                 } else {

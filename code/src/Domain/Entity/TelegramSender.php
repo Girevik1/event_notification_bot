@@ -6,6 +6,7 @@ namespace Art\Code\Domain\Entity;
 
 //use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
+use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
 use Art\Code\Infrastructure\Repository\TelegramUserRepository;
 use Illuminate\Database\Eloquent\Model;
 use Telegram\Bot\Api;
@@ -42,6 +43,10 @@ class TelegramSender extends Model
         }
 
         $telegram = new Api($_ENV['TELEGRAM_KEY']);
+
+        $repMsg =   new TelegramMessageRepository();
+        $t['test'] = 452;
+        $repMsg->create($t);
         $response = $telegram->sendMessage($dataForSend);
 
         return $response->getMessageId();
