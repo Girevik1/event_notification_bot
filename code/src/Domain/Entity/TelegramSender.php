@@ -42,7 +42,7 @@ class TelegramSender extends Model
             $dataForSend = self::getKeyboard($dataForSend, $typeBtn);
         }
 
-        $telegram = new Api($_ENV['TELEGRAM_KEY']);
+        $telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
 
         $repMsg =   new TelegramMessageRepository();
         $t['test'] = 452;
@@ -57,7 +57,7 @@ class TelegramSender extends Model
 //        $user = User::where('login', $login)->first();
         $user = $this->telegramUserRepository->firstByLogin($login);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_KEY'] . "/deleteMessage?chat_id=" . $user->telegram_chat_id . "&message_id=" . $msg_id);
+        curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $user->telegram_chat_id . "&message_id=" . $msg_id);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_exec($ch);
         curl_close($ch);
