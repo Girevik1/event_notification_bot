@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Art\Code\Domain\Entity;
 
-//use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
-use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
-use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
 use Art\Code\Infrastructure\Repository\TelegramUserRepository;
 use Illuminate\Database\Eloquent\Model;
 use Telegram\Bot\Api;
@@ -33,9 +30,9 @@ class TelegramSender extends Model
 
         $dataForSend = [
             'chat_id' => $user->telegram_chat_id,
-//            'parse_mode' => 'HTML',
+            'parse_mode' => 'HTML',
             'text' => $message,
-//            'reply_to_message_id' => $replyToMessageId
+            'reply_to_message_id' => $replyToMessageId
         ];
 
         if ($typeBtn) {
@@ -43,18 +40,13 @@ class TelegramSender extends Model
         }
 
         $telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
-
-        $repMsg =   new TelegramMessageRepository();
-        $t['test'] = 452;
-        $repMsg->create($t);
         $response = $telegram->sendMessage($dataForSend);
 
         return $response->getMessageId();
     }
 
-    public function deleteMessage($login, $msg_id)
+    public function deleteMessage($login, $msg_id): string
     {
-//        $user = User::where('login', $login)->first();
         $user = $this->telegramUserRepository->firstByLogin($login);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $user->telegram_chat_id . "&message_id=" . $msg_id);
@@ -84,31 +76,34 @@ class TelegramSender extends Model
                 );
                 break;
 
-            case "cfo-acception-procedure-agreement":
+            case "main_menu":
                 $dataForSend['reply_markup'] = json_encode(
                     [
                         'inline_keyboard' => [
                             [
                                 [
-                                    'text' => '➖',
-                                    'callback_data' => 'ceo-proc-minus',
-                                ],
-                                [
-                                    'text' => 'skip',
-                                    'callback_data' => 'ceo-proc-skip',
-                                ],
-                                [
-                                    'text' => '➕',
-                                    'callback_data' => 'ceo-proc-plus',
+                                    'text' => '❔О проекте',
+                                    'callback_data' => 'about_project',
                                 ],
                             ],
-                            // [
-                            //     [
-                            //         'text' => '⏩ Skip',
-                            //         'callback_data' => 'ceo-proc-skip',
-                            //     ],
-                            // ]
-
+                            [
+                                [
+                                    'text' => '❔Что я могу',
+                                    'callback_data' => 'what_can_bot',
+                                ],
+                            ],
+                            [
+                                [
+                                    'text' => '❔Как меня использовать',
+                                    'callback_data' => 'how_use',
+                                ],
+                            ],
+                            [
+                                [
+                                    'text' => '🏠 Личный кабинет',
+                                    'callback_data' => 'private_cabinet',
+                                ],
+                            ],
                         ],
                     ],
                 );
