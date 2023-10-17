@@ -6,6 +6,7 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
+use Art\Code\Domain\Entity\TelegramUser;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -150,18 +151,18 @@ class BotUseCase
         $text = strtolower(trim($text));
         switch ($text) {
             case "/start":
-                if ($user) {
+//                if ($user) {
+//
+//
+//                    $txt = 'Ваши настройки бота';
+//
+//                    TelegramMessage::newMessage($user, $txt, '/settings');
+//                }else{
+                $this->start(new TelegramUserDto($message), $user);
 
-
-                    $txt = 'Ваши настройки бота';
-
-                    TelegramMessage::newMessage($user, $txt, '/settings');
-                }else{
-                    $result = $this->start(new TelegramUserDto($message));
-
-                    TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start','',0,[],'main_menu');
-                }
-                $command = $text;
+//                    TelegramMessage::newMessage($result['telegram_user'], $result['text'], '/start','',0,[],'main_menu');
+//                }
+//                $command = $text;
                 break;
 //            case "/block":
 //                $answer = $this->block(strtolower($message["chat"]["username"]), $chat_id, $message["message_id"]);
@@ -226,14 +227,21 @@ class BotUseCase
 
     }
 
-    private function start(TelegramUserDto $telegramUserDto): array
+    private function start(TelegramUserDto $telegramUserDto, ?TelegramUser $telegramUser): void
     {
-        $telegramUser = $this->telegramUserRepository->create($telegramUserDto);
+        if (!$telegramUser) {
+            $telegramUser = $this->telegramUserRepository->create($telegramUserDto);
+        }
+        $text = "Привет! Я бот для напоминания твоих событий 😎 Давай познакомимся?";
+        TelegramMessage::newMessage($telegramUser, $text, '/start', '', 0, [], 'main_menu');
 
-        return [
-            'text' => "Привет! Я бот для напоминания твоих событий 😎 Давай познакомимся?",
-            'telegram_user' => $telegramUser
-        ];
+//        $command = $text;
+//
+//
+//        return [
+//            'text' => "Привет! Я бот для напоминания твоих событий 😎 Давай познакомимся?",
+//            'telegram_user' => $telegramUser
+//        ];
     }
 
     private function checkMessage($message): bool
