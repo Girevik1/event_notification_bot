@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\Dto\TelegramUserDto;
-use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
-use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -14,16 +12,20 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class BotUseCase
 {
     private Api $telegram;
-
+    public array $newRequest;
     /**
      * @throws TelegramSDKException
      */
     public function __construct(
-        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
-        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
+        private $telegramUserRepository,
+        private $telegramMessageRepository
+//        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
+//        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
     )
     {
         $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
+
+//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
     /**
