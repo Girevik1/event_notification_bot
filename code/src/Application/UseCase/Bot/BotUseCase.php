@@ -18,8 +18,8 @@ class BotUseCase
      * @throws TelegramSDKException
      */
     public function __construct(
-        private $telegramUserRepository,
-        private $telegramMessageRepository
+        public $telegramUserRepository,
+        public $telegramMessageRepository
 //        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
 //        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
     )
