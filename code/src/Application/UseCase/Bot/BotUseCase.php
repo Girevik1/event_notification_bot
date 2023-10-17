@@ -132,6 +132,7 @@ class BotUseCase
 
         $user = $this->telegramUserRepository->firstByChatId(500264009);
 
+        $this->telegramMessageRepository->create($user);
 //        if ($user) {
 //            $was_message = false;
 //            if ($user->login != $username) {
@@ -149,9 +150,10 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 if ($user) {
+                    $t['test'] = 34;
 
                     $txt = 'Ваши настройки бота';
-
+                    $this->telegramMessageRepository->create($t);
                     TelegramMessage::newMessage($user, $txt, '/settings');
                 }else{
                     $result = $this->start(new TelegramUserDto($message));
