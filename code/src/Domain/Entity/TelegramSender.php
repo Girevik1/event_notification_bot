@@ -31,10 +31,10 @@ class TelegramSender extends Model
         $user = $thisObj->telegramUserRepository->firstByLogin($login);
 
         $dataForSend = [
-            'chat_id' => (int)$user->telegram_chat_id,
-            'parse_mode' => 'HTML',
+            'chat_id' => $user->telegram_chat_id,
+//            'parse_mode' => 'HTML',
             'text' => $message,
-            'reply_to_message_id' => $replyToMessageId
+//            'reply_to_message_id' => $replyToMessageId
         ];
 
         if ($typeBtn) {

@@ -115,40 +115,41 @@ class BotUseCase
 //        $message = $this->newRequest;
 
 
-        if (!$this->checkMessage($message)) {
-            return 'check data msg!';
-        };
+//        if (!$this->checkMessage($message)) {
+//            return 'check data msg!';
+//        };
 
         $text = $message["text"];
-        $reply_to_message = [];
+//        $reply_to_message = [];
+//
+//        $chat_id = $message["chat"]["id"];
+//        $username = strtolower($message["chat"]["username"]);
+//        $message_id = $message["message_id"];
+//
+//        if (isset($message["reply_to_message"])) {
+//            $reply_to_message = $message["reply_to_message"];
+//        }
 
-        $chat_id = $message["chat"]["id"];
-        $username = strtolower($message["chat"]["username"]);
-        $message_id = $message["message_id"];
+        $user = $this->telegramUserRepository->firstByChatId(500264009);
 
-        if (isset($message["reply_to_message"])) {
-            $reply_to_message = $message["reply_to_message"];
-        }
+//        if ($user) {
+//            $was_message = false;
+//            if ($user->login != $username) {
+//                $user->login = strtolower($username);
+//                $user->save();
+//                $txt = "Вы сменили username в Telegram.";
+//                $txt .= "\n\nВаш новый username перезаписан на @" . $username;
+//                $txt .= "\nВаш логин в систему теперь " . strtolower($username);
+//                TelegramMessage::newMessage($user, $txt, '/change-username');
+//                $was_message = true;
+//            }
+//        }
 
-        $user = $this->telegramUserRepository->firstByChatId($chat_id);
-
-        if ($user) {
-            $was_message = false;
-            if ($user->login != $username) {
-                $user->login = strtolower($username);
-                $user->save();
-                $txt = "Вы сменили username в Telegram.";
-                $txt .= "\n\nВаш новый username перезаписан на @" . $username;
-                $txt .= "\nВаш логин в систему теперь " . strtolower($username);
-                TelegramMessage::newMessage($user, $txt, '/change-username');
-                $was_message = true;
-            }
-        }
-
+        $text = strtolower(trim($text));
         switch ($text) {
             case "/start":
                 if ($user) {
-                    var_dump(3);
+
                     $txt = 'Ваши настройки бота';
 
                     TelegramMessage::newMessage($user, $txt, '/settings');
