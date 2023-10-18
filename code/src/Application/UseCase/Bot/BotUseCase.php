@@ -174,17 +174,20 @@ class BotUseCase
 
                 case "about_project":
                     $text = "<b>О проекте\n</b>";
-                    $text .= "\n\nМы часто забываем про дни рождения, годовщины и тд..";
-                    $text .= "\nБот создан для уведомления события в чатах и каналах -> исходя от Ваших установок в личном кабинете бота.";
-                    $text .= "\nФункционал развивается, не судите строго";
-                    $text .= "\n Version: 1.0.0";
+                    $text .= "\n\nМы часто забываем про дни рождения, годовщины..";
+                    $text .= "\nБот создан для уведомления события в чатах и каналах,";
+                    $text .= "\nисходя от Ваших установок в личном кабинете бота.";
+                    $text .= "\n\nТеперь все участники группы будут в курсе важного события!";
+                    $text .= "\n\nФункционал развивается, не судите строго";
+                    $text .= "\nVersion: 1.0.0";
                     $text .= "\n\nДля фидбека и предложений пишите - <a href='https://t.me/artur_timerkhanov'>Создатель</a>";
 
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup'=> TelegramSender::getKeyboard('to_the_beginning')
+                        'reply_markup'=> TelegramSender::getKeyboard('to_the_beginning'),
+                        'parse_mode' => 'HTML',
                     ]);
 
                     break;
@@ -196,7 +199,8 @@ class BotUseCase
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup'=> TelegramSender::getKeyboard('main_menu')
+                        'reply_markup'=> TelegramSender::getKeyboard('main_menu'),
+                        'parse_mode' => 'HTML',
                     ]);
 
                     break;
