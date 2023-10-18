@@ -6,6 +6,7 @@ namespace Art\Code\Domain\Entity;
 
 //use Art\Code\Domain\ValueObject\TelegramUser\TelegramUserId;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
+use Art\Code\Domain\Dto\MessageDataDto;
 use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,28 +30,18 @@ class TelegramMessage extends Model
         $this->attributes['data_test'] = json_encode($value);
     }
 
-    public static function newMessage(
-        $user,
-        $text,
-        $command,
-        $model = "",
-        $model_id = 0,
-        $reply_to_message = [],
-//        $is_from_bot = 1,
-//        $author = 0,
-        $typeBtn = ''
-    ): void
+    public static function newMessage(MessageDataDto $messageDataDto): void
     {
         $thisObj = new self();
-        $text_array = [$text];
+        $text_array = [$messageDataDto->text];
 
-        if (mb_strlen($text, '8bit') > 4096) {
+        if (mb_strlen($messageDataDto->text, '8bit') > 4096) {
             $text_array = [];
             $start = 0;
             do {
-                $text_array[] = mb_strcut($text, $start, 4096);
+                $text_array[] = mb_strcut($messageDataDto->text, $start, 4096);
                 $start += 4096;
-            } while (mb_strlen($text, '8bit') > $start);
+            } while (mb_strlen($messageDataDto->text, '8bit') > $start);
         }
 
         try {
@@ -59,7 +50,7 @@ class TelegramMessage extends Model
                     $_ENV['APP_ENV'] == 'prod' ||
                     $_ENV['APP_ENV'] == 'dev'
                 ) {
-                    $msg_id = TelegramSender::sendMessage($user->login, $textItem, $typeBtn);
+                    $msg_id = TelegramSender::sendMessage($messageDataDto->user->login, $textItem, $messageDataDto->typeBtn);
                 } else {
                     $last_message = $thisObj->telegramMessageRepository->getLastMessage();
                     if ($last_message) {
@@ -69,21 +60,21 @@ class TelegramMessage extends Model
                     }
                 }
                 $message = new TelegramMessage();
-                $message->telegram_user_id = $user->id;
+                $message->telegram_user_id = $messageDataDto->user->id;
 //                $message->is_from_bot = $is_from_bot;
                 $message->message_id = $msg_id;
                 $message->text = $textItem;
-                if (count($reply_to_message) > 0) {
-                    $message->reply_to = $reply_to_message['message_id'];
+                if (count($messageDataDto->reply_to_message) > 0) {
+                    $message->reply_to = $messageDataDto->reply_to_message['message_id'];
                 } else {
                     $message->reply_to = 0;
                 }
 //                $message->author = $author;
 
-                $message->command = $command;
-                $message->model = $model;
+                $message->command = $messageDataDto->command;
+                $message->model = $messageDataDto->model;
                 $message->is_deleted_from_chat = 0;
-                $message->model_id = $model_id;
+                $message->model_id = $messageDataDto->model_id;
                 $message->data_test = null;
                 $message->save();
             }

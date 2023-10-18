@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Art\Code\Infrastructure\Repository;
 
-use Art\Code\Application\Dto\TelegramUserDto;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
+use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramUser;
 
 class TelegramUserRepository implements TelegramUserRepositoryInterface
@@ -41,5 +41,13 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
     public function isExistByLogin($login): bool
     {
         return TelegramUser::where('login','=', $login)->exist();
+    }
+
+    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser
+    {
+        $telegramUser->$field = $value;
+        $telegramUser->save();
+
+        return $telegramUser;
     }
 }

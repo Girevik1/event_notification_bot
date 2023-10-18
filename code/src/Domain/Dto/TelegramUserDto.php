@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Art\Code\Application\Dto;
+namespace Art\Code\Domain\Dto;
 
 class TelegramUserDto
 {
