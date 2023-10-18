@@ -36,7 +36,8 @@ class TelegramSender extends Model
         ];
 
         if ($typeBtn) {
-            $dataForSend = self::getKeyboard($dataForSend, $typeBtn);
+//            $dataForSend = self::getKeyboard($dataForSend, $typeBtn);
+            $dataForSend['reply_markup'] = self::getKeyboard($typeBtn);
         }
 
         $telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
@@ -56,18 +57,17 @@ class TelegramSender extends Model
         return "";
     }
 
-    private static function getKeyboard(array $dataForSend, string $type): array
+    public static function getKeyboard(string $type): bool|string
     {
         switch ($type) {
-            case "cfo-acception-procedure-continue":
-                $dataForSend['reply_markup'] = json_encode(
+            case "to_the_beginning":
+                $keyboard = json_encode(
                     [
                         'inline_keyboard' => [
                             [
                                 [
-                                    'text' => 'продолжить',
-//                                    'text' => '✅ Продолжить',
-                                    'callback_data' => 'ceo-proc-start',
+                                    'text' => '🔙 В начало',
+                                    'callback_data' => 'to_the_beginning',
                                 ],
                             ]
 
@@ -77,7 +77,7 @@ class TelegramSender extends Model
                 break;
 
             case "main_menu":
-                $dataForSend['reply_markup'] = json_encode(
+                $keyboard = json_encode(
                     [
                         'inline_keyboard' => [
                             [
@@ -109,7 +109,7 @@ class TelegramSender extends Model
                 );
                 break;
             case "cfo-acception-procedure-agreement-skip-off":
-                $dataForSend['reply_markup'] = json_encode(
+                $keyboard = json_encode(
                     [
                         'inline_keyboard' => [
                             [
@@ -132,8 +132,6 @@ class TelegramSender extends Model
                 break;
         }
 
-        return $dataForSend;
+        return $keyboard;
     }
-
-
 }

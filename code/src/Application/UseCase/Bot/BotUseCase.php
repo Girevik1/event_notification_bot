@@ -8,6 +8,7 @@ use Art\Code\Application\UseCase\Message\MessageTextUseCase;
 use Art\Code\Domain\Dto\MessageDataDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
+use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -172,15 +173,32 @@ class BotUseCase
             switch ($inline_keyboard_data) {
 
                 case "about_project":
-                    $text = "about_project";
+                    $text = "<b>О проекте\n</b>";
+                    $text .= "\n\nМы часто забываем про дни рождения, годовщины и тд..";
+                    $text .= "\nБот создан для уведомления события в чатах и каналах -> исходя от Ваших установок в личном кабинете бота.";
+                    $text .= "\nФункционал развивается, не судите строго";
+                    $text .= "\n Version: 1.0.0";
+                    $text .= "\n\nДля фидбека и предложений пишите - <a href='https://t.me/artur_timerkhanov'>Создатель</a>";
+
                     $this->telegram->editMessageText([
-                        'chat_id'=>$telegramUser->telegram_chat_id,
-                        'message_id'=>$message_id,
-                        'text'=> 'test'
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup'=> TelegramSender::getKeyboard('to_the_beginning')
                     ]);
+
                     break;
-                case "ceo-proc-minus":
-                    $text = "-";
+                case "to_the_beginning":
+
+                    $text = $this->messageTextUseCase->getGreatingsText($isNewUser);
+
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup'=> TelegramSender::getKeyboard('main_menu')
+                    ]);
+
                     break;
                 case "ceo-proc-skip":
                     $text = "/skip";
