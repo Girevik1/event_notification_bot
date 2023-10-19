@@ -14,12 +14,12 @@ class AddBirthdayUseCase
     private TelegramUser $telegramUser;
     public int $message_id;
 
-    public function __constructor(
+    public function __construct(
         Api $telegram,
         TextUseCase $textUseCase,
         TelegramUser $telegramUser,
         int $message_id
-    ): void
+    )
     {
         $this->telegram = $telegram;
         $this->textUseCase = $textUseCase;

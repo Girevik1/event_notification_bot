@@ -235,9 +235,9 @@ class BotUseCase
                     break;
 
                 case "add_birthday":
+
                     $addBirthdayUseCase = new AddBirthdayUseCase($this->telegram, $this->textUseCase, $telegramUser, $message_id);
                     $addBirthdayUseCase->addBirthday();
-
 
                     break;
                 default:
