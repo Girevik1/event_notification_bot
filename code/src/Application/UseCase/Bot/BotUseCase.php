@@ -223,8 +223,7 @@ class BotUseCase
                     break;
                 case "private_cabinet":
 
-//                    $text = $this->messageTextUseCase->getHowUseText();
-                    $text = '';
+                    $text = $this->messageTextUseCase->getPrivateCabinetText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,

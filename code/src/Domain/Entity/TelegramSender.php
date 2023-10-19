@@ -147,6 +147,8 @@ class TelegramSender extends Model
                 );
                 break;
             default:
+
+                $keyboard = false;
                 break;
         }
 
