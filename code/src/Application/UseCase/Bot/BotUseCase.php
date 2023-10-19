@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
-use Art\Code\Application\UseCase\Message\MessageTextUseCase;
 use Art\Code\Domain\Dto\MessageDataDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
@@ -17,7 +16,7 @@ class BotUseCase
 {
     private Api $telegram;
     public array $newRequest;
-    private MessageTextUseCase $messageTextUseCase;
+    private TextUseCase $textUseCase;
 
     /**
      * @throws TelegramSDKException
@@ -30,7 +29,8 @@ class BotUseCase
     )
     {
         $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
-        $this->messageTextUseCase = new MessageTextUseCase();
+        $this->textUseCase = new TextUseCase();
+
 //        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
@@ -153,7 +153,7 @@ class BotUseCase
             $was_message = false;
             if ($telegramUser->login != $username) {
                 $this->telegramMessageRepository->updateByField($telegramUser, 'login', strtolower($username));
-                $txt = $this->messageTextUseCase->getChangeLoginText($username);
+                $txt = $this->textUseCase->getChangeLoginText($username);
 
                 $messageDataDto = new MessageDataDto();
                 $messageDataDto->text = $txt;
@@ -175,7 +175,7 @@ class BotUseCase
 
                 case "about_project":
 
-                    $text = $this->messageTextUseCase->getAboutText();
+                    $text = $this->textUseCase->getAboutText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
@@ -187,7 +187,7 @@ class BotUseCase
                     break;
                 case "to_the_beginning":
 
-                    $text = $this->messageTextUseCase->getGreatingsText($isNewUser);
+                    $text = $this->textUseCase->getGreetingsText($isNewUser);
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
@@ -199,7 +199,7 @@ class BotUseCase
                     break;
                 case "what_can_bot":
 
-                    $text = $this->messageTextUseCase->getWhatCanText();
+                    $text = $this->textUseCase->getWhatCanText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
@@ -211,7 +211,7 @@ class BotUseCase
                     break;
                 case "how_use":
 
-                    $text = $this->messageTextUseCase->getHowUseText();
+                    $text = $this->textUseCase->getHowUseText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
@@ -223,7 +223,7 @@ class BotUseCase
                     break;
                 case "private_cabinet":
 
-                    $text = $this->messageTextUseCase->getPrivateCabinetText();
+                    $text = $this->textUseCase->getPrivateCabinetText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
@@ -231,6 +231,13 @@ class BotUseCase
                         'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
                         'parse_mode' => 'HTML',
                     ]);
+
+                    break;
+
+                case "add_birthday":
+                    $addBirthdayUseCase = new AddBirthdayUseCase($this->telegram, $this->textUseCase, $telegramUser, $message_id);
+                    $addBirthdayUseCase->addBirthday();
+
 
                     break;
                 default:
@@ -280,7 +287,7 @@ class BotUseCase
 
     private function start(TelegramUser $telegramUser, bool $isNewUser): void
     {
-        $text = $this->messageTextUseCase->getGreatingsText($isNewUser);
+        $text = $this->textUseCase->getGreetingsText($isNewUser);
 
         $messageDataDto = new MessageDataDto();
         $messageDataDto->text = $text;

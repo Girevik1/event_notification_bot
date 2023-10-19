@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Art\Code\Application\UseCase\Message;
+namespace Art\Code\Application\UseCase\Bot;
 
-class MessageTextUseCase
+class TextUseCase
 {
     public function getChangeLoginText(string $username): string
     {
@@ -16,7 +16,7 @@ class MessageTextUseCase
         return $txt;
     }
 
-    public function getGreatingsText(bool $isNewUser): string
+    public function getGreetingsText(bool $isNewUser): string
     {
         if ($isNewUser) {
             $text = "Привет! Я бот для напоминаний твоих событий.\n";
@@ -31,6 +31,13 @@ class MessageTextUseCase
     public function getPrivateCabinetText(): string
     {
         $text = "<b>🏠 Личный кабинет\n\n</b>";
+
+        return $text;
+    }
+
+    public function getAddBirthdayText(): string
+    {
+        $text = "<b>👶 Укажите имя</b>";
 
         return $text;
     }
