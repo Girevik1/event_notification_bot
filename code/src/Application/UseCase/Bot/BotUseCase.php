@@ -36,6 +36,7 @@ class BotUseCase
 
     /**
      * For test hook bot
+     * @throws TelegramSDKException
      */
 //    public static function testStart(): void
 //    {
@@ -173,20 +174,13 @@ class BotUseCase
             switch ($inline_keyboard_data) {
 
                 case "about_project":
-                    $text = "<b>О проекте\n</b>";
-                    $text .= "\n\nМы часто забываем про дни рождения, годовщины..";
-                    $text .= "\nБот создан для уведомления события в чатах и каналах,";
-                    $text .= "\nисходя от Ваших установок в личном кабинете бота.";
-                    $text .= "\n\nТеперь все участники группы будут в курсе важного события!";
-                    $text .= "\n\nФункционал развивается, не судите строго";
-                    $text .= "\nVersion: 1.0.0";
-                    $text .= "\n\nДля фидбека и предложений пишите - <a href='https://t.me/artur_timerkhanov'>Создатель</a>";
 
+                    $text = $this->messageTextUseCase->getAboutText();
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup'=> TelegramSender::getKeyboard('to_the_beginning'),
+                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
                         'parse_mode' => 'HTML',
                     ]);
 
@@ -194,18 +188,51 @@ class BotUseCase
                 case "to_the_beginning":
 
                     $text = $this->messageTextUseCase->getGreatingsText($isNewUser);
-
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup'=> TelegramSender::getKeyboard('main_menu'),
+                        'reply_markup' => TelegramSender::getKeyboard('main_menu'),
                         'parse_mode' => 'HTML',
                     ]);
 
                     break;
-                case "ceo-proc-skip":
-                    $text = "/skip";
+                case "what_can_bot":
+
+                    $text = $this->messageTextUseCase->getWhatCanText();
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
+                    break;
+                case "how_use":
+
+                    $text = $this->messageTextUseCase->getHowUseText();
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
+                    break;
+                case "private_cabinet":
+
+//                    $text = $this->messageTextUseCase->getHowUseText();
+                    $text = '';
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
                     break;
                 default:
                     break;
@@ -250,29 +277,6 @@ class BotUseCase
             default:
                 break;
         }
-
-//        $this->telegramUserRepository->create();
-//        $this->telegramMessageRepository->create($message);
-
-//        return 'ok test';
-//        $users = (new TelegramUserRepository())->firstById(new Id(1));
-//        var_dump($users);
-
-//        if (!isset($message['text'])) {
-//            return 0;
-//        }
-//        if (
-//            !isset($message["chat"]["username"]) ||
-//            !isset($message['text']) ||
-//            $message['text'] == "" ||
-//            $message['text'] == null ||
-//            empty($message['text'])
-//        ) {
-//            return 0;
-//        }
-//        if (!isset($message["chat"]["username"])) {
-//            return 0;
-//        }
     }
 
     private function start(TelegramUser $telegramUser, bool $isNewUser): void

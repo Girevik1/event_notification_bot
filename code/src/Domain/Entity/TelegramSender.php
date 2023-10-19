@@ -108,20 +108,38 @@ class TelegramSender extends Model
                     ],
                 );
                 break;
-            case "cfo-acception-procedure-agreement-skip-off":
+            case "settings_menu":
                 $keyboard = json_encode(
                     [
                         'inline_keyboard' => [
                             [
                                 [
-                                    'text' => '➖',
-                                    // 'text' => '❌',
-                                    'callback_data' => 'ceo-proc-minus',
+                                    'text' => '➕ Добавить день рождение',
+                                    'callback_data' => 'add_birthday',
                                 ],
+                            ],
+                            [
                                 [
-                                    'text' => '➕',
-                                    // 'text' => '✅',
-                                    'callback_data' => 'ceo-proc-plus',
+                                    'text' => '➕ Добавить событие',
+                                    'callback_data' => 'add_event',
+                                ],
+                            ],
+                            [
+                                [
+                                    'text' => ' ➕ Добавить заметку',
+                                    'callback_data' => 'add_note',
+                                ],
+                            ],
+                            [
+                                [
+                                    'text' => '✅ Список Ваших событий',
+                                    'callback_data' => 'list_events',
+                                ],
+                            ],
+                            [
+                                [
+                                    'text' => '✅ Список доступных групп',
+                                    'callback_data' => 'list_groups',
                                 ],
                             ],
                         ],
