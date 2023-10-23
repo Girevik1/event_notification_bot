@@ -35,14 +35,6 @@ class GroupUseCase
             // TODO удалить все эвенты связанные с этой группой
             return true;
         }
-        //
-        $message = $textUseCase->getGreetingsGroupText($user);
-        $telegram->sendMessage([
-            'chat_id' => '-1001743972342',
-            'parse_mode' => 'HTML',
-            'text' => $message
-        ]);//
-
 
         $telegramGroupDto = new TelegramGroupDto($message);
 
