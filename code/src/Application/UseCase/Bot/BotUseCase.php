@@ -54,7 +54,7 @@ class BotUseCase
             $message = $updates->getMessage();
         }
 
-        if (!$message) {
+        if (!isset($message['message_id']) || $message['message_id'] == 0) {
             return;
         }
 
