@@ -27,11 +27,11 @@ class GroupUseCase
         TelegramUser $user
     ): bool
     {
-        $telegram->sendMessage([
-            'chat_id' => -1001743972342,
-            'parse_mode' => 'HTML',
-            'text' => 'testest'
-        ]);//
+//        $telegram->sendMessage([
+//            'chat_id' => -1001743972342,
+//            'parse_mode' => 'HTML',
+//            'text' => 'testest'
+//        ]);//
 
         if (isset($message['left_chat_member'])) {
             $resulDelete = $groupRepository->deleteByChatId($message['chat']['id']);
