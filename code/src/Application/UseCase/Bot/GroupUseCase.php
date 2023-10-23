@@ -20,8 +20,8 @@ class GroupUseCase
      * @throws GroupDeleteException
      */
     public function groupHandlerByMessage(
-        array                   $message,
-//        TelegramGroupRepository $groupRepository,
+//        array                   $message,
+        TelegramGroupRepository $groupRepository,
         Api                     $telegram,
 //        TextUseCase             $textUseCase,
 //        TelegramUser $user
