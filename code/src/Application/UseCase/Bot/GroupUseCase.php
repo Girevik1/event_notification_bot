@@ -35,7 +35,7 @@ class GroupUseCase
 //        ]);//
 
         if (isset($message['left_chat_member'])) {
-            $resulDelete = $groupRepository->deleteByChatId((string)$message['chat']['id']);
+            $resulDelete = $groupRepository->deleteByChatId($message['chat']['id']);
             if (!$resulDelete) {
                 throw new GroupDeleteException('Не удалось удалить группу с БД');
             }
