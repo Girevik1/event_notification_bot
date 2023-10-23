@@ -27,9 +27,15 @@ class GroupUseCase
         TelegramUser $user
     ): bool
     {
-        if(isset($message['left_chat_member'])){
+        $telegram->sendMessage([
+            'chat_id' => -1001743972342,
+            'parse_mode' => 'HTML',
+            'text' => 'testest'
+        ]);//
+
+        if (isset($message['left_chat_member'])) {
             $resulDelete = $groupRepository->deleteByChatId($message['chat']['id']);
-            if(!$resulDelete){
+            if (!$resulDelete) {
                 throw new GroupDeleteException('Не удалось удалить группу с БД');
             }
             // TODO удалить все эвенты связанные с этой группой
@@ -45,8 +51,8 @@ class GroupUseCase
         $message = $textUseCase->getGreetingsGroupText($user);
 
         $telegram->sendMessage([
-            'chat_id' => -1001743972342,
-//            'chat_id' => (int) $telegramGroupDto->group_chat_id,
+//            'chat_id' => -1001743972342,
+            'chat_id' => $telegramGroupDto->group_chat_id,
             'parse_mode' => 'HTML',
             'text' => $message
         ]);
