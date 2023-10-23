@@ -83,8 +83,8 @@ class BotUseCase
 //                $message,
                 $this->telegramGroupRepository,
                 $this->telegram,
-//                $this->textUseCase,
-//                $telegramUser
+                $this->textUseCase,
+                $telegramUser
             );
 
             return '';

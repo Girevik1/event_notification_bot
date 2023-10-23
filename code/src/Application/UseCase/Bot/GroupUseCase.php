@@ -23,8 +23,8 @@ class GroupUseCase
 //        array                   $message,
         TelegramGroupRepository $groupRepository,
         Api                     $telegram,
-//        TextUseCase             $textUseCase,
-//        TelegramUser $user
+        TextUseCase             $textUseCase,
+        TelegramUser $user
     ): bool
     {
         $telegram->sendMessage([
