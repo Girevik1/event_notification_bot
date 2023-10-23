@@ -71,7 +71,7 @@ class BotUseCase
          * Create group in db on added in group
          * */
         if ($this->checkChatTitle($messageDto)) {
-//            $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
+            $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
 
             $this->telegram->sendMessage([
                 'chat_id' => -1001743972342,
