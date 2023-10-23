@@ -80,7 +80,7 @@ class BotUseCase
 //            ]);//
 
             $this->groupUseCase->groupHandlerByMessage(
-//                $message,
+                $message,
 //                $this->telegramGroupRepository,
                 $this->telegram,
 //                $this->textUseCase,
