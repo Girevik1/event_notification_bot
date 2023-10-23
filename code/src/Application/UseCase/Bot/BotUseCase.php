@@ -18,7 +18,6 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class BotUseCase
 {
     private Api $telegram;
-    public array $newRequest;
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
 
@@ -174,13 +173,14 @@ class BotUseCase
 
                     break;
                 case "list_groups":
+
                     $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
                     $text = $this->textUseCase->getListGroupText($listGroups);
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
+                        'reply_markup' => TelegramSender::getKeyboard('main_menu'),
                         'parse_mode' => 'HTML',
                     ]);
 

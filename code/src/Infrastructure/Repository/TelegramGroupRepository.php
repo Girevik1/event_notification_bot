@@ -7,6 +7,7 @@ namespace Art\Code\Infrastructure\Repository;
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Dto\TelegramGroupDto;
 use Art\Code\Domain\Entity\TelegramGroup;
+use Illuminate\Database\Eloquent\Collection;
 
 class TelegramGroupRepository implements TelegramGroupRepositoryInterface
 {
@@ -19,7 +20,7 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
         ]);
     }
 
-    public function getListByUser(string $userChatId): TelegramGroup
+    public function getListByUser(string $userChatId): Collection
     {
         return TelegramGroup::select('name')
             ->where('user_chat_id', '=', $userChatId)
