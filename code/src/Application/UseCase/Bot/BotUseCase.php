@@ -165,6 +165,7 @@ class BotUseCase
                     ]);
 
                     break;
+                case "settings_menu":
                 case "private_cabinet":
 
                     $text = $this->textUseCase->getPrivateCabinetText();
