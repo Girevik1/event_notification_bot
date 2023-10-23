@@ -14,8 +14,7 @@ try {
             new BotUseCase(
                 $dependence[\Art\Code\Domain\Contract\TelegramUserRepositoryInterface::class],
                 $dependence[\Art\Code\Domain\Contract\TelegramMessageRepositoryInterface::class],
-//                new \Art\Code\Infrastructure\Repository\TelegramUserRepository(),
-//                new \Art\Code\Infrastructure\Repository\TelegramMessageRepository()
+                $dependence[\Art\Code\Domain\Contract\TelegramGroupRepositoryInterface::class],
             )
         );
 } catch (\Exception $e) {

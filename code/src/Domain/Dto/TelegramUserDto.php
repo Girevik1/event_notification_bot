@@ -6,16 +6,16 @@ namespace Art\Code\Domain\Dto;
 
 class TelegramUserDto
 {
-    public string $username;
-    public string $first_name;
-    public string $last_name;
-    public string|int $chat_id;
+    public string $login;
+    public string $name;
+    public string $surname;
+    public string $telegram_chat_id;
 
     public function __construct($message)
     {
-        $this->username = strtolower($message["chat"]["username"]);
-        $this->chat_id = $message["chat"]["id"];
-        $this->first_name = $message["chat"]["first_name"] ?? '';
-        $this->last_name = $message["chat"]["last_name"] ?? '';
+        $this->login = strtolower($message["chat"]["username"]) ?? '';
+        $this->telegram_chat_id = (string)$message["chat"]["id"];
+        $this->name = $message["chat"]["first_name"] ?? '';
+        $this->surname = $message["chat"]["last_name"] ?? '';
     }
 }

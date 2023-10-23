@@ -14,9 +14,11 @@ interface TelegramUserRepositoryInterface
 
     public function firstById($id): ?TelegramUser;
 
-    public function firstByLogin($id): ?TelegramUser;
+    public function firstByLogin($login): ?TelegramUser;
 
-    public function isExistByLogin($id): bool;
+    public function isExistByLogin($login): bool;
 
-    public function create(TelegramUserDto $telegramUserDto);
+    public function create(TelegramUserDto $telegramUserDto): TelegramUser;
+
+    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser;
 }

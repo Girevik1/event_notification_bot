@@ -6,9 +6,9 @@ namespace Art\Code\Domain\Entity;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TelegramUser extends Model
+class TelegramGroup extends Model
 {
-    protected $table = 'telegram_user';
+    protected $table = 'telegram_group';
 
     protected $guarded = [];
 }

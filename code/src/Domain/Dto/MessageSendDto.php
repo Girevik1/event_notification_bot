@@ -6,7 +6,7 @@ namespace Art\Code\Domain\Dto;
 
 use Art\Code\Domain\Entity\TelegramUser;
 
-class MessageDataDto
+class MessageSendDto
 {
     public TelegramUser $user;
     public string $text;
@@ -14,7 +14,7 @@ class MessageDataDto
     public string $model = '';
     public int $model_id = 0;
     public array $reply_to_message = [];
-    public string $typeBtn = '';
+    public string $type_btn = '';
 
 //    public function __construct($message)
 //    {
@@ -23,5 +23,4 @@ class MessageDataDto
 //        $this->first_name = $message["chat"]["first_name"] ?? '';
 //        $this->last_name = $message["chat"]["last_name"] ?? '';
 //    }
-
 }

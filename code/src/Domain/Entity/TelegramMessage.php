@@ -6,7 +6,7 @@ namespace Art\Code\Domain\Entity;
 
 //use Art\Code\Domain\ValueObject\TelegramUser\TelegramUserId;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
-use Art\Code\Domain\Dto\MessageDataDto;
+use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Infrastructure\Repository\TelegramMessageRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,12 +25,16 @@ class TelegramMessage extends Model
         parent::__construct($attributes);
     }
 
-    public function setDataTestAttribute($value): void
-    {
-        $this->attributes['data_test'] = json_encode($value);
-    }
+//    public function setDataTestAttribute($value): void
+//    {
+//        $this->attributes['data_test'] = json_encode($value);
+//    }
 
-    public static function newMessage(MessageDataDto $messageDataDto): void
+    /**
+     * @param MessageSendDto $messageDataDto
+     * @return int|mixed|void
+     */
+    public static function newMessage(MessageSendDto $messageDataDto)
     {
         $thisObj = new self();
         $text_array = [$messageDataDto->text];
@@ -59,23 +63,18 @@ class TelegramMessage extends Model
                         $msg_id = 1000000;
                     }
                 }
+
                 $message = new TelegramMessage();
                 $message->telegram_user_id = $messageDataDto->user->id;
-//                $message->is_from_bot = $is_from_bot;
                 $message->message_id = $msg_id;
                 $message->text = $textItem;
+                $message->command = $messageDataDto->command;
+
                 if (count($messageDataDto->reply_to_message) > 0) {
                     $message->reply_to = $messageDataDto->reply_to_message['message_id'];
                 } else {
                     $message->reply_to = 0;
                 }
-//                $message->author = $author;
-
-                $message->command = $messageDataDto->command;
-                $message->model = $messageDataDto->model;
-                $message->is_deleted_from_chat = 0;
-                $message->model_id = $messageDataDto->model_id;
-                $message->data_test = null;
                 $message->save();
             }
 //            echo '<pre>';

@@ -39,10 +39,6 @@ class DatabasePostgresConnection extends DatabaseConnection
                     'collation' => 'utf8_unicode_ci',
                     'prefix' => '',
                 ]);
-                // Set the event dispatcher used by Eloquent models... (optional)
-                // use Illuminate\Events\Dispatcher;
-                // use Illuminate\Container\Container;
-                // self::$dbInstance->setEventDispatcher(new Dispatcher(new Container));
 
                 // Make this Capsule instance available globally via static methods... (optional)
                 self::$dbInstance->setAsGlobal();

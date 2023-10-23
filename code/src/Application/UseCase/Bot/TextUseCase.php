@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
+use Art\Code\Domain\Entity\TelegramUser;
+
 class TextUseCase
 {
     public function getChangeLoginText(string $username): string
     {
         $txt = "Вы сменили username в Telegram.";
-
         $txt .= "\n\nВаш новый username перезаписан на @" . $username;
-        $txt .= "\nВаш логин в систему теперь " . strtolower($username);
 
         return $txt;
     }
@@ -26,6 +26,32 @@ class TextUseCase
         }
 
         return $text;
+    }
+
+    public function getGreetingsGroupText(TelegramUser $user): string
+    {
+        $name = $user->name ?? '';
+        $surname = $user->surname ?? '';
+        $userLogin = $user->login ?? '';
+
+        $text = "Всем привет! Я бот, который будет уведомлять вас о разных событиях.\n\n";
+        $text .= "Подробнее обо мне можно прочитать начав со мной диалог -";
+        $text .= "\n@reminders_event_bot";
+        $text .= "\nP.S. Меня добавил в чат и настроил события " . $name . " " . $surname . " (@" . $userLogin . "), поэтому тыкайте палочкой его 😎";
+
+        return $text;
+    }
+
+    public function getListGroupText($listGroups): string
+    {
+        if(count($listGroups)>0){
+            $text = "<b>Список добавленных групп\n\n</b>";
+            foreach ($listGroups as $key => $group){
+                $text .= $key + 1 . ") <i>". $group->name . "</i>\n";
+            }
+            return $text;
+        }
+        return "<b>Бот не добавлен в группы.</b>";
     }
 
     public function getPrivateCabinetText(): string
@@ -70,7 +96,7 @@ class TextUseCase
         $text .= "\n\n- Напоминать Тебе о твоих заметках указаных ранее";
 
         return $text;
-    }  
+    }
 
     public function getHowUseText(): string
     {

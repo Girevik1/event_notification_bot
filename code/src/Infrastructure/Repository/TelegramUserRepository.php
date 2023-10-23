@@ -12,15 +12,14 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 {
     public function create(TelegramUserDto $telegramUserDto): TelegramUser
     {
-        $telegramUser = new TelegramUser();
-        $telegramUser->login = $telegramUserDto->username;
-        $telegramUser->name = $telegramUserDto->first_name;
-        $telegramUser->surname = $telegramUserDto->last_name;
-        $telegramUser->information = 'artur test5';
-        $telegramUser->telegram_chat_id = $telegramUserDto->chat_id;
-        $telegramUser->save();
-
-        return $telegramUser;
+//        $telegramUser = new TelegramUser();
+        return TelegramUser::create([
+            'login' => $telegramUserDto->login,
+            'name' => $telegramUserDto->name,
+            'surname' => $telegramUserDto->surname,
+            'telegram_chat_id' => $telegramUserDto->telegram_chat_id
+        ]);
+//        return $telegramUser;
     }
 
     public function firstById($id): ?TelegramUser
