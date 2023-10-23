@@ -20,6 +20,7 @@ class BotUseCase
     private Api $telegram;
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
+    private mixed $newRequest;
 
     /**
      * @throws TelegramSDKException
@@ -180,7 +181,7 @@ class BotUseCase
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $message_id,
                         'text' => $text,
-                        'reply_markup' => TelegramSender::getKeyboard('main_menu'),
+                        'reply_markup' => TelegramSender::getKeyboard('to_the_settings_menu'),
                         'parse_mode' => 'HTML',
                     ]);
 

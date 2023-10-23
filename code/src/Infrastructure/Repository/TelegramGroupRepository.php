@@ -15,7 +15,7 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
     {
         return TelegramGroup::create([
             'name' => $telegramGroupDto->name,
-            'group_chat_id' => $telegramGroupDto->name,
+            'group_chat_id' => $telegramGroupDto->group_chat_id,
             'user_chat_id' => $telegramGroupDto->user_chat_id,
         ]);
     }

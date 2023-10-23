@@ -73,6 +73,19 @@ class TelegramSender extends Model
                     ],
                 ],
             ),
+            "to_the_settings_menu" => json_encode(
+                [
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '🔙 В личный кабинет',
+                                'callback_data' => 'settings_menu',
+                            ],
+                        ]
+
+                    ],
+                ],
+            ),
             "main_menu" => json_encode(
                 [
                     'inline_keyboard' => [
