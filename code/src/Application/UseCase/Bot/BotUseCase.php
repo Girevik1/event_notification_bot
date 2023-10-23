@@ -63,9 +63,9 @@ class BotUseCase
 
         $this->telegramMessageRepository->create($messageDto);
 
-//        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
-//            return 'Not enough data!';
-//        };
+        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
+            return 'Not enough data!';
+        };
 
         /*
          * Create group in db on added in group
