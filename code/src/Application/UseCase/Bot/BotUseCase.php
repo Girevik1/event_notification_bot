@@ -73,19 +73,19 @@ class BotUseCase
         if ($this->checkChatTitle($messageDto)) {
             $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
 
-            $this->telegram->sendMessage([
-                'chat_id' => -1001743972342,
-                'parse_mode' => 'HTML',
-                'text' => 'testest'
-            ]);//
+//            $this->telegram->sendMessage([
+//                'chat_id' => -1001743972342,
+//                'parse_mode' => 'HTML',
+//                'text' => 'testest'
+//            ]);//
 
-//            $this->groupUseCase->groupHandlerByMessage(
-//                $message,
-//                $this->telegramGroupRepository,
-//                $this->telegram,
-//                $this->textUseCase,
-//                $telegramUser
-//            );
+            $this->groupUseCase->groupHandlerByMessage(
+                $message,
+                $this->telegramGroupRepository,
+                $this->telegram,
+                $this->textUseCase,
+                $telegramUser
+            );
 
             return '';
         }

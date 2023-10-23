@@ -45,7 +45,7 @@ class GroupUseCase
         $message = $textUseCase->getGreetingsGroupText($user);
 
         $telegram->sendMessage([
-            'chat_id' => $telegramGroupDto->group_chat_id,
+            'chat_id' => (int) $telegramGroupDto->group_chat_id,
             'parse_mode' => 'HTML',
             'text' => $message
         ]);
