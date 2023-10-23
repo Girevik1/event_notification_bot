@@ -53,6 +53,11 @@ class BotUseCase
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
+
+        if (!$message) {
+            return;
+        }
+
 //        $message = $this->newRequest;
         $messageDto = new MessageDto($message);
 
@@ -67,7 +72,6 @@ class BotUseCase
          * */
         if ($this->checkChatTitle($messageDto)) {
             $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
-
             $this->groupUseCase->groupHandlerByMessage(
                 $message,
                 $this->telegramGroupRepository,
