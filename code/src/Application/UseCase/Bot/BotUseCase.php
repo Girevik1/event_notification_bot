@@ -63,15 +63,15 @@ class BotUseCase
 
         $this->telegramMessageRepository->create($messageDto);
 
-        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
-            return 'Not enough data!';
-        };
+//        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
+//            return 'Not enough data!';
+//        };
 
         /*
          * Create group in db on added in group
          * */
         if ($this->checkChatTitle($messageDto)) {
-            $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
+//            $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
 
             $this->telegram->sendMessage([
                 'chat_id' => -1001743972342,
@@ -79,13 +79,13 @@ class BotUseCase
                 'text' => 'testest'
             ]);//
 
-            $this->groupUseCase->groupHandlerByMessage(
-                $message,
-                $this->telegramGroupRepository,
-                $this->telegram,
-                $this->textUseCase,
-                $telegramUser
-            );
+//            $this->groupUseCase->groupHandlerByMessage(
+//                $message,
+//                $this->telegramGroupRepository,
+//                $this->telegram,
+//                $this->textUseCase,
+//                $telegramUser
+//            );
 
             return '';
         }
