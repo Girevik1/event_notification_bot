@@ -16,7 +16,6 @@ class MessageDto
     public string $command;
     public int $is_deleted_from_chat;
     public ?string $data_test;
-    public array $callbackUpdate;
 
     public function __construct($message)
     {

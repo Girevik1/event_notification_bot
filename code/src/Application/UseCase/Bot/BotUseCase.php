@@ -68,7 +68,7 @@ class BotUseCase
 
 
         $messageDto = new MessageDto($message);
-        $messageDto->callbackUpdate = $updates['callback_query'] ?? '';
+        $message['callback_query'] = $updates['callback_query'] ?? '';
         $this->telegramMessageRepository->create($messageDto);
 
         if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
