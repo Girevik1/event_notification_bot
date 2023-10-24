@@ -66,7 +66,7 @@ class BotUseCase
             throw new TelegramMessageDataException('Some data is missing');
         }
 
-        $message['callback_query'] = $updates['callback_query'] ?? '';
+        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
         $this->telegramMessageRepository->create($messageDto);
