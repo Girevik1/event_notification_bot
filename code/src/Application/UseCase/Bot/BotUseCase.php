@@ -206,6 +206,14 @@ class BotUseCase
 
                 case "add_birthday":
 
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => 'tst',
+                        'reply_markup' => TelegramSender::getKeyboard('to_the_settings_menu'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
                     $addBirthdayUseCase = new AddBirthdayUseCase(
                         $this->telegram,
 //                        $this->textUseCase,
