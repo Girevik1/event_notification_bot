@@ -16,11 +16,11 @@ class MessageDto
     public string $command;
     public int $is_deleted_from_chat;
     public ?string $data_test;
+    public array $callbackUpdate;
 
     public function __construct($message)
     {
         $userName = $message["chat"]["username"] ?? '';
-
         $this->chat_id = (string)$message["chat"]["id"];
         $this->chat_title = $message["chat"]["title"] ?? '';
         $this->user_name = strtolower($userName);
