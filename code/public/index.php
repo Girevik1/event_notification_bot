@@ -15,6 +15,7 @@ try {
                 $dependence[\Art\Code\Domain\Contract\TelegramUserRepositoryInterface::class],
                 $dependence[\Art\Code\Domain\Contract\TelegramMessageRepositoryInterface::class],
                 $dependence[\Art\Code\Domain\Contract\TelegramGroupRepositoryInterface::class],
+                $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class],
             )
         );
 } catch (\Exception $e) {

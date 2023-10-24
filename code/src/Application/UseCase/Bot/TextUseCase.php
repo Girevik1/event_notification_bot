@@ -61,13 +61,6 @@ class TextUseCase
         return $text;
     }
 
-    public function getAddBirthdayText(): string
-    {
-        $text = "<b>👶 Укажите имя</b>";
-
-        return $text;
-    }
-
     public function getAboutText(): string
     {
         $text = "<b>❔О проекте</b>";

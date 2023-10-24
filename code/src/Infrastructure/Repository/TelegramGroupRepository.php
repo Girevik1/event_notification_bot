@@ -27,7 +27,7 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
             ->get();
     }
 
-    public function deleteByChatId(string $chatId)
+    public function deleteByChatId(string $chatId): mixed
     {
         return TelegramGroup::where('group_chat_id', $chatId)
             ->delete();

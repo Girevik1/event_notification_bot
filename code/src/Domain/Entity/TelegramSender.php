@@ -60,6 +60,24 @@ class TelegramSender extends Model
     public static function getKeyboard(string $type): bool|string
     {
         return match ($type) {
+            "process_set_event" => json_encode(
+                [
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '🔙 назад',
+                                'callback_data' => 'to_previous_question',
+                            ],
+                        ],
+                        [
+                            [
+                                'text' => '🙅 передумал',
+                                'callback_data' => 'changed_my_mind',
+                            ],
+                        ]
+                    ],
+                ],
+            ),
             "to_the_beginning" => json_encode(
                 [
                     'inline_keyboard' => [

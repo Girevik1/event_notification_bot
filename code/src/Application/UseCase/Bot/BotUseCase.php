@@ -12,6 +12,7 @@ use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\GroupCreateException;
 use Art\Code\Domain\Exception\GroupDeleteException;
+use Art\Code\Domain\Exception\TelegramMessageDataException;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -29,6 +30,7 @@ class BotUseCase
         public $telegramUserRepository,
         public $telegramMessageRepository,
         public $telegramGroupRepository,
+        public $queueMessageRepository,
 //        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
 //        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
     )
@@ -44,27 +46,33 @@ class BotUseCase
      * @throws TelegramSDKException
      * @throws GroupCreateException
      * @throws GroupDeleteException
+     * @throws TelegramMessageDataException
      */
     public function hook()
     {
         $message = [];
 
-        if ($_ENV['APP_ENV'] == 'prod') {
+//        $message = $this->newRequest;
+
+        if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
 
-        if (!isset($message['message_id']) || $message['message_id'] == 0) {
-            return;
+        if (
+            !isset($message['message_id']) ||
+            $message['message_id'] === 0
+        ) {
+            throw new TelegramMessageDataException('Some data is missing');
         }
 
-//        $message = $this->newRequest;
+
         $messageDto = new MessageDto($message);
 
         $this->telegramMessageRepository->create($messageDto);
 
         if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
-            return 'Not enough data!';
+            throw new TelegramMessageDataException('Some data is missing');
         };
 
         /*
@@ -72,12 +80,6 @@ class BotUseCase
          * */
         if ($this->checkChatTitle($messageDto)) {
             $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
-
-//            $this->telegram->sendMessage([
-//                'chat_id' => -1001743972342,
-//                'parse_mode' => 'HTML',
-//                'text' => 'testest'
-//            ]);//
 
             $this->groupUseCase->groupHandlerByMessage(
                 $message,
@@ -93,6 +95,9 @@ class BotUseCase
         $text = $messageDto->text;
 
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
+
+//        $message = TelegramMessage::where("telegram_message_queue_id", $active_telegram_queue->id)
+//            ->where("state", "NOT_SEND")->first();
 
         $isNewUser = false;
         if ($telegramUser === null) {
@@ -201,7 +206,13 @@ class BotUseCase
 
                 case "add_birthday":
 
-                    $addBirthdayUseCase = new AddBirthdayUseCase($this->telegram, $this->textUseCase, $telegramUser, $message_id);
+                    $addBirthdayUseCase = new AddBirthdayUseCase(
+                        $this->telegram,
+//                        $this->textUseCase,
+                        $telegramUser,
+                        $message_id,
+                        $this->queueMessageRepository
+                    );
                     $addBirthdayUseCase->addBirthday();
 
                     break;
