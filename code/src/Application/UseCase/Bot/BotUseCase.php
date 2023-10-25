@@ -230,13 +230,14 @@ class BotUseCase
                     /*
                      * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
-                    if ($previousQueueMessage && $previousQueueMessage->pevious_id == 0) {
+                    if ($previousQueueMessage != null && $previousQueueMessage->pevious_id == 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
 
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
-                            'text' => $text,
+                            'text' => '2',
+//                            'text' => $text,
                             'reply_markup' => TelegramSender::getKeyboard('settings_menu'), // process_set_event
                             'parse_mode' => 'HTML',
                         ]);
@@ -246,7 +247,7 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
                      * */
-//                    if ($previousQueueMessage && $previousQueueMessage->pevious_id != 0) {
+//                    if ($previousQueueMessage != null && $previousQueueMessage->pevious_id != 0) {
 //                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
 //                    }
 //
