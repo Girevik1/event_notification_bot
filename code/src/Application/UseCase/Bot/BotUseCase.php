@@ -230,14 +230,13 @@ class BotUseCase
                     /*
                      * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
-                    if ($lastSentQueueMessage !== null && $lastSentQueueMessage->pevious_id == 0) {
+                    if ($lastSentQueueMessage !== null && !$lastSentQueueMessage->pevious_id) {
                         $text = $this->textUseCase->getPrivateCabinetText();
 
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
-//                            'text' => $text,
-                            'text' => '111',
+                            'text' => $text,
                             'reply_markup' => TelegramSender::getKeyboard('settings_menu'), // process_set_event
                             'parse_mode' => 'HTML',
                         ]);
