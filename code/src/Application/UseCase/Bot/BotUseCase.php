@@ -7,6 +7,7 @@ namespace Art\Code\Application\UseCase\Bot;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -275,6 +276,31 @@ class BotUseCase
                 break;
 
             default:
+
+                $queueMessageByUser = QueueMessage::where('state','SENT')
+                    ->where('telegram_user_id',$telegramUser->id)
+                    ->first();
+                if($queueMessageByUser && $text != ''){
+
+                    // VALIDATION
+
+                    $queueMessageByUser->answer = $text;
+                    $queueMessageByUser->save();
+
+                    $queueMessageByUser = QueueMessage::where('id',$queueMessageByUser->next_id)->first();
+//                    $queueMessageByUser->state = 'SENT';
+//                    $queueMessageByUser->save();
+
+                    $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
+
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message['message_id'],
+                        'text' => $text,
+                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+                        'parse_mode' => 'HTML',
+                    ]);
+                }
                 break;
         }
     }

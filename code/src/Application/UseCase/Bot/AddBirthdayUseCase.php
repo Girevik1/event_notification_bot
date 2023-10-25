@@ -62,7 +62,8 @@ class AddBirthdayUseCase
             "BIRTHDAY" => "<b>👶 Укажите имя</b>",
             "DATE_OF_BIRTH" => "<b>Дата рождения</b> (формат: 01-01-1970)",
             "GROUP" => "<b>Укажите номер группы для оповещения</b> (например: 1)\n",
-            "TIME_NOTIFICATION" => "<b>Укажите время оповещения в день рождения</b> (формат: 12:00)"
+            "TIME_NOTIFICATION" => "<b>Укажите время оповещения в день рождения</b> (формат: 12:00)",
+            "CONFIRMATION" => "<b>Подтвердите даннные:</b>"
         ];
     }
 
@@ -76,21 +77,17 @@ class AddBirthdayUseCase
 
         $message_texts = self::getAllMessageQueue();
         $text .= $message_texts[$message->type];
-//        $keyboard = null;
+
         switch ($message->type) {
 
             case "GROUP":
-
 //                $text .= self::getRubrics();
                 $text .= "\n   (или /cancel для отмены отзыва)";
                 break;
 
-//            case "CITY":
-//                if ($message->answer != "") {
-//                    return null;
-//                }
-//                $text .= "\n(или /cancel для отмены отзыва)";
-//                break;
+            case "DATE_OF_BIRTH":
+                $text = '';
+                break;
 
             default:
                 break;
@@ -100,10 +97,6 @@ class AddBirthdayUseCase
         $message->save();
 
         return $text;
-//        return [
-//             'text' => $text,
-//             'keyboard' => $keyboard,
-//        ];
     }
 
 
