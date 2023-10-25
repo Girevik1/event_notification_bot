@@ -145,7 +145,7 @@ class BotUseCase
                         'parse_mode' => 'HTML',
                     ]);
 
-                    break;
+                    return;
                 case "to_the_beginning":
 
                     $text = $this->textUseCase->getGreetingsText($isNewUser);
@@ -157,7 +157,7 @@ class BotUseCase
                         'parse_mode' => 'HTML',
                     ]);
 
-                    break;
+                    return;
                 case "what_can_bot":
 
                     $text = $this->textUseCase->getWhatCanText();
@@ -169,7 +169,7 @@ class BotUseCase
                         'parse_mode' => 'HTML',
                     ]);
 
-                    break;
+                    return;
                 case "how_use":
 
                     $text = $this->textUseCase->getHowUseText();
@@ -181,21 +181,21 @@ class BotUseCase
                         'parse_mode' => 'HTML',
                     ]);
 
-                    break;
+                    return;
                 case "settings_menu":
                 case "private_cabinet":
                 case "changed_my_mind":
 
-                    $text = $this->textUseCase->getPrivateCabinetText();
-                    $this->telegram->editMessageText([
-                        'chat_id' => $telegramUser->telegram_chat_id,
-                        'message_id' => $message_id,
-                        'text' => $text,
-                        'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
-                        'parse_mode' => 'HTML',
-                    ]);
+                $text = $this->textUseCase->getPrivateCabinetText();
+                $this->telegram->editMessageText([
+                    'chat_id' => $telegramUser->telegram_chat_id,
+                    'message_id' => $message_id,
+                    'text' => $text,
+                    'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
+                    'parse_mode' => 'HTML',
+                ]);
 
-                    break;
+                return;
                 case "list_groups":
 
                     $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
@@ -208,7 +208,7 @@ class BotUseCase
                         'parse_mode' => 'HTML',
                     ]);
 
-                    break;
+                    return;
 
                 case "add_birthday":
 
