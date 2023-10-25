@@ -6,13 +6,17 @@ namespace Art\Code\Application\UseCase\Message;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Infrastructure\Repository\QueueMessageRepository;
 
 class QueueMessageUseCase
 {
 //    private mixed $queueMessageRepository;
 
-    public function __construct(private readonly QueueMessageRepositoryInterface $queueMessageRepository)
+    private QueueMessageRepository $queueMessageRepository;
+
+    public function __construct()
     {
+       $this->queueMessageRepository = new QueueMessageRepository();
 //        $dependence = require '../../../../dependence.php';
 //        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
     }
