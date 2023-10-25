@@ -27,6 +27,13 @@ class QueueMessageUseCase
 //       $a = QueueMessage::where("telegram_user_id", '=', $telegramUser->id)
 //            ->where("state", "NOT_SEND")
 //            ->first();
+
+//        if ($a != null) {
+        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
+
+            $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
+            // есть не законченная очередь по др; -> delete -> create new queue
+        }
         $telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $msg_id,
@@ -34,13 +41,6 @@ class QueueMessageUseCase
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
-//        if ($a != null) {
-        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
-
-            $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
-            // есть не законченная очередь по др; -> delete -> create new queue
-        }
-
 
         $this->createQueueMessages($queue, $telegramUser->id);
 
