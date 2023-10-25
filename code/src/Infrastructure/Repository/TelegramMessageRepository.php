@@ -36,14 +36,14 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
         return TelegramMessage::orderBy('id', 'desc')->first();
     }
 
-    /**
-     * @param int $telegramUserId
-     * @return Collection|null
-     */
-    public function getAllByUser(int $telegramUserId): ?Collection
-    {
-        return TelegramMessage::where("telegram_user_id", $telegramUserId)->get();
-    }
+//    /**
+//     * @param int $telegramUserId
+//     * @return Collection|null
+//     */
+//    public function getAllByUser(int $telegramUserId): ?Collection
+//    {
+//        return TelegramMessage::where("telegram_user_id", $telegramUserId)->get();
+//    }
 
     /**
      * @param int $message_id

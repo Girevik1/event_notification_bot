@@ -29,16 +29,16 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
         return $telegram_message;
     }
 
-    /**
-     * @param int $telegramUserId
-     * @return QueueMessage|null
-     */
-    public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage
-    {
-        return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
-            ->where("state", "NOT_SEND")
-            ->first();
-    }
+//    /**
+//     * @param int $telegramUserId
+//     * @return QueueMessage|null
+//     */
+//    public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage
+//    {
+//        return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
+//            ->where("state", "NOT_SEND")
+//            ->first();
+//    }
 
     /**
      * @param int $telegramUserId

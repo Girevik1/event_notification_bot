@@ -12,20 +12,18 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 {
     public function create(TelegramUserDto $telegramUserDto): TelegramUser
     {
-//        $telegramUser = new TelegramUser();
         return TelegramUser::create([
             'login' => $telegramUserDto->login,
             'name' => $telegramUserDto->name,
             'surname' => $telegramUserDto->surname,
             'telegram_chat_id' => $telegramUserDto->telegram_chat_id
         ]);
-//        return $telegramUser;
     }
 
-    public function firstById($id): ?TelegramUser
-    {
-        return TelegramUser::where('id','=', $id)->first();
-    }
+//    public function firstById($id): ?TelegramUser
+//    {
+//        return TelegramUser::where('id','=', $id)->first();
+//    }
 
     public function firstByChatId($chatId): ?TelegramUser
     {
@@ -37,16 +35,16 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
         return TelegramUser::where('login','=', $login)->first();
     }
 
-    public function isExistByLogin($login): bool
-    {
-        return (bool) TelegramUser::where('login','=', $login)->first();
-    }
+//    public function isExistByLogin($login): bool
+//    {
+//        return (bool) TelegramUser::where('login','=', $login)->first();
+//    }
 
-    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser
-    {
-        $telegramUser->$field = $value;
-        $telegramUser->save();
-
-        return $telegramUser;
-    }
+//    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser
+//    {
+//        $telegramUser->$field = $value;
+//        $telegramUser->save();
+//
+//        return $telegramUser;
+//    }
 }

@@ -12,13 +12,13 @@ interface TelegramUserRepositoryInterface
 {
     public function firstByChatId($chatId): ?TelegramUser;
 
-    public function firstById($id): ?TelegramUser;
+//    public function firstById($id): ?TelegramUser;
 
     public function firstByLogin($login): ?TelegramUser;
 
-    public function isExistByLogin($login): bool;
+//    public function isExistByLogin($login): bool;
 
     public function create(TelegramUserDto $telegramUserDto): TelegramUser;
 
-    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser;
+//    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser;
 }
