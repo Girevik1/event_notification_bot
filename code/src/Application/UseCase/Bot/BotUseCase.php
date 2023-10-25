@@ -6,6 +6,7 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
+use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -209,7 +210,6 @@ class BotUseCase
 
                 case "add_birthday":
 
-                    var_dump(342);
                     $addBirthdayUseCase = new AddBirthdayUseCase(
                         $this->telegram,
 //                        $this->textUseCase,
