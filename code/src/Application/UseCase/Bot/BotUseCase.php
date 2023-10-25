@@ -218,13 +218,7 @@ class BotUseCase
                         $this->queueMessageRepository
                     );
 
-                    $this->telegram->editMessageText([
-                        'chat_id' => $telegramUser->telegram_chat_id,
-                        'message_id' => $message_id,
-                        'text' => 'rer',
-                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                        'parse_mode' => 'HTML',
-                    ]);
+
 
                     $addBirthdayUseCase->addBirthday();
                     return;
