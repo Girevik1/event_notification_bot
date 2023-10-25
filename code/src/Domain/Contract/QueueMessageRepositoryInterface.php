@@ -9,7 +9,7 @@ interface QueueMessageRepositoryInterface
 {
     public function createQueue(int $telegramUserId, string $key): ?QueueMessage;
 
-    public function existUnfinishedQueueByUser(int $telegramUserId): bool;
+    public function existUnfinishedQueueByUser(int $telegramUserId);
 
     public function deleteOpenByUser(int $telegramUserId): mixed;
 
