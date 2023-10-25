@@ -279,7 +279,7 @@ class BotUseCase
 
                 $queueMessageByUser = QueueMessage::where('state','SENT')
                     ->where('telegram_user_id',$telegramUser->id)
-                    ->latest()
+                    ->orderBy('id','desc')
                     ->first();
                 if($queueMessageByUser && $text != ''){
 
