@@ -21,6 +21,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
         $telegram_message->type = $key;
         $telegram_message->state = "NOT_SEND";
         $telegram_message->next_id = 0;
+        $telegram_message->previous_id = 0;
         $telegram_message->answer = "";
         $telegram_message->save();
 
@@ -42,7 +43,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
      * @param int $telegramUserId
      * @return mixed
      */
-    public function deleteOpenByUser(int $telegramUserId): mixed
+    public function deleteAllMessageByUser(int $telegramUserId): mixed
     {
         return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
 //            ->where("state", "NOT_SEND")
@@ -71,5 +72,12 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
             ->where("state", "SENT")
             ->latest()
             ->update(['state' => 'NOT_SEND']);
+    }
+
+    public function getAllSentByUser(int $telegramUserId): ?QueueMessage
+    {
+        return QueueMessage::where("telegram_user_id", $telegramUserId)
+            ->where('state', 'SENT')
+            ->get();
     }
 }

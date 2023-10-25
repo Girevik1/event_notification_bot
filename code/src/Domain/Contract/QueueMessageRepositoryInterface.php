@@ -11,7 +11,7 @@ interface QueueMessageRepositoryInterface
 
     public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage;
 
-    public function deleteOpenByUser(int $telegramUserId): mixed;
+    public function deleteAllMessageByUser(int $telegramUserId): mixed;
 
     public function getFirstOpenMsg(int $telegramUserId): ?QueueMessage;
 

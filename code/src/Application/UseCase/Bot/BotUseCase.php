@@ -223,6 +223,12 @@ class BotUseCase
                     return;
 
                 case "to_previous_question":
+
+//                    $allSentMessage = $this->queueMessageRepository->getAllSentByUser($telegramUser->id);
+//                    if(count($allSentMessage) === 1){
+//                        $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
+//                    }
+
                     $this->queueMessageRepository->makeOpenState($telegramUser->id);
 
                     $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);

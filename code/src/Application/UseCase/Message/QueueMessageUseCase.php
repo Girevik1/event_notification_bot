@@ -39,7 +39,7 @@ class QueueMessageUseCase
 //        if ($a != null) {
         if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
 
-            $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
+            $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
             // есть не законченная очередь по др; -> delete -> create new queue
         }
 
@@ -54,10 +54,15 @@ class QueueMessageUseCase
         $prev = null;
         foreach ($queue as $key => $value) {
             $telegram_message = $this->queueMessageRepository->createQueue($telegramUserId, $key);
+
             if ($prev != null) {
                 $prev->next_id = $telegram_message->id;
                 $prev->save();
+
+                $telegram_message->previous_id = $prev->id;
+                $telegram_message->save();
             }
+
             $prev = $telegram_message;
         }
     }
