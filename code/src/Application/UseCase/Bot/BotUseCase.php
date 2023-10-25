@@ -298,7 +298,7 @@ class BotUseCase
 
 //                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
-                    TelegramMessage::where('message_id', $message['message_id'])->delete();
+//                    TelegramMessage::where('message_id', $message['message_id'])->delete();
 
                     $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)->first();
 
