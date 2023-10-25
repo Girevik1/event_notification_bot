@@ -43,14 +43,14 @@ class AddBirthdayUseCase
     {
         $queueBirthday = $this->getAllMessageQueue();
 
-        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser);
-        $this->telegram->editMessageText([
-            'chat_id' => $this->telegramUser->telegram_chat_id,
-            'message_id' => $this->message_id,
-            'text' => 'rer',
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+        $this->queueMessageUseCase->processQueueMessage($this->telegram, $this->message_id, $queueBirthday, $this->telegramUser);
+//        $this->telegram->editMessageText([
+//            'chat_id' => $this->telegramUser->telegram_chat_id,
+//            'message_id' => $this->message_id,
+//            'text' => 'rer',
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]);
         $firsQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 
         $text = $this->getMessageByType($firsQueueMessage);
