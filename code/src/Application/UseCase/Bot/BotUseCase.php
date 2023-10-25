@@ -300,14 +300,16 @@ class BotUseCase
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
                     TelegramMessage::where('message_id', $message['message_id'])->delete();
 
-                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)->first();
+                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)
+                        ->orderBy('id','desk')
+                        ->first();
 
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $lastTelegramMessage->message_id,
 //                        'text' => $queueMessageByUser2->type,
-                        'text' => '1212',
-//                        'text' => $text,
+//                        'text' => '1212',
+                        'text' => $text,
                         'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                         'parse_mode' => 'HTML',
                     ]);
