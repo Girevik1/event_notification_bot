@@ -277,15 +277,6 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 $this->start($telegramUser, $isNewUser);
-
-//                $allTelegramMessage = $this->telegramMessageRepository->getAllByUser($telegramUser->telegram_chat_id);
-//
-//                foreach ($allTelegramMessage as $msg){
-//                    if($msg->message_id != $message['message_id']){
-//                        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $msg->message_id);
-//                    }
-//                }
-
                 return;
 
             default:
@@ -335,7 +326,6 @@ class BotUseCase
         $messageSendDto->type_btn = 'main_menu';
 
         TelegramMessage::newMessage($messageSendDto);
-
     }
 
     private function checkText($message): bool
