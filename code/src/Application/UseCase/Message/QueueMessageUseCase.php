@@ -14,8 +14,11 @@ class QueueMessageUseCase
 
 //    private QueueMessageRepositoryInterface $queueMessageRepository;
 
-    public function __construct(public QueueMessageRepositoryInterface $queueMessageRepository)
+    private mixed $queueMessageRepository;
+
+    public function __construct($queueMessageRepository)
     {
+        $this->queueMessageRepository = $queueMessageRepository;
 //       $this->queueMessageRepository = new QueueMessageRepository();
 //        $dependence = require '../../../../dependence.php';
 //        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
@@ -23,6 +26,11 @@ class QueueMessageUseCase
 
     public function processQueueMessage($telegram, $msg_id, array $queue, TelegramUser $telegramUser): void
     {
+
+        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
+            $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
+            // есть не законченная очередь по др; -> delete -> create new queue
+        }
         $telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $msg_id,
@@ -30,11 +38,6 @@ class QueueMessageUseCase
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
-        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
-            $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
-            // есть не законченная очередь по др; -> delete -> create new queue
-        }
-
 
         $this->createQueueMessages($queue, $telegramUser->id);
 
