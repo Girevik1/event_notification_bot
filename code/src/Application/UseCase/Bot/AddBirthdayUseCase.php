@@ -32,8 +32,6 @@ class AddBirthdayUseCase
         $this->message_id = $message_id;
         $this->queueMessageRepository = $queueMessageRepository;
         $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
-
-
     }
 
     /**
@@ -44,16 +42,10 @@ class AddBirthdayUseCase
         $queueBirthday = $this->getAllMessageQueue();
 
         $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser);
-//        $this->telegram->editMessageText([
-//            'chat_id' => $this->telegramUser->telegram_chat_id,
-//            'message_id' => $this->message_id,
-//            'text' => 'rer',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
+
         $firsQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 
-        $text = $this->getMessageByType($firsQueueMessage);
+        $text = self::getMessageByType($firsQueueMessage);
 
         $this->telegram->editMessageText([
             'chat_id' => $this->telegramUser->telegram_chat_id,
@@ -64,7 +56,7 @@ class AddBirthdayUseCase
         ]);
     }
 
-    public function getAllMessageQueue(): array
+    private static function getAllMessageQueue(): array
     {
         return [
             "BIRTHDAY" => "<b>👶 Укажите имя</b>",
@@ -74,7 +66,7 @@ class AddBirthdayUseCase
         ];
     }
 
-    public function getMessageByType($message): ?string
+    public static function getMessageByType($message): ?string
     {
         $text = "";
 
@@ -82,7 +74,7 @@ class AddBirthdayUseCase
             return null;
         }
 
-        $message_texts = $this->getAllMessageQueue();
+        $message_texts = self::getAllMessageQueue();
         $text .= $message_texts[$message->type];
 //        $keyboard = null;
         switch ($message->type) {

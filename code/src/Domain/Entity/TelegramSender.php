@@ -68,13 +68,11 @@ class TelegramSender extends Model
                                 'text' => '🔙 назад',
                                 'callback_data' => 'to_previous_question',
                             ],
-                        ],
-                        [
                             [
                                 'text' => '🙅 передумал',
                                 'callback_data' => 'changed_my_mind',
                             ],
-                        ]
+                        ],
                     ],
                 ],
             ),

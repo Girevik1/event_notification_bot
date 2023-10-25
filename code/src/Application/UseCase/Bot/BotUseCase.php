@@ -218,9 +218,36 @@ class BotUseCase
                         $this->queueMessageRepository
                     );
 
-
-
                     $addBirthdayUseCase->addBirthday();
+
+                    return;
+
+                case "to_previous_question":
+                    $this->queueMessageRepository->makeOpenState($telegramUser->id);
+
+                    $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+
+                    if ($previousQueueMessage === null) {
+                        $text = $this->textUseCase->getPrivateCabinetText();
+                        $this->telegram->editMessageText([
+                            'chat_id' => $telegramUser->telegram_chat_id,
+                            'message_id' => $message_id,
+                            'text' => $text,
+                            'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
+                            'parse_mode' => 'HTML',
+                        ]);
+                    }
+
+                    $text = AddBirthdayUseCase::getMessageByType($previousQueueMessage);
+
+                    $this->telegram->editMessageText([
+                        'chat_id' => $telegramUser->telegram_chat_id,
+                        'message_id' => $message_id,
+                        'text' => $text,
+                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
                     return;
 
                 default:
