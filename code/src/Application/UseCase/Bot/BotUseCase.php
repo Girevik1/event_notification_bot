@@ -246,23 +246,24 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
                      * */
-                    if ($previousQueueMessage && $previousQueueMessage->pevious_id != 0) {
-                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
-                    }
-
-                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
-
-                    if ($previousMessage == null) {
-                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
+//                    if ($previousQueueMessage && $previousQueueMessage->pevious_id != 0) {
+//                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
+//                    }
+//
+//                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
+//
+//                    if ($previousMessage == null) {
+//                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
 
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
-                            'text' => $text,
+                            'text' => '444',
+//                            'text' => $text,
                             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                             'parse_mode' => 'HTML',
                         ]);
-                    }
+//                    }
                     return;
 
                 default:
