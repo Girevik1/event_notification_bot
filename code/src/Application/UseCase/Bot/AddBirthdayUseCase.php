@@ -17,19 +17,19 @@ class AddBirthdayUseCase
     private TelegramUser $telegramUser;
     public int $message_id;
 //    private QueueMessageUseCase $queueMessageUseCase;
-//    private QueueMessageRepositoryInterface $queueMessageRepository;
+    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(
         Api          $telegram,
         TelegramUser $telegramUser,
         int          $message_id,
-//        QueueMessageRepositoryInterface $queueMessageRepository
+        QueueMessageRepositoryInterface $queueMessageRepository
     )
     {
         $this->telegram = $telegram;
         $this->telegramUser = $telegramUser;
         $this->message_id = $message_id;
-//        $this->queueMessageRepository = $queueMessageRepository;
+        $this->queueMessageRepository = $queueMessageRepository;
 //        $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
 
         $this->telegram->editMessageText([
