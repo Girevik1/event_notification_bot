@@ -39,7 +39,7 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 
     public function isExistByLogin($login): bool
     {
-        return TelegramUser::where('login','=', $login)->exist();
+        return (bool) TelegramUser::where('login','=', $login)->first();
     }
 
     public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser

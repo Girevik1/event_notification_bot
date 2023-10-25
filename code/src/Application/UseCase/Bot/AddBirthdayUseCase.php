@@ -33,7 +33,7 @@ class AddBirthdayUseCase
         $this->telegramUser = $telegramUser;
         $this->message_id = $message_id;
         $this->queueMessageRepository = $queueMessageRepository;
-        $this->queueMessageUseCase = new QueueMessageUseCase();
+        $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
     }
 
     /**

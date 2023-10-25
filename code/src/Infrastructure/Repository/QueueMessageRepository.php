@@ -33,9 +33,9 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
      */
     public function existUnfinishedQueueByUser(int $telegramUserId): bool
     {
-        return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
+        return (bool) QueueMessage::where("telegram_user_id", '=', $telegramUserId)
             ->where("state", "NOT_SEND")
-            ->exist();
+            ->first();
     }
 
     /**
@@ -45,7 +45,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     public function deleteOpenByUser(int $telegramUserId): mixed
     {
         return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
-            ->where("state", "NOT_SEND")
+//            ->where("state", "NOT_SEND")
             ->delete();
     }
 

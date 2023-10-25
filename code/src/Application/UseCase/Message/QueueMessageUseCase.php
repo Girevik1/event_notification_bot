@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Message;
 
+use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
 
 class QueueMessageUseCase
 {
-    private mixed $queueMessageRepository;
+//    private mixed $queueMessageRepository;
 
-    public function __construct()
+    public function __construct(private QueueMessageRepositoryInterface $queueMessageRepository)
     {
-        $dependence = require '../../../../dependence.php';
-        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
+//        $dependence = require '../../../../dependence.php';
+//        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
     }
 
     public function processQueueMessage(array $queue, TelegramUser $telegramUser): void

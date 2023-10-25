@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
-use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
-use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -53,6 +51,7 @@ class BotUseCase
         $message = [];
 
 //        $message = $this->newRequest;
+//        $updates['callback_query'] = $message['callback_query'];
 
         if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
@@ -65,8 +64,8 @@ class BotUseCase
         ) {
             throw new TelegramMessageDataException('Some data is missing');
         }
-
-        $message['callback_query'] = $updates->callback_query ?? '';
+        $updates['callback_query'] =
+//        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
         $this->telegramMessageRepository->create($messageDto);
@@ -96,29 +95,33 @@ class BotUseCase
 
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
 
-//        $message = TelegramMessage::where("telegram_message_queue_id", $active_telegram_queue->id)
-//            ->where("state", "NOT_SEND")->first();
+
+//        $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
+//        $isNewUser = false;
+//        $text = '';
+
 
         $isNewUser = false;
         if ($telegramUser === null) {
             $telegramUser = $this->telegramUserRepository->create(new TelegramUserDto($message));
             $isNewUser = true;
-        } else {
-            /*
-             * If user change login in telegram
-             * */
-            if ($telegramUser->login != $messageDto->user_name) {
-                $this->telegramMessageRepository->updateByField($telegramUser, 'login', $messageDto->user_name);
-                $txt = $this->textUseCase->getChangeLoginText($messageDto->user_name);
-
-                $messageSendDto = new MessageSendDto();
-                $messageSendDto->text = $txt;
-                $messageSendDto->user = $telegramUser;
-                $messageSendDto->command = '/change-username';
-
-                TelegramMessage::newMessage($messageSendDto);
-            }
         }
+//        else {
+//            /*
+//             * If user change login in telegram
+//             * */
+//            if ($telegramUser->login != $messageDto->user_name) {
+//                $this->telegramMessageRepository->updateByField($telegramUser, 'login', $messageDto->user_name);
+//                $txt = $this->textUseCase->getChangeLoginText($messageDto->user_name);
+//
+//                $messageSendDto = new MessageSendDto();
+//                $messageSendDto->text = $txt;
+//                $messageSendDto->user = $telegramUser;
+//                $messageSendDto->command = '/change-username';
+//
+//                TelegramMessage::newMessage($messageSendDto);
+//            }
+//        }
 
         /*
          * It`s callback of line keyboard
@@ -206,14 +209,7 @@ class BotUseCase
 
                 case "add_birthday":
 
-                    $this->telegram->editMessageText([
-                        'chat_id' => $telegramUser->telegram_chat_id,
-                        'message_id' => $message_id,
-                        'text' => 'tst',
-                        'reply_markup' => TelegramSender::getKeyboard('to_the_settings_menu'),
-                        'parse_mode' => 'HTML',
-                    ]);
-
+                    var_dump(342);
                     $addBirthdayUseCase = new AddBirthdayUseCase(
                         $this->telegram,
 //                        $this->textUseCase,
@@ -222,8 +218,8 @@ class BotUseCase
                         $this->queueMessageRepository
                     );
                     $addBirthdayUseCase->addBirthday();
+                    return;
 
-                    break;
                 default:
                     break;
             }
