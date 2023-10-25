@@ -213,7 +213,7 @@ class BotUseCase
 
                     $addBirthdayUseCase = new AddBirthdayUseCase(
                         $this->telegram,
-//                        $telegramUser,
+                        $telegramUser,
                         $message_id,
 //                        $this->queueMessageRepository
                     );
