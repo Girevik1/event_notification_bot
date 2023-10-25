@@ -248,14 +248,15 @@ class BotUseCase
                      * */
                     if ($lastSentQueueMessage !== null && $lastSentQueueMessage->pevious_id !== 0) {
                         $this->queueMessageRepository->makeNotSendState($lastSentQueueMessage->id);
-//                        QueueMessage::where("id", $lastSentQueueMessage->id)->update(['state' => 'NOT_SEND']);
-//                        QueueMessage::where("id", $lastSentQueueMessage->id)->update(['state' => 'NOT_SEND']);
                     }
 
-//                    $previousMessage = QueueMessage::where("id", $lastSentQueueMessage->previous_id)->first();;
                     $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->previous_id);
 
                     if ($previousMessage !== null) {
+
+                        $previousMessage->answer = '';
+                        $previousMessage->save();
+
                         $text = AddBirthdayUseCase::getMessageByType($previousMessage);
 
                         $this->telegram->editMessageText([
