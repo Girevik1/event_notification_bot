@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
+use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -64,7 +65,7 @@ class BotUseCase
         ) {
             throw new TelegramMessageDataException('Some data is missing');
         }
-        $updates['callback_query'] =
+
 //        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
@@ -92,7 +93,6 @@ class BotUseCase
         }
 
         $text = $messageDto->text;
-
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
 
 
