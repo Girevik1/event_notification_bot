@@ -277,7 +277,7 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 $this->start($telegramUser, $isNewUser);
-//                return;
+                return;
 
             default:
 
@@ -306,7 +306,8 @@ class BotUseCase
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $lastTelegramMessage->message_id,
 //                        'text' => $queueMessageByUser2->type,
-                        'text' => $text,
+                        'text' => '1212',
+//                        'text' => $text,
                         'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                         'parse_mode' => 'HTML',
                     ]);
