@@ -6,6 +6,7 @@ namespace Art\Code\Infrastructure\Repository;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
+use Illuminate\Database\Eloquent\Collection;
 
 class QueueMessageRepository implements QueueMessageRepositoryInterface
 {
@@ -86,4 +87,9 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
             ->where('state', 'SENT')
             ->get();
     }
+//
+//    public function getAllByUser(int $telegramUserId): ?Collection
+//    {
+//        return QueueMessage::where("telegram_user_id", $telegramUserId)->get();
+//    }
 }
