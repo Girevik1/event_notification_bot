@@ -62,8 +62,9 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     public function getLastSentMsg(int $telegramUserId): ?QueueMessage
     {
         return QueueMessage::where("telegram_user_id", $telegramUserId)
-            ->where("state", "SENT")
-            ->orderBy('id','asc')
+//            ->where("state", "SENT")
+            ->where("answer", "")
+            ->orderBy('id','desc')
             ->first();
     }
 

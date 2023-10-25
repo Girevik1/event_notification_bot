@@ -228,7 +228,7 @@ class BotUseCase
                     $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 
                     /*
-                     * Если есть предыдущее сообщения нет (равно 0), то кидаем в личный кабинет
+                     * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
                     if ($previousQueueMessage && $previousQueueMessage->pevious_id == 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
