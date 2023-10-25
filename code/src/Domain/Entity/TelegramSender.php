@@ -46,16 +46,15 @@ class TelegramSender extends Model
         return $response->getMessageId();
     }
 
-//    public function deleteMessage($login, $msg_id): string
-//    {
-//        $user = $this->telegramUserRepository->firstByLogin($login);
-//        $ch = curl_init();
-//        curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $user->telegram_chat_id . "&message_id=" . $msg_id);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_exec($ch);
-//        curl_close($ch);
-//        return "";
-//    }
+    public static function deleteMessage($telegram_chat_id, $msg_id): string
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $telegram_chat_id . "&message_id=" . $msg_id);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_exec($ch);
+        curl_close($ch);
+        return "";
+    }
 
     public static function getKeyboard(string $type): bool|string
     {
