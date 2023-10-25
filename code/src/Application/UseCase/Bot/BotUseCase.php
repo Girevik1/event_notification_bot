@@ -183,6 +183,7 @@ class BotUseCase
                     break;
                 case "settings_menu":
                 case "private_cabinet":
+                case "changed_my_mind":
 
                     $text = $this->textUseCase->getPrivateCabinetText();
                     $this->telegram->editMessageText([
