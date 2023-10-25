@@ -86,7 +86,7 @@ class AddBirthdayUseCase
                 break;
 
             case "DATE_OF_BIRTH":
-                $text = '';
+                $text .= '';
                 break;
 
             default:

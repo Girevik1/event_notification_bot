@@ -29,11 +29,11 @@ class QueueMessageUseCase
 //            ->first();
 
 //        if ($a != null) {
-        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
+//        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
 
-            $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
-            // есть не законченная очередь по др; -> delete -> create new queue
-        }
+        $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
+        // есть не законченная очередь по др; -> delete -> create new queue
+//        }
         $telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $msg_id,
