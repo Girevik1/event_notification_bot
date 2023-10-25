@@ -288,9 +288,9 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save();
 
-                    $queueMessageByUser2 = QueueMessage::where('id', $queueMessageByUser->next_id)->first();
+                    $queueMessageByUser = QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
 
-                    $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser2);
+                    $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
 //                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
