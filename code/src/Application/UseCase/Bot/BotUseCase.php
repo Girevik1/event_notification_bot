@@ -236,8 +236,7 @@ class BotUseCase
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
-                            'text' => $previousQueueMessage->type,
-//                            'text' => $text,
+                            'text' => $text,
                             'reply_markup' => TelegramSender::getKeyboard('settings_menu'), // process_set_event
                             'parse_mode' => 'HTML',
                         ]);
@@ -247,24 +246,23 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
                      * */
-//                    if ($previousQueueMessage != null && $previousQueueMessage->pevious_id != 0) {
-//                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
-//                    }
-//
-//                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
-//
-//                    if ($previousMessage == null) {
-//                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
+                    if ($previousQueueMessage != null && $previousQueueMessage->pevious_id != 0) {
+                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
+                    }
+
+                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
+
+                    if ($previousMessage == null) {
+                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
 
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
-                            'text' => '444',
-//                            'text' => $text,
+                            'text' => $text,
                             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                             'parse_mode' => 'HTML',
                         ]);
-//                    }
+                    }
                     return;
 
                 default:
