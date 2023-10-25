@@ -14,26 +14,26 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class AddBirthdayUseCase
 {
     private Api $telegram;
-    private TelegramUser $telegramUser;
+//    private TelegramUser $telegramUser;
     public int $message_id;
-    private QueueMessageUseCase $queueMessageUseCase;
-    private QueueMessageRepositoryInterface $queueMessageRepository;
+//    private QueueMessageUseCase $queueMessageUseCase;
+//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(
         Api          $telegram,
-        TelegramUser $telegramUser,
+//        TelegramUser $telegramUser,
         int          $message_id,
 //        QueueMessageRepositoryInterface $queueMessageRepository
     )
     {
         $this->telegram = $telegram;
-        $this->telegramUser = $telegramUser;
+//        $this->telegramUser = $telegramUser;
         $this->message_id = $message_id;
 //        $this->queueMessageRepository = $queueMessageRepository;
 //        $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
 
         $this->telegram->editMessageText([
-            'chat_id' => $telegramUser->telegram_chat_id,
+            'chat_id' => '500264009',
             'message_id' => $message_id,
             'text' => 'rer',
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
