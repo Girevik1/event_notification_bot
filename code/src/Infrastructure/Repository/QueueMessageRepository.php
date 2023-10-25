@@ -63,7 +63,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     {
         return QueueMessage::where("telegram_user_id", $telegramUserId)
             ->where("state", "SENT")
-            ->orderBy('id','desc')
+            ->orderBy('id','asc')
             ->first();
     }
 
