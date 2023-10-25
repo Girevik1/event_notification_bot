@@ -18,7 +18,8 @@ class AddBirthdayUseCase
     private TelegramUser $telegramUser;
     public int $message_id;
     private QueueMessageUseCase $queueMessageUseCase;
-    private QueueMessageRepositoryInterface $queueMessageRepository;
+    private  $queueMessageRepository;
+//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(
         Api          $telegram,
