@@ -52,7 +52,8 @@ class QueueMessageUseCase
         $prev = null;
         foreach ($queue as $key => $value) {
             $telegram_message = $this->queueMessageRepository->createQueue($telegramUserId, $key);
-
+                $telegram_message->previous_id = 222;
+                $telegram_message->save();
             if ($prev != null) {
                 $prev->next_id = $telegram_message->id;
                 $prev->save();
