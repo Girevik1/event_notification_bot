@@ -23,13 +23,6 @@ class QueueMessageUseCase
 
     public function processQueueMessage($telegram, $msg_id, array $queue, TelegramUser $telegramUser): void
     {
-        $telegram->editMessageText([
-            'chat_id' => '500264009',
-            'message_id' => $msg_id,
-            'text' => 'rer',
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
         if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
             $telegram->editMessageText([
                 'chat_id' => '500264009',
