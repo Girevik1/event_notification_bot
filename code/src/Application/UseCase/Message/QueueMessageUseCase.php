@@ -12,11 +12,11 @@ class QueueMessageUseCase
 {
 //    private mixed $queueMessageRepository;
 
-    private QueueMessageRepository $queueMessageRepository;
+//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
-    public function __construct()
+    public function __construct(private QueueMessageRepositoryInterface $queueMessageRepository)
     {
-       $this->queueMessageRepository = new QueueMessageRepository();
+//       $this->queueMessageRepository = new QueueMessageRepository();
 //        $dependence = require '../../../../dependence.php';
 //        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
     }
