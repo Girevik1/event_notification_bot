@@ -43,7 +43,7 @@ class AddBirthdayUseCase
     {
         $queueBirthday = $this->getAllMessageQueue();
 
-        $this->queueMessageUseCase->processQueueMessage($this->telegram, $this->message_id, $queueBirthday, $this->telegramUser);
+        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser);
 //        $this->telegram->editMessageText([
 //            'chat_id' => $this->telegramUser->telegram_chat_id,
 //            'message_id' => $this->message_id,
