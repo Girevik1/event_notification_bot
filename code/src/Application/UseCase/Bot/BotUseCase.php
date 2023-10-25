@@ -228,13 +228,36 @@ class BotUseCase
 //                    if(count($allSentMessage) === 1){
 //                        $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 //                    }
-
-                    $this->queueMessageRepository->makeOpenState($telegramUser->id);
-
                     $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 
-                    if ($previousQueueMessage === null) {
+                    /*
+                     * Если есть предыдущее сообщения нет (равно 0), то кидаем в личный кабинет
+                     * */
+                    if ($previousQueueMessage && $previousQueueMessage->pevious_id === 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
+
+                        $this->telegram->editMessageText([
+                            'chat_id' => $telegramUser->telegram_chat_id,
+                            'message_id' => $message_id,
+                            'text' => $text,
+                            'reply_markup' => TelegramSender::getKeyboard('settings_menu'), // process_set_event
+                            'parse_mode' => 'HTML',
+                        ]);
+                        return;
+                    }
+
+                    /*
+                     * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
+                     * */
+                    if ($previousQueueMessage && $previousQueueMessage->pevious_id !== 0) {
+                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
+                    }
+
+                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
+
+                    if ($previousMessage === null) {
+                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
+
                         $this->telegram->editMessageText([
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
@@ -243,17 +266,6 @@ class BotUseCase
                             'parse_mode' => 'HTML',
                         ]);
                     }
-
-                    $text = AddBirthdayUseCase::getMessageByType($previousQueueMessage);
-
-                    $this->telegram->editMessageText([
-                        'chat_id' => $telegramUser->telegram_chat_id,
-                        'message_id' => $message_id,
-                        'text' => $text,
-                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                        'parse_mode' => 'HTML',
-                    ]);
-
                     return;
 
                 default:

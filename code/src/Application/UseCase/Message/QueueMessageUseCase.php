@@ -58,7 +58,6 @@ class QueueMessageUseCase
                 $prev->save();
 
                 $telegram_message->previous_id = $prev->id;
-//                $telegram_message->previous_id = $prev->id;
                 $telegram_message->save();
             }
 

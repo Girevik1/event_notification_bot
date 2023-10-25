@@ -66,12 +66,14 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
             ->first();
     }
 
-    public function makeOpenState(int $telegramUserId): void
+    public function getQueueMessageById(int $id): ?QueueMessage
     {
-        QueueMessage::where("telegram_user_id", $telegramUserId)
-            ->where("state", "SENT")
-            ->latest()
-            ->update(['state' => 'NOT_SEND']);
+       return QueueMessage::where("id", $id)->first();
+    }
+
+    public function makeNotSendState(int $id): void
+    {
+        QueueMessage::where("id", $id)->update(['state' => 'NOT_SEND']);
     }
 
     public function getAllSentByUser(int $telegramUserId): ?QueueMessage
