@@ -7,6 +7,7 @@ namespace Art\Code\Application\UseCase\Message;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Infrastructure\Repository\QueueMessageRepository;
 
 class QueueMessageUseCase
 {
@@ -23,7 +24,10 @@ class QueueMessageUseCase
 
     public function processQueueMessage($telegram, $msg_id, array $queue, TelegramUser $telegramUser): void
     {
-        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
+        $a = new QueueMessageRepository();
+
+        if ($a->existUnfinishedQueueByUser($telegramUser->id)) {
+//        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
             $telegram->editMessageText([
                 'chat_id' => '500264009',
                 'message_id' => $msg_id,
