@@ -6,7 +6,7 @@ namespace Art\Code\Infrastructure\Repository;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
-use Illuminate\Database\Eloquent\Collection;
+//use Illuminate\Database\Eloquent\Collection;
 
 class QueueMessageRepository implements QueueMessageRepositoryInterface
 {

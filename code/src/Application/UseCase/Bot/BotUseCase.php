@@ -278,10 +278,11 @@ class BotUseCase
             case "/start":
                 $this->start($telegramUser, $isNewUser);
 
-                $allTelegramMessage = $this->telegramMessageRepository->getAllByUser($telegramUser->telegram_chat_id);
+                $allTelegramMessage = TelegramMessage::where("telegram_user_id", $telegramUser->telegram_chat_id)->get();;
+//                $allTelegramMessage = $this->telegramMessageRepository->getAllByUser($telegramUser->telegram_chat_id);
 
                 foreach ($allTelegramMessage as $msg){
-                    if($msg->message_id !== $message['message_id']){
+                    if($msg->message_id != $message['message_id']){
                         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $msg->message_id);
                     }
                 }
