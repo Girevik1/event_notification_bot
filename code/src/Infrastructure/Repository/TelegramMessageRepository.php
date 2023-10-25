@@ -55,10 +55,10 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
     }
 
     /**
-     * @param int $telegramChatId
+     * @param string $telegramChatId
      * @return TelegramMessage
      */
-    public function getLastByChatId(int $telegramChatId): TelegramMessage
+    public function getLastByChatId(string $telegramChatId): TelegramMessage
     {
         return TelegramMessage::where('chat_id', $telegramChatId)
             ->orderBy('id','desc')
