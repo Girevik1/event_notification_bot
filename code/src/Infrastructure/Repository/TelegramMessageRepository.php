@@ -53,4 +53,15 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
     {
         return TelegramMessage::where('message_id', $message_id)->delete();
     }
+
+    /**
+     * @param int $telegramChatId
+     * @return TelegramMessage
+     */
+    public function getLastByChatId(int $telegramChatId): TelegramMessage
+    {
+        return TelegramMessage::where('chat_id', $telegramChatId)
+            ->orderBy('id','desc')
+            ->first();
+    }
 }

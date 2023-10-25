@@ -286,9 +286,10 @@ class BotUseCase
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
 //                    TelegramMessage::where('message_id', $message['message_id'])->delete();
 
-                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)
-                        ->orderBy('id','desc')
-                        ->first();
+                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
+//                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)
+//                        ->orderBy('id','desc')
+//                        ->first();
 
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
