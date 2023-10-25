@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Message;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
+use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Infrastructure\Repository\QueueMessageRepository;
@@ -24,17 +25,20 @@ class QueueMessageUseCase
 
     public function processQueueMessage($telegram, $msg_id, array $queue, TelegramUser $telegramUser): void
     {
-        $a = new QueueMessageRepository();
-        $a = $a->existUnfinishedQueueByUser($telegramUser->id);
+
+       $a = QueueMessage::where("telegram_user_id", '=', $telegramUser->id)
+            ->where("state", "NOT_SEND")
+            ->first();
+        $telegram->editMessageText([
+            'chat_id' => '500264009',
+            'message_id' => $msg_id,
+            'text' => 'rer',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
         if ($a != null) {
 //        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
-            $telegram->editMessageText([
-                'chat_id' => '500264009',
-                'message_id' => $msg_id,
-                'text' => 'rer',
-                'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                'parse_mode' => 'HTML',
-            ]);
+
             $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
             // есть не законченная очередь по др; -> delete -> create new queue
         }
