@@ -11,7 +11,7 @@ class QueueMessageUseCase
 {
 //    private mixed $queueMessageRepository;
 
-    public function __construct(private QueueMessageRepositoryInterface $queueMessageRepository)
+    public function __construct(private readonly QueueMessageRepositoryInterface $queueMessageRepository)
     {
 //        $dependence = require '../../../../dependence.php';
 //        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
