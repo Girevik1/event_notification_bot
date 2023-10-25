@@ -75,7 +75,9 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
 
     public function makeNotSendState(int $id): void
     {
-        QueueMessage::where("id", $id)->update(['state' => 'NOT_SEND']);
+        QueueMessage::where("id", $id)
+//            ->where()
+            ->update(['state' => 'NOT_SEND']);
     }
 
     public function getAllSentByUser(int $telegramUserId): ?QueueMessage

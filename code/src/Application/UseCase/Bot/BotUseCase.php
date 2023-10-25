@@ -230,7 +230,7 @@ class BotUseCase
                     /*
                      * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
-                    if ($lastSentQueueMessage && $lastSentQueueMessage->pevious_id === 0) {
+                    if ($lastSentQueueMessage !== null && $lastSentQueueMessage->pevious_id === 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
 
                         $this->telegram->editMessageText([
