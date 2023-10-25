@@ -229,7 +229,7 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
-                    if ($previousQueueMessage && $previousQueueMessage->pevious_id === 0) {
+                    if ($previousQueueMessage && $previousQueueMessage->pevious_id == 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
 
                         $this->telegram->editMessageText([
@@ -245,13 +245,13 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
                      * */
-                    if ($previousQueueMessage && $previousQueueMessage->pevious_id !== 0) {
+                    if ($previousQueueMessage && $previousQueueMessage->pevious_id != 0) {
                         $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
                     }
 
                     $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
 
-                    if ($previousMessage === null) {
+                    if ($previousMessage == null) {
                         $text = AddBirthdayUseCase::getMessageByType($previousMessage);
 
                         $this->telegram->editMessageText([
