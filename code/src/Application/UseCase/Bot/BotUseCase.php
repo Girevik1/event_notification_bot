@@ -277,7 +277,7 @@ class BotUseCase
         switch ($text) {
             case "/start":
                 $this->start($telegramUser, $isNewUser);
-                return;
+//                return;
 
             default:
 
