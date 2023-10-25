@@ -44,4 +44,13 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
     {
         return TelegramMessage::where("telegram_user_id", $telegramUserId)->get();
     }
+
+    /**
+     * @param int $message_id
+     * @return mixed
+     */
+    public function deleteByMessageId(int $message_id): mixed
+    {
+        return TelegramMessage::where('message_id', $message_id)->delete();
+    }
 }

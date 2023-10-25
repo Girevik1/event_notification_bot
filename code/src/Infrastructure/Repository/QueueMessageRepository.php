@@ -92,4 +92,5 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
 //    {
 //        return QueueMessage::where("telegram_user_id", $telegramUserId)->get();
 //    }
+//QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
 }

@@ -108,22 +108,6 @@ class BotUseCase
             $telegramUser = $this->telegramUserRepository->create(new TelegramUserDto($message));
             $isNewUser = true;
         }
-//        else {
-//            /*
-//             * If user change login in telegram
-//             * */
-//            if ($telegramUser->login != $messageDto->user_name) {
-//                $this->telegramMessageRepository->updateByField($telegramUser, 'login', $messageDto->user_name);
-//                $txt = $this->textUseCase->getChangeLoginText($messageDto->user_name);
-//
-//                $messageSendDto = new MessageSendDto();
-//                $messageSendDto->text = $txt;
-//                $messageSendDto->user = $telegramUser;
-//                $messageSendDto->command = '/change-username';
-//
-//                TelegramMessage::newMessage($messageSendDto);
-//            }
-//        }
 
         /*
          * It`s callback of line keyboard
@@ -292,13 +276,15 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save();
 
-                    $queueMessageByUser = QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
+//                    $queueMessageByUser = QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
+                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
                     $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
-//                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
-                    TelegramMessage::where('message_id', $message['message_id'])->delete();
+
+                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
+//                    TelegramMessage::where('message_id', $message['message_id'])->delete();
 
                     $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)
                         ->orderBy('id','desc')
@@ -307,8 +293,6 @@ class BotUseCase
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $lastTelegramMessage->message_id,
-//                        'text' => $queueMessageByUser2->type,
-//                        'text' => '1212',
                         'text' => $text,
                         'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                         'parse_mode' => 'HTML',

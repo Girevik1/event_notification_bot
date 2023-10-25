@@ -14,4 +14,6 @@ interface TelegramMessageRepositoryInterface
     public function getLastMessage(): TelegramMessage;
 
     public function getAllByUser(int $telegramUserId): ?Collection;
+
+    public function deleteByMessageId(int $message_id): mixed;
 }

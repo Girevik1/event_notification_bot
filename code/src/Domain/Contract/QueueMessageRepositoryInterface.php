@@ -17,5 +17,7 @@ interface QueueMessageRepositoryInterface
 
     public function getLastSentMsg(int $telegramUserId): ?QueueMessage;
 
+    public function getQueueMessageById(int $id): ?QueueMessage;
+
 //    public function getAllByUser(int $telegramUserId): ?Collection;
 }
