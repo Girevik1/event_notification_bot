@@ -224,10 +224,6 @@ class BotUseCase
 
                 case "to_previous_question":
 
-//                    $allSentMessage = $this->queueMessageRepository->getAllSentByUser($telegramUser->id);
-//                    if(count($allSentMessage) === 1){
-//                        $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
-//                    }
                     $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 
                     /*
@@ -262,7 +258,7 @@ class BotUseCase
                             'chat_id' => $telegramUser->telegram_chat_id,
                             'message_id' => $message_id,
                             'text' => $text,
-                            'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
+                            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                             'parse_mode' => 'HTML',
                         ]);
                     }
