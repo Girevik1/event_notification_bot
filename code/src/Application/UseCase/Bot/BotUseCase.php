@@ -225,12 +225,12 @@ class BotUseCase
 
                 case "to_previous_question":
 
-                    $previousQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+                    $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 
                     /*
                      * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
-                    if ($previousQueueMessage && $previousQueueMessage->pevious_id === 0) {
+                    if ($lastSentQueueMessage && $lastSentQueueMessage->pevious_id === 0) {
                         $text = $this->textUseCase->getPrivateCabinetText();
 
                         $this->telegram->editMessageText([
@@ -246,11 +246,13 @@ class BotUseCase
                     /*
                      * Если есть предыдущее сообщение то у текушего сообщения меняем статус на NOT_SEND
                      * */
-                    if ($previousQueueMessage != null && $previousQueueMessage->pevious_id != 0) {
-                        $this->queueMessageRepository->makeNotSendState($previousQueueMessage->id);
+                    if ($lastSentQueueMessage != null && $lastSentQueueMessage->pevious_id !== 0) {
+                        $this->queueMessageRepository->makeNotSendState($lastSentQueueMessage->id);
+//                        QueueMessage::where("id", $lastSentQueueMessage->id)->update(['state' => 'NOT_SEND']);
+//                        QueueMessage::where("id", $lastSentQueueMessage->id)->update(['state' => 'NOT_SEND']);
                     }
 
-                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousQueueMessage->id);
+                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->id);
 
                     if ($previousMessage == null) {
                         $text = AddBirthdayUseCase::getMessageByType($previousMessage);
