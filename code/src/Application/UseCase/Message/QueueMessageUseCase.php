@@ -7,8 +7,6 @@ namespace Art\Code\Application\UseCase\Message;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
-use Art\Code\Infrastructure\Repository\QueueMessageRepository;
-use Telegram\Bot\Api;
 
 class QueueMessageUseCase
 {
@@ -25,12 +23,6 @@ class QueueMessageUseCase
 
     public function processQueueMessage($telegram, $msg_id, array $queue, TelegramUser $telegramUser): void
     {
-        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
-            $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
-            // есть не законченная очередь по др; -> delete -> create new queue
-        }
-
-        $telegram = new Api();
         $telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $msg_id,
@@ -38,6 +30,12 @@ class QueueMessageUseCase
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
+        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
+            $this->queueMessageRepository->deleteOpenByUser($telegramUser->id);
+            // есть не законченная очередь по др; -> delete -> create new queue
+        }
+
+
         $this->createQueueMessages($queue, $telegramUser->id);
 
 
