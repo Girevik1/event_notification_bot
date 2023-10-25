@@ -265,10 +265,11 @@ class BotUseCase
 
             default:
 
-                $queueMessageByUser = QueueMessage::where('state','SENT')
-                    ->where('telegram_user_id',$telegramUser->id)
-                    ->orderBy('id','desc')
-                    ->first();
+                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+//                $queueMessageByUser = QueueMessage::where('state','SENT')
+//                    ->where('telegram_user_id',$telegramUser->id)
+//                    ->orderBy('id','desc')
+//                    ->first();
                 if($queueMessageByUser && $text != ''){
 
                     // VALIDATION
