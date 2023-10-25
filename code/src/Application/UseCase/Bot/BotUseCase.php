@@ -300,7 +300,8 @@ class BotUseCase
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
                         'message_id' => $lastTelegramMessage->message_id,
-                        'text' => $text,
+                        'text' => $queueMessageByUser2->type,
+//                        'text' => $text,
                         'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                         'parse_mode' => 'HTML',
                     ]);
