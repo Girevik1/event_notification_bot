@@ -291,8 +291,9 @@ class BotUseCase
 
                     $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
-                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
                     TelegramMessage::where('message_id', $message['message_id'])->delete();
+                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
+
 
                     $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)->first();
 
