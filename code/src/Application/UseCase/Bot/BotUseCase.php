@@ -287,15 +287,18 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save();
 
-                    $queueMessageByUser = QueueMessage::where('id',$queueMessageByUser->next_id)->first();
-//                    $queueMessageByUser->state = 'SENT';
-//                    $queueMessageByUser->save();
+                    $queueMessageByUser = QueueMessage::where('id', $queueMessageByUser->next_id)->first();
 
                     $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
+                    $this->telegram->deleteMessage([$telegramUser->telegram_chat_id, $message['message_id']]);
+                    TelegramMessage::where('message_id', $message['message_id'])->delete();
+
+                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)->first();
+
                     $this->telegram->editMessageText([
                         'chat_id' => $telegramUser->telegram_chat_id,
-                        'message_id' => $message['message_id'],
+                        'message_id' => $lastTelegramMessage->message_id,
                         'text' => $text,
                         'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
                         'parse_mode' => 'HTML',
