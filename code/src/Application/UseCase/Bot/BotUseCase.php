@@ -252,7 +252,7 @@ class BotUseCase
 //                        QueueMessage::where("id", $lastSentQueueMessage->id)->update(['state' => 'NOT_SEND']);
                     }
 
-                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->id);
+                    $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->previous_id);
 
                     if ($previousMessage == null) {
                         $text = AddBirthdayUseCase::getMessageByType($previousMessage);
