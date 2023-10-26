@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Art\Code\Domain\Entity;
 
+use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Infrastructure\Repository\TelegramUserRepository;
+use CurlHandle;
 use Illuminate\Database\Eloquent\Model;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -12,10 +14,14 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class TelegramSender extends Model
 {
     public TelegramUserRepository $telegramUserRepository;
+    private Api $telegram;
 
-//    public function __construct(public TelegramUserRepositoryInterface $telegramUserRepository, array $attributes = [])
+    /**
+     * @throws TelegramSDKException
+     */
     public function __construct(array $attributes = [])
     {
+        $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
         $this->telegramUserRepository = new TelegramUserRepository();
         parent::__construct($attributes);
     }
@@ -36,17 +42,35 @@ class TelegramSender extends Model
         ];
 
         if ($typeBtn) {
-//            $dataForSend = self::getKeyboard($dataForSend, $typeBtn);
             $dataForSend['reply_markup'] = self::getKeyboard($typeBtn);
         }
 
-        $telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
-        $response = $telegram->sendMessage($dataForSend);
+        $response = $thisObj->telegram->sendMessage($dataForSend);
 
         return $response->getMessageId();
     }
 
-    public static function deleteMessage($telegram_chat_id, $msg_id): \CurlHandle|bool
+    /**
+     * @throws TelegramSDKException
+     */
+    public static function editMessageTextSend(DataEditMessageDto $dataEditMessage): void
+    {
+        $thisObj = new self();
+        $thisObj->telegram->editMessageText([
+            'chat_id' => $dataEditMessage->chat_id,
+            'message_id' => $dataEditMessage->message_id,
+            'text' => $dataEditMessage->text,
+            'reply_markup' => TelegramSender::getKeyboard($dataEditMessage->keyboard),
+            'parse_mode' => 'HTML',
+        ]);
+    }
+
+    /**
+     * @param $telegram_chat_id
+     * @param $msg_id
+     * @return CurlHandle|bool
+     */
+    public static function deleteMessage($telegram_chat_id, $msg_id): CurlHandle|bool
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $telegram_chat_id . "&message_id=" . $msg_id);
@@ -56,6 +80,10 @@ class TelegramSender extends Model
         return $ch;
     }
 
+    /**
+     * @param string $type
+     * @return bool|string
+     */
     public static function getKeyboard(string $type): bool|string
     {
         return match ($type) {
