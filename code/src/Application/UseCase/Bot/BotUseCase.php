@@ -129,17 +129,9 @@ class BotUseCase
                     $this->dataEditMessage->message_id = $message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessage);
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
+
                     return;
                 case "to_the_beginning":
-
-//                    $text = $this->textUseCase->getGreetingsText($isNewUser);
 
                     $this->dataEditMessage->text = $this->textUseCase->getGreetingsText($isNewUser);
                     $this->dataEditMessage->keyboard = 'main_menu';
@@ -147,24 +139,10 @@ class BotUseCase
                     $this->dataEditMessage->message_id = $message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessage);
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('main_menu'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
+
                     return;
                 case "what_can_bot":
 
-//                    $text = $this->textUseCase->getWhatCanText();
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
                     $this->dataEditMessage->text = $this->textUseCase->getWhatCanText();
                     $this->dataEditMessage->keyboard = 'to_the_beginning';
                     $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -175,14 +153,6 @@ class BotUseCase
                     return;
                 case "how_use":
 
-//                    $text = $this->textUseCase->getHowUseText();
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('to_the_beginning'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
                     $this->dataEditMessage->text = $this->textUseCase->getHowUseText();
                     $this->dataEditMessage->keyboard = 'to_the_beginning';
                     $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -195,14 +165,6 @@ class BotUseCase
                 case "private_cabinet":
                 case "changed_my_mind":
 
-//                $text = $this->textUseCase->getPrivateCabinetText();
-//                $this->telegram->editMessageText([
-//                    'chat_id' => $telegramUser->telegram_chat_id,
-//                    'message_id' => $message_id,
-//                    'text' => $text,
-//                    'reply_markup' => TelegramSender::getKeyboard('settings_menu'),
-//                    'parse_mode' => 'HTML',
-//                ]);
                 $this->dataEditMessage->text = $this->textUseCase->getPrivateCabinetText();
                 $this->dataEditMessage->keyboard = 'settings_menu';
                 $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -213,15 +175,6 @@ class BotUseCase
                 return;
                 case "list_groups":
 
-//                    $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
-//                    $text = $this->textUseCase->getListGroupText($listGroups);
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('to_the_settings_menu'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
                     $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
                     $this->dataEditMessage->text = $this->textUseCase->getListGroupText($listGroups);
                     $this->dataEditMessage->keyboard = 'to_the_settings_menu';
@@ -253,15 +206,7 @@ class BotUseCase
                      * Если есть предыдущего сообщения нет (равно 0), то кидаем в личный кабинет
                      * */
                     if ($lastSentQueueMessage !== null && $lastSentQueueMessage->previous_id === 0) {
-//                        $text = $this->textUseCase->getPrivateCabinetText();
-//
-//                        $this->telegram->editMessageText([
-//                            'chat_id' => $telegramUser->telegram_chat_id,
-//                            'message_id' => $message_id,
-//                            'text' => $text,
-//                            'reply_markup' => TelegramSender::getKeyboard('settings_menu'), // process_set_event
-//                            'parse_mode' => 'HTML',
-//                        ]);
+
                         $this->dataEditMessage->text = $this->textUseCase->getPrivateCabinetText();
                         $this->dataEditMessage->keyboard = 'settings_menu';
                         $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -282,19 +227,10 @@ class BotUseCase
                     $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->previous_id);
 
                     if ($previousMessage !== null) {
+                        $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
+//                        $previousMessage->answer = '';
+//                        $previousMessage->save();
 
-                        $previousMessage->answer = '';
-                        $previousMessage->save();
-
-//                        $text = AddBirthdayUseCase::getMessageByType($previousMessage);
-//
-//                        $this->telegram->editMessageText([
-//                            'chat_id' => $telegramUser->telegram_chat_id,
-//                            'message_id' => $message_id,
-//                            'text' => $text,
-//                            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//                            'parse_mode' => 'HTML',
-//                        ]);
                         $this->dataEditMessage->text = AddBirthdayUseCase::getMessageByType($previousMessage);
                         $this->dataEditMessage->keyboard = 'process_set_event';
                         $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -317,10 +253,7 @@ class BotUseCase
             default:
 
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-//                $queueMessageByUser = QueueMessage::where('state','SENT')
-//                    ->where('telegram_user_id',$telegramUser->id)
-//                    ->orderBy('id','desc')
-//                    ->first();
+
                 if($queueMessageByUser && $text != ''){
 
                     // VALIDATION
@@ -328,28 +261,14 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save();
 
-//                    $queueMessageByUser = QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
-
-//                    $text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
 
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
-//                    TelegramMessage::where('message_id', $message['message_id'])->delete();
 
                     $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
-//                    $lastTelegramMessage = TelegramMessage::where('chat_id', $telegramUser->telegram_chat_id)
-//                        ->orderBy('id','desc')
-//                        ->first();
 
-//                    $this->telegram->editMessageText([
-//                        'chat_id' => $telegramUser->telegram_chat_id,
-//                        'message_id' => $lastTelegramMessage->message_id,
-//                        'text' => $text,
-//                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//                        'parse_mode' => 'HTML',
-//                    ]);
                     $this->dataEditMessage->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
                     $this->dataEditMessage->keyboard = 'process_set_event';
                     $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
@@ -361,6 +280,11 @@ class BotUseCase
         }
     }
 
+    /**
+     * @param TelegramUser $telegramUser
+     * @param bool $isNewUser
+     * @return void
+     */
     private function start(TelegramUser $telegramUser, bool $isNewUser): void
     {
         $text = $this->textUseCase->getGreetingsText($isNewUser);
@@ -374,6 +298,10 @@ class BotUseCase
         TelegramMessage::newMessage($messageSendDto);
     }
 
+    /**
+     * @param $message
+     * @return bool
+     */
     private function checkText($message): bool
     {
         if (
@@ -384,6 +312,10 @@ class BotUseCase
         return true;
     }
 
+    /**
+     * @param $message
+     * @return bool
+     */
     private function checkChatTitle($message): bool
     {
         if (

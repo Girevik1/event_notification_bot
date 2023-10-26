@@ -6,6 +6,7 @@ namespace Art\Code\Infrastructure\Repository;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
+
 //use Illuminate\Database\Eloquent\Collection;
 
 class QueueMessageRepository implements QueueMessageRepositoryInterface
@@ -77,16 +78,27 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     public function makeNotSendState(int $id): void
     {
         QueueMessage::where("id", $id)
-//            ->where()
             ->update(['state' => 'NOT_SEND']);
     }
 
-    public function getAllSentByUser(int $telegramUserId): ?QueueMessage
+    /**
+     * @param mixed $field
+     * @param mixed $value
+     * @param int $id
+     * @return void
+     */
+    public function updateFieldById(mixed $field, mixed $value, int $id): void
     {
-        return QueueMessage::where("telegram_user_id", $telegramUserId)
-            ->where('state', 'SENT')
-            ->get();
+        QueueMessage::where("id", $id)
+            ->update([$field => $value]);
     }
+
+//    public function getAllSentByUser(int $telegramUserId): ?QueueMessage
+//    {
+//        return QueueMessage::where("telegram_user_id", $telegramUserId)
+//            ->where('state', 'SENT')
+//            ->get();
+//    }
 //
 //    public function getAllByUser(int $telegramUserId): ?Collection
 //    {

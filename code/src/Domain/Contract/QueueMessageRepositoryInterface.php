@@ -19,5 +19,9 @@ interface QueueMessageRepositoryInterface
 
     public function getQueueMessageById(int $id): ?QueueMessage;
 
+    public function makeNotSendState(int $id): void;
+
+    public function updateFieldById(mixed $field, mixed $value, int $id): void;
+
 //    public function getAllByUser(int $telegramUserId): ?Collection;
 }
