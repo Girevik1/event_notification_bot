@@ -28,9 +28,19 @@ class AddBirthdayUseCase
         QueueMessageRepositoryInterface $queueMessageRepository
     )
     {
-        $this->telegram = $telegram;
-        $this->telegramUser = $telegramUser;
+
         $this->message_id = $message_id;
+        $this->telegram = $telegram;
+
+        $this->telegram->editMessageText([
+            'chat_id' => '500264009',
+            'message_id' => $this->message_id,
+            'text' => 'test',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
+
+        $this->telegramUser = $telegramUser;
         $this->queueMessageRepository = $queueMessageRepository;
         $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
     }
