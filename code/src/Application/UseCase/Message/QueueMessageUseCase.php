@@ -13,7 +13,6 @@ use Art\Code\Domain\Exception\QueueTypeException;
 
 class QueueMessageUseCase
 {
-
     public function __construct(public QueueMessageRepositoryInterface $queueMessageRepository)
     {
     }

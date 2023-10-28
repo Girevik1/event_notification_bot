@@ -6,14 +6,18 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Dto\DataEditMessageDto;
+use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Domain\Exception\QueueTypeException;
 use Art\Code\Domain\Exception\TelegramMessageDataException;
+use Carbon\Carbon;
 use Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -206,6 +210,15 @@ class BotUseCase
 
                     return;
 
+                case "confirm_event":
+                    $queueMessagesByUser = $this->queueMessageRepository->getAllByUserId($telegramUser->id);
+
+                    $this->dataMappingListEvent($queueMessagesByUser);
+
+
+
+                    return;
+
                 case "to_previous_question":
 
                     $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
@@ -291,6 +304,37 @@ class BotUseCase
                 }
                 break;
         }
+    }
+
+    /**
+     * @throws QueueTypeException
+     */
+    private function dataMappingListEvent($queueMessagesByUser)
+    {
+        $listEventDto = new ListEventDto();
+        foreach ($queueMessagesByUser as $queueMessage) {
+               match ($queueMessage->type) {
+                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
+                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
+                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
+                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
+                "PERIOD" => $listEventDto->period = $queueMessage->answer,
+                "CONFIRMATION" => "",
+                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
+            };
+        };
+
+
+       $newEvent =  new ListEvent();
+        $newEvent->name = $listEventDto->name;
+        $newEvent->date_event = $listEventDto->date_event;
+        $newEvent->type = $queueMessagesByUser[0]->event_type;
+        $newEvent->telegram_user_id = $queueMessagesByUser[0]->telegram_user_id;
+        $newEvent->group_id = $listEventDto->group_id;
+        $newEvent->notification_time = Carbon::now();
+//        $newEvent->notification_time = $listEventDto->notification_time;
+        $newEvent->period = $listEventDto->period;
+        $newEvent->save();
     }
 
     /**

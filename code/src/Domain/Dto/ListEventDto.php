@@ -10,8 +10,8 @@ class ListEventDto
 {
     public TelegramUser $telegram_user_id;
     public string $name;
-    public $date;
-    public $notification_time;
+    public string $date_event;
+    public string $notification_time;
     public string $type;
     public int $group_id;
     public string $period;

@@ -39,7 +39,7 @@ class GroupUseCase
             if (!$resulDelete) {
                 throw new GroupDeleteException('Не удалось удалить группу с БД');
             }
-            // TODO удалить все эвенты связанные с этой группой
+            // TODO удалить все эвенты связанные с этой группой, upd эвенты оставить - сделать личное уведомление
             return true;
         }
 
