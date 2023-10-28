@@ -79,6 +79,14 @@ class BotUseCase
             throw new TelegramMessageDataException('Some data is missing');
         }
 
+        $this->telegram->editMessageText([
+            'chat_id' => '500264009',
+            'message_id' => $message['message_id'],
+            'text' => 'testetetst',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
+
 //        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
@@ -259,13 +267,7 @@ class BotUseCase
 
             default:
 
-                $this->telegram->editMessageText([
-                    'chat_id' => '500264009',
-                    'message_id' => $message['message_id'],
-                    'text' => 'testetetst',
-                    'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                    'parse_mode' => 'HTML',
-                ]);
+
 
 //                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 //
