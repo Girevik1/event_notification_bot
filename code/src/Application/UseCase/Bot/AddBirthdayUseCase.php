@@ -87,7 +87,7 @@ class AddBirthdayUseCase
         $this->telegram->editMessageText([
             'chat_id' => $this->telegramUser->telegram_chat_id,
             'message_id' => $this->message_id,
-            'text' => $text,
+            'text' => '333333',
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);

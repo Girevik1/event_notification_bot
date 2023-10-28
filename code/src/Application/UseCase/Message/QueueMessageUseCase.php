@@ -61,13 +61,13 @@ class QueueMessageUseCase
             return null;
         }
 
-        $telegram->editMessageText([
-            'chat_id' => '500264009',
-            'message_id' => $message_id,
-            'text' => 'test434',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+//        $telegram->editMessageText([
+//            'chat_id' => '500264009',
+//            'message_id' => $message_id,
+//            'text' => 'test434',
+////            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]);
 
         $message_texts = match ($message->event_type) {
             "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday(),
