@@ -89,7 +89,7 @@ class QueueMessageUseCase
                 break;
 
             case "CONFIRMATION":
-                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->get();
+                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->orderBy('id','asc')->get();
                 if ($message->event_type === 'birthday') {
                     foreach ($queueMessagesByUser as $queueMessage) {
                         $text .= self::getTextConfirmationBirthday($queueMessage);
@@ -110,7 +110,7 @@ class QueueMessageUseCase
     /**
      * @throws QueueTypeException
      */
-    private static function getTextConfirmationBirthday(QueueMessage $queueMessage): string
+    private static function getTextConfirmationBirthday($queueMessage): string
     {
         return match ($$queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: " . $queueMessage->answer,
