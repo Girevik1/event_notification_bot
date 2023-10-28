@@ -55,7 +55,7 @@ class QueueMessageUseCase
     /**
      * @throws EventNotFoundException|QueueTypeException
      */
-    public static function getMessageByType($message, $telegram = '', $message_id = ''): ?string
+    public static function getMessageByType($message): ?string
     {
         if ($message == null) {
             return null;

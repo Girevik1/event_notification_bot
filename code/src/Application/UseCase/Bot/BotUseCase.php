@@ -13,9 +13,12 @@ use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Domain\Exception\EventNotFoundException;
 use Art\Code\Domain\Exception\GroupCreateException;
 use Art\Code\Domain\Exception\GroupDeleteException;
+use Art\Code\Domain\Exception\QueueTypeException;
 use Art\Code\Domain\Exception\TelegramMessageDataException;
+use Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -48,10 +51,14 @@ class BotUseCase
     }
 
     /**
-     * @throws TelegramSDKException
-     * @throws GroupCreateException
-     * @throws GroupDeleteException
-     * @throws TelegramMessageDataException
+//     * @throws TelegramSDKException
+//     * @throws GroupCreateException
+//     * @throws GroupDeleteException
+//     * @throws TelegramSDKException
+//     * @throws EventNotFoundException;
+//     * @throws QueueTypeException;
+//     * @throws TelegramMessageDataException
+     * @throws Exception
      */
     public function hook()
     {
@@ -301,6 +308,7 @@ class BotUseCase
     }
 
     /**
+     * @throws Exception
      * @param QueueMessage $queueMessageByUser
      * @return string|null
      */
