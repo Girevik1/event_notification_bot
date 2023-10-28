@@ -60,36 +60,36 @@ class BotUseCase
 //        $message = $this->newRequest;
 //        $updates['callback_query'] = $message['callback_query'];
 
-        if ($_ENV['APP_ENV'] == 'prod') {
+        if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
 
-        $this->telegram->editMessageText([
-            'chat_id' => 500264009,
-            'message_id' => $message['message_id'],
-            'text' => 'testetetst',
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+//        $this->telegram->editMessageText([
+//            'chat_id' => 500264009,
+//            'message_id' => $message['message_id'],
+//            'text' => 'testetetst',
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]);
 
-//        if (
-//            !isset($message['message_id']) ||
-//            $message['message_id'] === 0
-//        ) {
-//            throw new TelegramMessageDataException('Some data is missing');
-//        }
-//
-//
-//
-////        $message['callback_query'] = $updates->callback_query ?? '';
+        if (
+            !isset($message['message_id']) ||
+            $message['message_id'] === 0
+        ) {
+            throw new TelegramMessageDataException('Some data is missing');
+        }
+
+
+
+//        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
-//
-//        $this->telegramMessageRepository->create($messageDto);
-//
-//        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
-//            throw new TelegramMessageDataException('Some data is missing');
-//        };
+
+        $this->telegramMessageRepository->create($messageDto);
+
+        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
+            throw new TelegramMessageDataException('Some data is missing');
+        };
 
         /*
          * Create group in db on added in group
