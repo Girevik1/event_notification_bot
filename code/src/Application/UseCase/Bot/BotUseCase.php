@@ -258,10 +258,19 @@ class BotUseCase
 
                     // VALIDATION
 
+                    // temp
                     $queueMessageByUser->answer = $text;
-                    $queueMessageByUser->save();
+                    $queueMessageByUser->save(); //
 
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+
+                    $this->telegram->editMessageText([
+                        'chat_id' => '500264009',
+                        'message_id' => $message['message_id'],
+                        'text' => $queueMessageByUser->type,
+                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+                        'parse_mode' => 'HTML',
+                    ]);
 
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
 
