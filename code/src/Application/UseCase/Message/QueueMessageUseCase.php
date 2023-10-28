@@ -117,6 +117,7 @@ class QueueMessageUseCase
             "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
             "GROUP" => "\nГруппа: " . $queueMessage->answer,
             "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
+            "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
         };
     }
