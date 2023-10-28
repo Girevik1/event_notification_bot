@@ -6,9 +6,10 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
-use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Domain\Exception\EventNotFoundException;
+use Art\Code\Domain\Exception\QueueTypeException;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -55,16 +56,31 @@ class AddBirthdayUseCase
         $firsQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 
 
-                $this->telegram->editMessageText([
-            'chat_id' => '500264009',
-            'message_id' => $this->message_id,
-            'text' => $firsQueueMessage->type,
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+//                $this->telegram->editMessageText([
+//            'chat_id' => '500264009',
+//            'message_id' => $this->message_id,
+//            'text' => $firsQueueMessage->type,
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]);
 
 
-        $text = QueueMessageUseCase::getMessageByType($firsQueueMessage, $this->telegram, $this->message_id);
+        try {
+            $text = QueueMessageUseCase::getMessageByType($firsQueueMessage, $this->telegram, $this->message_id);
+        } catch (EventNotFoundException $e) {
+            $this->telegram->sendMessage([
+                'chat_id' => $this->telegramUser->telegram_chat_id,
+                'parse_mode' => 'HTML',
+                'text' => $e->getMessage()
+            ]);
+        } catch (QueueTypeException $e) {
+            $this->telegram->sendMessage([
+                'chat_id' => $this->telegramUser->telegram_chat_id,
+                'parse_mode' => 'HTML',
+                'text' => $e->getMessage()
+            ]);
+        }
+
 
         $this->telegram->editMessageText([
             'chat_id' => $this->telegramUser->telegram_chat_id,
