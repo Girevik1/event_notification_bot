@@ -6,7 +6,6 @@ namespace Art\Code\Application\UseCase\Message;
 
 use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
-use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\EventNotFoundException;
 use Art\Code\Domain\Exception\QueueTypeException;
@@ -55,7 +54,7 @@ class QueueMessageUseCase
     /**
      * @throws EventNotFoundException|QueueTypeException
      */
-    public static function getMessageByType($message,$queueMessageRepository): ?string
+    public static function getMessageByType($message, $queueMessageRepository): ?string
     {
         if ($message == null) {
             return null;

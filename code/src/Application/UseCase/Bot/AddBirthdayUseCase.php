@@ -68,7 +68,7 @@ class AddBirthdayUseCase
 
 
 //        try {
-            $text = QueueMessageUseCase::getMessageByType($firsQueueMessage);
+        $text = QueueMessageUseCase::getMessageByType($firsQueueMessage, $this->queueMessageRepository);
 //        } catch (EventNotFoundException $e) {
 //            $this->telegram->sendMessage([
 //                'chat_id' => $this->telegramUser->telegram_chat_id,
