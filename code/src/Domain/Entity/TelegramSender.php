@@ -116,7 +116,7 @@ class TelegramSender extends Model
                                 'callback_data' => 'changed_my_mind',
                             ],
                             [
-                                'text' => '✅ подтвердить',
+                                'text' => '✅ ok',
                                 'callback_data' => 'confirm_event',
                             ],
                         ],
