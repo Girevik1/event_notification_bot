@@ -69,12 +69,12 @@ class BotUseCase
 //            'parse_mode' => 'HTML',
 //        ]);
 
-//        if (
-//            !isset($message['message_id']) ||
-//            $message['message_id'] === 0
-//        ) {
-//            throw new TelegramMessageDataException('Some data is missing');
-//        }
+        if (
+            !isset($message['message_id']) ||
+            $message['message_id'] === 0
+        ) {
+            throw new TelegramMessageDataException('Some data is missing');
+        }
 
 
 
@@ -257,11 +257,7 @@ class BotUseCase
                 return;
 
             default:
-
-
-
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-
                 if($queueMessageByUser && $text != ''){
 
                     // VALIDATION
@@ -273,7 +269,6 @@ class BotUseCase
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
 
-
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
 
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
@@ -281,7 +276,6 @@ class BotUseCase
                     $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
 
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
-//                    $this->dataEditMessageDto->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
                     if ($queueMessageByUser->type === 'CONFIRMATION') {
                         $this->dataEditMessageDto->keyboard = 'confirmation_event';
@@ -290,6 +284,7 @@ class BotUseCase
                     }
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+
                     $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);

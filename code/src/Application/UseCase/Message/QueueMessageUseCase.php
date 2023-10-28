@@ -13,25 +13,15 @@ use Art\Code\Domain\Exception\QueueTypeException;
 
 class QueueMessageUseCase
 {
-//    private mixed $queueMessageRepository;
-
-//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(public QueueMessageRepositoryInterface $queueMessageRepository)
     {
-//       $this->queueMessageRepository = new QueueMessageRepository();
-//        $dependence = require '../../../../dependence.php';
-//        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
     }
 
     public function processQueueMessage(array $queue, TelegramUser $telegramUser, string $eventType): void
     {
         $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
-        // есть не законченная очередь по др; -> delete -> create new queue
-
         $this->createQueueMessages($queue, $telegramUser->id, $eventType);
-
-
     }
 
     private function createQueueMessages(array $queue, int $telegramUserId, string $eventType): void
@@ -47,7 +37,6 @@ class QueueMessageUseCase
                 $telegram_message->previous_id = $prev->id;
                 $telegram_message->save();
             }
-
             $prev = $telegram_message;
         }
     }
@@ -88,7 +77,6 @@ class QueueMessageUseCase
             case "CONFIRMATION":
 
                 $queueMessagesByUser = $queueMessageRepository->getAllByUserId($message->telegram_user_id);
-//                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->orderBy('id','asc')->get();
 
                 if ($message->event_type === 'birthday') {
                     foreach ($queueMessagesByUser as $queueMessage) {
