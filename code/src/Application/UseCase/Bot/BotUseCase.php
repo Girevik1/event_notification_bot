@@ -51,13 +51,6 @@ class BotUseCase
     }
 
     /**
-//     * @throws TelegramSDKException
-//     * @throws GroupCreateException
-//     * @throws GroupDeleteException
-//     * @throws TelegramSDKException
-//     * @throws EventNotFoundException;
-//     * @throws QueueTypeException;
-//     * @throws TelegramMessageDataException
      * @throws Exception
      */
     public function hook()
@@ -80,23 +73,23 @@ class BotUseCase
             'parse_mode' => 'HTML',
         ]);
 
-        if (
-            !isset($message['message_id']) ||
-            $message['message_id'] === 0
-        ) {
-            throw new TelegramMessageDataException('Some data is missing');
-        }
-
-
-
-//        $message['callback_query'] = $updates->callback_query ?? '';
+//        if (
+//            !isset($message['message_id']) ||
+//            $message['message_id'] === 0
+//        ) {
+//            throw new TelegramMessageDataException('Some data is missing');
+//        }
+//
+//
+//
+////        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
-
-        $this->telegramMessageRepository->create($messageDto);
-
-        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
-            throw new TelegramMessageDataException('Some data is missing');
-        };
+//
+//        $this->telegramMessageRepository->create($messageDto);
+//
+//        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
+//            throw new TelegramMessageDataException('Some data is missing');
+//        };
 
         /*
          * Create group in db on added in group
