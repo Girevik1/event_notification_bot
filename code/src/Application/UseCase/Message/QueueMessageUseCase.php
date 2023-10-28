@@ -59,7 +59,7 @@ class QueueMessageUseCase
         $telegram->telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $message_id,
-            'text' => 'test',
+            'text' => 'test434',
 //            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
