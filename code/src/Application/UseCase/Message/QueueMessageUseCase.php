@@ -90,10 +90,12 @@ class QueueMessageUseCase
 
             case "CONFIRMATION":
                 $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->orderBy('id','asc')->get();
+
                 if ($message->event_type === 'birthday') {
-                    foreach ($queueMessagesByUser as $queueMessage) {
-                        $text .= self::getTextConfirmationBirthday($queueMessage);
-                    }
+                    $text .= 'test';
+//                    foreach ($queueMessagesByUser as $queueMessage) {
+//                        $text .= self::getTextConfirmationBirthday($queueMessage);
+//                    }
                 }
                 break;
 
