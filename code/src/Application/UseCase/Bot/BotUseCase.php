@@ -267,42 +267,42 @@ class BotUseCase
                     'parse_mode' => 'HTML',
                 ]);
 
-                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-
-                if($queueMessageByUser && $text != ''){
-
-                    // VALIDATION
-
-                    // temp
-                    $queueMessageByUser->answer = $text;
-                    $queueMessageByUser->save(); //
-
-
-
-                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
-
-
-
-                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
-
-                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
-
-                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
-
-                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
-//                    $this->dataEditMessageDto->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
-
-                    if ($queueMessageByUser->type === 'CONFIRMATION') {
-                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
-                    } else {
-                        $this->dataEditMessageDto->keyboard = 'process_set_event';
-                    }
-
-                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
-
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-                }
+//                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+//
+//                if($queueMessageByUser && $text != ''){
+//
+//                    // VALIDATION
+//
+//                    // temp
+//                    $queueMessageByUser->answer = $text;
+//                    $queueMessageByUser->save(); //
+//
+//
+//
+//                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+//
+//
+//
+//                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
+//
+//                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
+//
+//                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
+//
+//                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+////                    $this->dataEditMessageDto->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
+//
+//                    if ($queueMessageByUser->type === 'CONFIRMATION') {
+//                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
+//                    } else {
+//                        $this->dataEditMessageDto->keyboard = 'process_set_event';
+//                    }
+//
+//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//                    $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
+//
+//                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+//                }
                 break;
         }
     }
