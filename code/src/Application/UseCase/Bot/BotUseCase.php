@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
+use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -23,7 +25,7 @@ class BotUseCase
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
     private mixed $newRequest;
-    private DataEditMessageDto $dataEditMessage;
+    private DataEditMessageDto $dataEditMessageDto;
 
     /**
      * @throws TelegramSDKException
@@ -40,7 +42,7 @@ class BotUseCase
         $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
         $this->textUseCase = new TextUseCase();
         $this->groupUseCase = new GroupUseCase();
-        $this->dataEditMessage = new DataEditMessageDto();
+        $this->dataEditMessageDto = new DataEditMessageDto();
 
 //        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
@@ -123,65 +125,65 @@ class BotUseCase
                 case "about_project":
 
 
-                    $this->dataEditMessage->text = $this->textUseCase->getAboutText();
-                    $this->dataEditMessage->keyboard = 'to_the_beginning';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $message_id;
+                    $this->dataEditMessageDto->text = $this->textUseCase->getAboutText();
+                    $this->dataEditMessageDto->keyboard = 'to_the_beginning';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $message_id;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "to_the_beginning":
 
-                    $this->dataEditMessage->text = $this->textUseCase->getGreetingsText($isNewUser);
-                    $this->dataEditMessage->keyboard = 'main_menu';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $message_id;
+                    $this->dataEditMessageDto->text = $this->textUseCase->getGreetingsText($isNewUser);
+                    $this->dataEditMessageDto->keyboard = 'main_menu';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $message_id;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "what_can_bot":
 
-                    $this->dataEditMessage->text = $this->textUseCase->getWhatCanText();
-                    $this->dataEditMessage->keyboard = 'to_the_beginning';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $message_id;
+                    $this->dataEditMessageDto->text = $this->textUseCase->getWhatCanText();
+                    $this->dataEditMessageDto->keyboard = 'to_the_beginning';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $message_id;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "how_use":
 
-                    $this->dataEditMessage->text = $this->textUseCase->getHowUseText();
-                    $this->dataEditMessage->keyboard = 'to_the_beginning';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $message_id;
+                    $this->dataEditMessageDto->text = $this->textUseCase->getHowUseText();
+                    $this->dataEditMessageDto->keyboard = 'to_the_beginning';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $message_id;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "settings_menu":
                 case "private_cabinet":
                 case "changed_my_mind":
 
-                $this->dataEditMessage->text = $this->textUseCase->getPrivateCabinetText();
-                $this->dataEditMessage->keyboard = 'settings_menu';
-                $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                $this->dataEditMessage->message_id = $message_id;
+                $this->dataEditMessageDto->text = $this->textUseCase->getPrivateCabinetText();
+                $this->dataEditMessageDto->keyboard = 'settings_menu';
+                $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                $this->dataEditMessageDto->message_id = $message_id;
 
-                TelegramSender::editMessageTextSend($this->dataEditMessage);
+                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                 return;
                 case "list_groups":
 
                     $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
-                    $this->dataEditMessage->text = $this->textUseCase->getListGroupText($listGroups);
-                    $this->dataEditMessage->keyboard = 'to_the_settings_menu';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $message_id;
+                    $this->dataEditMessageDto->text = $this->textUseCase->getListGroupText($listGroups);
+                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $message_id;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
 
@@ -207,12 +209,12 @@ class BotUseCase
                      * */
                     if ($lastSentQueueMessage !== null && $lastSentQueueMessage->previous_id === 0) {
 
-                        $this->dataEditMessage->text = $this->textUseCase->getPrivateCabinetText();
-                        $this->dataEditMessage->keyboard = 'settings_menu';
-                        $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                        $this->dataEditMessage->message_id = $message_id;
+                        $this->dataEditMessageDto->text = $this->textUseCase->getPrivateCabinetText();
+                        $this->dataEditMessageDto->keyboard = 'settings_menu';
+                        $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                        $this->dataEditMessageDto->message_id = $message_id;
 
-                        TelegramSender::editMessageTextSend($this->dataEditMessage);
+                        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                         return;
                     }
@@ -228,15 +230,13 @@ class BotUseCase
 
                     if ($previousMessage !== null) {
                         $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
-//                        $previousMessage->answer = '';
-//                        $previousMessage->save();
 
-                        $this->dataEditMessage->text = AddBirthdayUseCase::getMessageByType($previousMessage);
-                        $this->dataEditMessage->keyboard = 'process_set_event';
-                        $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                        $this->dataEditMessage->message_id = $message_id;
+                        $this->dataEditMessageDto->text = QueueMessageUseCase::getMessageByType($previousMessage);
+                        $this->dataEditMessageDto->keyboard = 'process_set_event';
+                        $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                        $this->dataEditMessageDto->message_id = $message_id;
 
-                        TelegramSender::editMessageTextSend($this->dataEditMessage);
+                        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
                     }
                     return;
 
@@ -269,15 +269,33 @@ class BotUseCase
 
                     $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
 
-                    $this->dataEditMessage->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
-                    $this->dataEditMessage->keyboard = 'process_set_event';
-                    $this->dataEditMessage->chat_id = $telegramUser->telegram_chat_id;
-                    $this->dataEditMessage->message_id = $lastTelegramMessage->message_id;
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+//                    $this->dataEditMessageDto->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessage);
+                    if ($queueMessageByUser->type === 'CONFIRMATION') {
+                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
+                    } else {
+                        $this->dataEditMessageDto->keyboard = 'process_set_event';
+                    }
+
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
+
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
                 }
                 break;
         }
+    }
+
+    /**
+     * @param QueueMessage $queueMessageByUser
+     * @return string|null
+     */
+    private function getTextByEventType(QueueMessage $queueMessageByUser): ?string
+    {
+        return match ($queueMessageByUser->event_type) {
+            "birthday" => QueueMessageUseCase::getMessageByType($queueMessageByUser)
+        };
     }
 
     /**

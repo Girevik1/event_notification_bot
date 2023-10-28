@@ -103,6 +103,26 @@ class TelegramSender extends Model
                     ],
                 ],
             ),
+            "confirmation_event" => json_encode(
+                [
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '🔙 назад',
+                                'callback_data' => 'to_previous_question',
+                            ],
+                            [
+                                'text' => '🙅 передумал',
+                                'callback_data' => 'changed_my_mind',
+                            ],
+                            [
+                                'text' => '✅ подтвердить',
+                                'callback_data' => 'confirm_event',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
             "to_the_beginning" => json_encode(
                 [
                     'inline_keyboard' => [

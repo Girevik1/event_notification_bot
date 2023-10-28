@@ -7,7 +7,7 @@ use Art\Code\Domain\Entity\QueueMessage;
 
 interface QueueMessageRepositoryInterface
 {
-    public function createQueue(int $telegramUserId, string $key): ?QueueMessage;
+    public function createQueue(int $telegramUserId, string $key, string $eventType): ?QueueMessage;
 
 //    public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage;
 

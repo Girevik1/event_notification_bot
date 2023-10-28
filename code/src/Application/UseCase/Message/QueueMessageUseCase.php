@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Message;
 
+use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
-use Art\Code\Domain\Entity\TelegramSender;
+use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramUser;
 
 class QueueMessageUseCase
@@ -21,37 +22,21 @@ class QueueMessageUseCase
 //        $this->queueMessageRepository = new $dependence[\Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class];
     }
 
-    public function processQueueMessage(array $queue, TelegramUser $telegramUser): void
+    public function processQueueMessage(array $queue, TelegramUser $telegramUser, string $eventType): void
     {
-
-//       $a = QueueMessage::where("telegram_user_id", '=', $telegramUser->id)
-//            ->where("state", "NOT_SEND")
-//            ->first();
-
-//        if ($a != null) {
-//        if ($this->queueMessageRepository->existUnfinishedQueueByUser($telegramUser->id)) {
-
         $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
         // есть не законченная очередь по др; -> delete -> create new queue
-//        }
-//        $telegram->editMessageText([
-//            'chat_id' => '500264009',
-//            'message_id' => $msg_id,
-//            'text' => 'rer',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
 
-        $this->createQueueMessages($queue, $telegramUser->id);
+        $this->createQueueMessages($queue, $telegramUser->id, $eventType);
 
 
     }
 
-    private function createQueueMessages(array $queue, int $telegramUserId): void
+    private function createQueueMessages(array $queue, int $telegramUserId, string $eventType): void
     {
         $prev = null;
         foreach ($queue as $key => $value) {
-            $telegram_message = $this->queueMessageRepository->createQueue($telegramUserId, $key);
+            $telegram_message = $this->queueMessageRepository->createQueue($telegramUserId, $key, $eventType);
 
             if ($prev != null) {
                 $prev->next_id = $telegram_message->id;
@@ -64,4 +49,57 @@ class QueueMessageUseCase
             $prev = $telegram_message;
         }
     }
+
+    public static function getMessageByType($message): ?string
+    {
+        if ($message == null) {
+            return null;
+        }
+
+        $message_texts = match ($message->type) {
+            "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday()
+        };
+
+        $text = $message_texts[$message->type];
+
+        switch ($message->type) {
+
+            case "GROUP":
+//                $text .= self::getRubrics();
+                $text .= "\n   (или /cancel для отмены отзыва)";
+                break;
+
+            case "DATE_OF_BIRTH":
+                $text .= '';
+                break;
+
+            case "CONFIRMATION":
+                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->get();
+                if ($message->event_type === 'birthday') {
+                    foreach ($queueMessagesByUser as $queueMessage) {
+                        $text .= self::getTextConfirmationBirthday($queueMessage);
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        $message->state = "SENT";
+        $message->save();
+
+        return $text;
+    }
+
+    private static function getTextConfirmationBirthday(QueueMessage $queueMessage): string
+    {
+        return match ($$queueMessage->type) {
+            "NANE_WHOSE_BIRTHDAY" => "\nИмя: " . $queueMessage->answer,
+            "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
+            "GROUP" => "\nГруппа: " . $queueMessage->answer,
+            "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
+        };
+    }
+
 }

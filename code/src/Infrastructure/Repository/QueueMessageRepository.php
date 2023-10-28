@@ -7,16 +7,15 @@ namespace Art\Code\Infrastructure\Repository;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
 
-//use Illuminate\Database\Eloquent\Collection;
-
 class QueueMessageRepository implements QueueMessageRepositoryInterface
 {
     /**
      * @param int $telegramUserId
      * @param string $key
+     * @param string $eventType
      * @return QueueMessage|null
      */
-    public function createQueue(int $telegramUserId, string $key): ?QueueMessage
+    public function createQueue(int $telegramUserId, string $key, string $eventType): ?QueueMessage
     {
         $telegram_message = new QueueMessage();
         $telegram_message->telegram_user_id = $telegramUserId;
@@ -25,21 +24,11 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
         $telegram_message->next_id = 0;
         $telegram_message->previous_id = 0;
         $telegram_message->answer = "";
+        $telegram_message->event_type = $eventType;
         $telegram_message->save();
 
         return $telegram_message;
     }
-
-//    /**
-//     * @param int $telegramUserId
-//     * @return QueueMessage|null
-//     */
-//    public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage
-//    {
-//        return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
-//            ->where("state", "NOT_SEND")
-//            ->first();
-//    }
 
     /**
      * @param int $telegramUserId
@@ -48,19 +37,24 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     public function deleteAllMessageByUser(int $telegramUserId): mixed
     {
         return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
-//            ->where("state", "NOT_SEND")
             ->delete();
     }
 
+    /**
+     * @param int $telegramUserId
+     * @return QueueMessage|null
+     */
     public function getFirstOpenMsg(int $telegramUserId): ?QueueMessage
     {
         return QueueMessage::where("telegram_user_id", $telegramUserId)
             ->where("state", "NOT_SEND")
-//            ->where("answer", "<>", "")
-//            ->orderBy("id", 'desc')
             ->first();
     }
 
+    /**
+     * @param int $telegramUserId
+     * @return QueueMessage|null
+     */
     public function getLastSentMsg(int $telegramUserId): ?QueueMessage
     {
         return QueueMessage::where("telegram_user_id", $telegramUserId)
@@ -70,11 +64,19 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
             ->first();
     }
 
+    /**
+     * @param int $id
+     * @return QueueMessage|null
+     */
     public function getQueueMessageById(int $id): ?QueueMessage
     {
        return QueueMessage::where("id", $id)->first();
     }
 
+    /**
+     * @param int $id
+     * @return void
+     */
     public function makeNotSendState(int $id): void
     {
         QueueMessage::where("id", $id)
@@ -92,17 +94,4 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
         QueueMessage::where("id", $id)
             ->update([$field => $value]);
     }
-
-//    public function getAllSentByUser(int $telegramUserId): ?QueueMessage
-//    {
-//        return QueueMessage::where("telegram_user_id", $telegramUserId)
-//            ->where('state', 'SENT')
-//            ->get();
-//    }
-//
-//    public function getAllByUser(int $telegramUserId): ?Collection
-//    {
-//        return QueueMessage::where("telegram_user_id", $telegramUserId)->get();
-//    }
-//QueueMessage::where('id', $queueMessageByUser->next_id)->orderBy('id','desc')->first();
 }
