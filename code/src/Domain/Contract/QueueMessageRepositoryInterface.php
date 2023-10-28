@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Art\Code\Domain\Contract;
 
 use Art\Code\Domain\Entity\QueueMessage;
+use Illuminate\Support\Collection;
 
 interface QueueMessageRepositoryInterface
 {
@@ -23,5 +24,5 @@ interface QueueMessageRepositoryInterface
 
     public function updateFieldById(mixed $field, mixed $value, int $id): void;
 
-//    public function getAllByUser(int $telegramUserId): ?Collection;
+    public function getAllByUserId(int $telegramUserId): Collection;
 }

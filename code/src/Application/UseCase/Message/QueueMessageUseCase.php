@@ -55,7 +55,7 @@ class QueueMessageUseCase
     /**
      * @throws EventNotFoundException|QueueTypeException
      */
-    public static function getMessageByType($message): ?string
+    public static function getMessageByType($message,$queueMessageRepository): ?string
     {
         if ($message == null) {
             return null;
@@ -89,7 +89,9 @@ class QueueMessageUseCase
                 break;
 
             case "CONFIRMATION":
-                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->orderBy('id','asc')->get();
+
+                $queueMessagesByUser = $queueMessageRepository->getAllByUserId($message->telegram_user_id);
+//                $queueMessagesByUser = QueueMessage::where('telegram_user_id', $message->telegram_user_id)->orderBy('id','asc')->get();
 
                 if ($message->event_type === 'birthday') {
                     foreach ($queueMessagesByUser as $queueMessage) {

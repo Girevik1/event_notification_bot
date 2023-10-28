@@ -6,6 +6,7 @@ namespace Art\Code\Infrastructure\Repository;
 
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
+use Illuminate\Support\Collection;
 
 class QueueMessageRepository implements QueueMessageRepositoryInterface
 {
@@ -94,5 +95,16 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     {
         QueueMessage::where("id", $id)
             ->update([$field => $value]);
+    }
+
+    /**
+     * @param int $telegramUserId
+     * @return mixed
+     */
+    public function getAllByUserId(int $telegramUserId): Collection
+    {
+        return QueueMessage::where('telegram_user_id', $telegramUserId)
+            ->orderBy('id','asc')
+            ->get();
     }
 }
