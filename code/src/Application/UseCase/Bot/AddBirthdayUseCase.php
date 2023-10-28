@@ -46,6 +46,8 @@ class AddBirthdayUseCase
 
     /**
      * @throws TelegramSDKException
+     * @throws EventNotFoundException;
+     * @throws QueueTypeException;
      */
     public function addBirthday(): void
     {
