@@ -48,6 +48,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     {
         return QueueMessage::where("telegram_user_id", $telegramUserId)
             ->where("state", "NOT_SEND")
+            ->orederBy('id','asc')
             ->first();
     }
 
