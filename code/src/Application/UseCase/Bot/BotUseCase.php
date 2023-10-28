@@ -274,7 +274,15 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save(); //
 
-
+if($queueMessageByUser->next_id === 0){
+        $this->telegram->editMessageText([
+            'chat_id' => 500264009,
+            'message_id' => $message['message_id'],
+            'text' => 'testetetst',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
+}
 
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
@@ -285,13 +293,7 @@ class BotUseCase
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
 
                     $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
-//        $this->telegram->editMessageText([
-//            'chat_id' => 500264009,
-//            'message_id' => $message['message_id'],
-//            'text' => 'testetetst',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
+
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
 //                    $this->dataEditMessageDto->text = AddBirthdayUseCase::getMessageByType($queueMessageByUser);
 
