@@ -213,7 +213,7 @@ class BotUseCase
                 case "confirm_event":
                     $queueMessagesByUser = $this->queueMessageRepository->getAllByUserId($telegramUser->id);
 
-                    $this->dataMappingListEvent($queueMessagesByUser);
+                    $this->dataMappingListEvent($queueMessagesByUser, $message_id);
 
 
 
@@ -309,32 +309,38 @@ class BotUseCase
     /**
      * @throws QueueTypeException
      */
-    private function dataMappingListEvent($queueMessagesByUser)
+    private function dataMappingListEvent($queueMessagesByUser,$messageId)
     {
-        $listEventDto = new ListEventDto();
-        foreach ($queueMessagesByUser as $queueMessage) {
-               match ($queueMessage->type) {
-                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
-                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
-                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
-                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
-                "PERIOD" => $listEventDto->period = $queueMessage->answer,
-                "CONFIRMATION" => "",
-                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
-            };
-        };
+//        $listEventDto = new ListEventDto();
+//        foreach ($queueMessagesByUser as $queueMessage) {
+//               match ($queueMessage->type) {
+//                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
+//                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
+//                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
+//                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
+//                "PERIOD" => $listEventDto->period = $queueMessage->answer,
+//                "CONFIRMATION" => "",
+//                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
+//            };
+//        };
+        $this->telegram->editMessageText([
+            'chat_id' => 500264009,
+            'message_id' => $messageId,
+            'text' => 'testetetst',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
 
-
-       $newEvent =  new ListEvent();
-        $newEvent->name = $listEventDto->name;
-        $newEvent->date_event = $listEventDto->date_event;
-        $newEvent->type = $queueMessagesByUser[0]->event_type;
-        $newEvent->telegram_user_id = $queueMessagesByUser[0]->telegram_user_id;
-        $newEvent->group_id = $listEventDto->group_id;
-        $newEvent->notification_time = Carbon::now();
-//        $newEvent->notification_time = $listEventDto->notification_time;
-        $newEvent->period = $listEventDto->period;
-        $newEvent->save();
+//       $newEvent =  new ListEvent();
+//        $newEvent->name = $listEventDto->name;
+//        $newEvent->date_event = $listEventDto->date_event;
+//        $newEvent->type = $queueMessagesByUser[0]->event_type;
+//        $newEvent->telegram_user_id = $queueMessagesByUser[0]->telegram_user_id;
+//        $newEvent->group_id = $listEventDto->group_id;
+//        $newEvent->notification_time = Carbon::now();
+////        $newEvent->notification_time = $listEventDto->notification_time;
+//        $newEvent->period = $listEventDto->period;
+//        $newEvent->save();
     }
 
     /**
