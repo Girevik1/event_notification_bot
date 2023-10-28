@@ -252,6 +252,14 @@ class BotUseCase
 
             default:
 
+                $this->telegram->editMessageText([
+                    'chat_id' => '500264009',
+                    'message_id' => $message['message_id'],
+                    'text' => 'testetetst',
+                    'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+                    'parse_mode' => 'HTML',
+                ]);
+
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
 
                 if($queueMessageByUser && $text != ''){
@@ -262,13 +270,7 @@ class BotUseCase
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save(); //
 
-                    $this->telegram->editMessageText([
-                        'chat_id' => '500264009',
-                        'message_id' => $message['message_id'],
-                        'text' => 'testetetst',
-                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                        'parse_mode' => 'HTML',
-                    ]);
+
 
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
