@@ -237,7 +237,7 @@ class BotUseCase
                     if ($previousMessage !== null) {
                         $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
 
-                        $this->dataEditMessageDto->text = QueueMessageUseCase::getMessageByType($previousMessage);
+                        $this->dataEditMessageDto->text = QueueMessageUseCase::getMessageByType($previousMessage, $this->queueMessageRepository);
                         $this->dataEditMessageDto->keyboard = 'process_set_event';
                         $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                         $this->dataEditMessageDto->message_id = $message_id;
