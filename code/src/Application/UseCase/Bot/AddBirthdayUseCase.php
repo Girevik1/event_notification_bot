@@ -65,21 +65,21 @@ class AddBirthdayUseCase
 //        ]);
 
 
-        try {
+//        try {
             $text = QueueMessageUseCase::getMessageByType($firsQueueMessage, $this->telegram, $this->message_id);
-        } catch (EventNotFoundException $e) {
-            $this->telegram->sendMessage([
-                'chat_id' => $this->telegramUser->telegram_chat_id,
-                'parse_mode' => 'HTML',
-                'text' => $e->getMessage()
-            ]);
-        } catch (QueueTypeException $e) {
-            $this->telegram->sendMessage([
-                'chat_id' => $this->telegramUser->telegram_chat_id,
-                'parse_mode' => 'HTML',
-                'text' => $e->getMessage()
-            ]);
-        }
+//        } catch (EventNotFoundException $e) {
+//            $this->telegram->sendMessage([
+//                'chat_id' => $this->telegramUser->telegram_chat_id,
+//                'parse_mode' => 'HTML',
+//                'text' => $e->getMessage()
+//            ]);
+//        } catch (QueueTypeException $e) {
+//            $this->telegram->sendMessage([
+//                'chat_id' => $this->telegramUser->telegram_chat_id,
+//                'parse_mode' => 'HTML',
+//                'text' => $e->getMessage()
+//            ]);
+//        }
 
 
         $this->telegram->editMessageText([

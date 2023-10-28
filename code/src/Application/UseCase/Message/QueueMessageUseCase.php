@@ -61,7 +61,7 @@ class QueueMessageUseCase
             return null;
         }
 
-        $telegram->telegram->editMessageText([
+        $telegram->editMessageText([
             'chat_id' => '500264009',
             'message_id' => $message_id,
             'text' => 'test434',
