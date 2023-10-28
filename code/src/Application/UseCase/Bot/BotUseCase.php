@@ -73,12 +73,12 @@ class BotUseCase
 //            'parse_mode' => 'HTML',
 //        ]);
 
-        if (
-            !isset($message['message_id']) ||
-            $message['message_id'] === 0
-        ) {
-            throw new TelegramMessageDataException('Some data is missing');
-        }
+//        if (
+//            !isset($message['message_id']) ||
+//            $message['message_id'] === 0
+//        ) {
+//            throw new TelegramMessageDataException('Some data is missing');
+//        }
 
 
 
