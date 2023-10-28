@@ -8,6 +8,8 @@ use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Domain\Exception\EventNotFoundException;
+use Art\Code\Domain\Exception\QueueTypeException;
 
 class QueueMessageUseCase
 {
@@ -50,6 +52,9 @@ class QueueMessageUseCase
         }
     }
 
+    /**
+     * @throws EventNotFoundException|QueueTypeException
+     */
     public static function getMessageByType($message, $telegram = '', $message_id = ''): ?string
     {
         if ($message == null) {
@@ -64,8 +69,10 @@ class QueueMessageUseCase
             'parse_mode' => 'HTML',
         ]);
 
-        $message_texts = match ($message->type) {
-            "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday()
+        $message_texts = match ($message->event_type) {
+            "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday(),
+            "note" => ['NOTE_NAME'=>'in test..'],
+            default => throw new EventNotFoundException($message->event_type . ' - такой вид эвента не существует')
         };
 
         $text = $message_texts[$message->type];
@@ -100,6 +107,9 @@ class QueueMessageUseCase
         return $text;
     }
 
+    /**
+     * @throws QueueTypeException
+     */
     private static function getTextConfirmationBirthday(QueueMessage $queueMessage): string
     {
         return match ($$queueMessage->type) {
@@ -107,6 +117,7 @@ class QueueMessageUseCase
             "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
             "GROUP" => "\nГруппа: " . $queueMessage->answer,
             "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
+            default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
         };
     }
 
