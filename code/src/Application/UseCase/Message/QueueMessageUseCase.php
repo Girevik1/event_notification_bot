@@ -50,11 +50,19 @@ class QueueMessageUseCase
         }
     }
 
-    public static function getMessageByType($message): ?string
+    public static function getMessageByType($message, $telegram = '', $message_id = ''): ?string
     {
         if ($message == null) {
             return null;
         }
+
+        $telegram->telegram->editMessageText([
+            'chat_id' => '500264009',
+            'message_id' => $message_id,
+            'text' => 'test',
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
 
         $message_texts = match ($message->type) {
             "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday()
