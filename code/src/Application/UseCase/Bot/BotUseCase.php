@@ -223,6 +223,11 @@ class BotUseCase
                     $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                     $this->queueMessageRepository->updateFieldById('answer', 'personal', $lastSentQueueMessage->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
+
+                    $this->queueMessageRepository->updateFieldById('answer', '0', $queueMessageByUser->id);
+                    $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
+                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
