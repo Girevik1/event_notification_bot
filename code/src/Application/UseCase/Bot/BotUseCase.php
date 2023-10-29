@@ -284,6 +284,7 @@ class BotUseCase
                      * Если на этапе выбора "как уведомлять" -> отправили текст, пересекаем
                      * */
                     if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+                        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
                         return;
                     }
 
