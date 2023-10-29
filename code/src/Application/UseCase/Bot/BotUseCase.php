@@ -299,13 +299,12 @@ class BotUseCase
 //                    }
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
-                    $this->telegram->editMessageText([
-                        'chat_id' => 500264009,
-                        'message_id' => $message['message_id'],
-                        'text' => $this->dataEditMessageDto->keyboard,
-                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-                        'parse_mode' => 'HTML',
-                    ]);
+                    $messageSendDto = new MessageSendDto();
+                    $messageSendDto->text = $queueMessageByUser->type;
+                    $messageSendDto->user = $telegramUser;
+                    $messageSendDto->command = 'test';
+                    $messageSendDto->type_btn = '';
+                    TelegramMessage::newMessage($messageSendDto);
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
 
