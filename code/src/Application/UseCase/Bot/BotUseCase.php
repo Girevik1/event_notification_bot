@@ -6,7 +6,6 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Dto\DataEditMessageDto;
-use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
@@ -341,9 +340,8 @@ class BotUseCase
 ////        $newEvent->notification_time = $listEventDto->notification_time;
 //        $newEvent->period = $listEventDto->period;
 //        $newEvent->save();
-        $date = strtotime('2023-10-29');
-        $a = date('Y-m-d', $date);
-
+        $a = new Carbon();
+        $a = $a->now()->format('Y-m-d');
         $newEvent =  new ListEvent();
         $newEvent->name = 'test';
         $newEvent->date_event = $a;
