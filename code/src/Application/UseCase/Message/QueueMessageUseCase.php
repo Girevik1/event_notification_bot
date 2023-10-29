@@ -105,7 +105,7 @@ class QueueMessageUseCase
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: " . $queueMessage->answer,
             "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
-            "NOTIFICATION_TYPE" => "\nКак уведомлять: " . $queueMessage->answer,
+            "NOTIFICATION_TYPE" => "\nКак уведомлять: " . $queueMessage->answer === 'personal' ? 'Лично' : 'В группе',
             "GROUP" => "\nГруппа: " . $queueMessage->answer,
             "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
             "CONFIRMATION" => "",
