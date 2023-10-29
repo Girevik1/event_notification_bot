@@ -79,6 +79,9 @@ class QueueMessageUseCase
 
                 if ($message->event_type === 'birthday') {
                     foreach ($queueMessagesByUser as $queueMessage) {
+                        if($queueMessage->type === 'GROUP' && $queueMessage->answer === '0'){
+                            continue;
+                        }
                         $text .= self::getTextConfirmationBirthday($queueMessage);
                     }
                 }

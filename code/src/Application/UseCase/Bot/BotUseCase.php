@@ -290,9 +290,7 @@ class BotUseCase
                          * Пропустить раздел выбора группы - если это личное оповещение
                          * */
                         if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
-//                            $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                             $this->queueMessageRepository->updateFieldById('state', 'NOT_SEND', $previousMessage->id);
-
                             $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
                             $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousMessage->previous_id);
                         }
@@ -418,7 +416,7 @@ class BotUseCase
             $listEventDto->period = 'annually';
         }
 
-        $newEvent =  new ListEvent();
+        $newEvent = new ListEvent();
         $newEvent->name = $listEventDto->name;
         $newEvent->date_event_at = $listEventDto->date_event_at;
         $newEvent->type = $queueMessagesByUser[0]->event_type;
