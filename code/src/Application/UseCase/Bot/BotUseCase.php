@@ -286,11 +286,11 @@ class BotUseCase
                     $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->previous_id);
 
                     if ($previousMessage !== null) {
-
                         /*
                          * Пропустить раздел выбора группы - если это личное оповещение
                          * */
                         if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
+                            $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
                             $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousMessage->previous_id);
                         }
 
