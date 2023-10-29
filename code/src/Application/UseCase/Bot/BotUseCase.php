@@ -304,6 +304,7 @@ class BotUseCase
 
                         if($previousMessage->type === 'NOTIFICATION_TYPE'){
                             $this->dataEditMessageDto->keyboard = 'notification_type';
+                            $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
                         }else{
                             $this->dataEditMessageDto->keyboard = 'process_set_event';
                         }
