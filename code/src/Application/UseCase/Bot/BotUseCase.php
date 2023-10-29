@@ -311,25 +311,25 @@ class BotUseCase
      */
     private function dataMappingListEvent($queueMessagesByUser,$messageId)
     {
-        $listEventDto = new ListEventDto();
-        foreach ($queueMessagesByUser as $queueMessage) {
-               match ($queueMessage->type) {
-                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
-                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
-                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
-                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
-                "PERIOD" => $listEventDto->period = $queueMessage->answer,
-                "CONFIRMATION" => "",
-                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
-            };
-        };
-        $this->telegram->editMessageText([
-            'chat_id' => 500264009,
-            'message_id' => $messageId,
-            'text' => 'testetetst',
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+//        $listEventDto = new ListEventDto();
+//        foreach ($queueMessagesByUser as $queueMessage) {
+//               match ($queueMessage->type) {
+//                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
+//                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
+//                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
+//                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
+//                "PERIOD" => $listEventDto->period = $queueMessage->answer,
+//                "CONFIRMATION" => "",
+//                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
+//            };
+//        };
+//        $this->telegram->editMessageText([
+//            'chat_id' => 500264009,
+//            'message_id' => $messageId,
+//            'text' => 'testetetst',
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]);
 
 //       $newEvent =  new ListEvent();
 //        $newEvent->name = $listEventDto->name;
@@ -341,6 +341,17 @@ class BotUseCase
 ////        $newEvent->notification_time = $listEventDto->notification_time;
 //        $newEvent->period = $listEventDto->period;
 //        $newEvent->save();
+
+        $newEvent =  new ListEvent();
+        $newEvent->name = 'test';
+        $newEvent->date_event = '2023-10-29';
+        $newEvent->type = 'birthday';
+        $newEvent->telegram_user_id = '3232323232323';
+        $newEvent->group_id = 2;
+        $newEvent->notification_time = Carbon::now();
+//        $newEvent->notification_time = $listEventDto->notification_time;
+        $newEvent->period = 'annually';
+        $newEvent->save();
     }
 
     /**
