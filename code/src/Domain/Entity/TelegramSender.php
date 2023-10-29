@@ -60,7 +60,7 @@ class TelegramSender extends Model
             'chat_id' => $dataEditMessage->chat_id,
             'message_id' => $dataEditMessage->message_id,
             'text' => $dataEditMessage->text,
-            'reply_markup' => TelegramSender::getKeyboard($dataEditMessage->keyboard),
+            'reply_markup' => TelegramSender::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
             'parse_mode' => 'HTML',
         ]);
     }
@@ -82,9 +82,10 @@ class TelegramSender extends Model
 
     /**
      * @param string $type
+     * @param mixed|null $keyboardData
      * @return bool|string
      */
-    public static function getKeyboard(string $type): bool|string
+    public static function getKeyboard(string $type, mixed $keyboardData = null): bool|string
     {
         return match ($type) {
             "process_set_event" => json_encode(
@@ -144,7 +145,7 @@ class TelegramSender extends Model
                         ],
                         [
                             [
-                                'text' => '👥 в группе',
+                                'text' => '👥 в группе (доступных: ' . $keyboardData . ')',
                                 'callback_data' => 'group_notice',
                             ],
                         ],

@@ -10,5 +10,6 @@ class DataEditMessageDto
     public int $message_id;
     public string $text;
     public string $keyboard;
+    public mixed $keyboardData;
 
 }

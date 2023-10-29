@@ -14,4 +14,6 @@ interface TelegramGroupRepositoryInterface
     public function getListByUser(string $userChatId):Collection;
 
     public function deleteByChatId(string $chatId): mixed;
+
+    public function getCountByUser(string $userChatId): int;
 }

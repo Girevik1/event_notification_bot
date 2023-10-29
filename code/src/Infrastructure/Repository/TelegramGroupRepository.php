@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TelegramGroupRepository implements TelegramGroupRepositoryInterface
 {
+    /**
+     * @param TelegramGroupDto $telegramGroupDto
+     * @return TelegramGroup
+     */
     public function create(TelegramGroupDto $telegramGroupDto): TelegramGroup
     {
         return TelegramGroup::create([
@@ -20,6 +24,10 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
         ]);
     }
 
+    /**
+     * @param string $userChatId
+     * @return Collection
+     */
     public function getListByUser(string $userChatId): Collection
     {
         return TelegramGroup::select('name')
@@ -27,9 +35,23 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
             ->get();
     }
 
+    /**
+     * @param string $chatId
+     * @return mixed
+     */
     public function deleteByChatId(string $chatId): mixed
     {
         return TelegramGroup::where('group_chat_id', $chatId)
             ->delete();
+    }
+
+    /**
+     * @param string $userChatId
+     * @return int
+     */
+    public function getCountByUser(string $userChatId): int
+    {
+        return TelegramGroup::where('user_chat_id', '=', $userChatId)
+            ->count();
     }
 }
