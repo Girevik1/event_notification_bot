@@ -160,7 +160,6 @@ class TelegramSender extends Model
                                 'callback_data' => 'to_the_beginning',
                             ],
                         ]
-
                     ],
                 ],
             ),
