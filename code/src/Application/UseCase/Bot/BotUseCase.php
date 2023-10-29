@@ -281,7 +281,6 @@ class BotUseCase
 
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
-
                     TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
 
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
