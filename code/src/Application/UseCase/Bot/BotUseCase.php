@@ -290,7 +290,7 @@ class BotUseCase
                          * Пропустить раздел выбора группы - если это личное оповещение
                          * */
                         if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
-                            $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+//                            $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                             $this->queueMessageRepository->updateFieldById('state', 'NOT_SEND', $lastSentQueueMessage->id);
 
                             $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
