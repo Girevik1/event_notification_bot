@@ -280,6 +280,13 @@ class BotUseCase
 
                     // VALIDATION
 
+                    /*
+                     * Если на этапе выбора "как уведомлять" -> отправили текст, пересекаем
+                     * */
+                    if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+                        return;
+                    }
+
                     // temp
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save(); //
