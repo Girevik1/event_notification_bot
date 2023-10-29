@@ -219,9 +219,18 @@ class BotUseCase
 
                     return;
 
-//                case "personal_notice":
-//                    // empty
-//                    break;
+                case "personal_notice":
+                    $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+                    $this->queueMessageRepository->updateFieldById('answer', 'personal', $lastSentQueueMessage->id);
+                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $messageId;
+
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                    return;
 
                 case "to_previous_question":
 
