@@ -337,6 +337,7 @@ class BotUseCase
             match ($queueMessage->type) {
                 "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
                 "DATE_OF_BIRTH" => $listEventDto->date_event_at = Carbon::parse($queueMessage->answer),
+                "NOTIFICATION_TYPE" => $listEventDto->notification_type = $queueMessage->answer,
                 "GROUP" => $listEventDto->group_id = (int)$queueMessage->answer,
                 "TIME_NOTIFICATION" => $listEventDto->notification_time_at = $queueMessage->answer,
                 "PERIOD" => $listEventDto->period = $queueMessage->answer,
