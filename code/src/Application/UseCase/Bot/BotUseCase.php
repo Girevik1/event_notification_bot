@@ -341,14 +341,15 @@ class BotUseCase
 ////        $newEvent->notification_time = $listEventDto->notification_time;
 //        $newEvent->period = $listEventDto->period;
 //        $newEvent->save();
-
+        $date = new \DateTime();
+        $a =  $date->format('Y-m-d H:i:s.uO');
         $newEvent =  new ListEvent();
         $newEvent->name = 'test';
         $newEvent->date_event = '2023-10-29';
         $newEvent->type = 'birthday';
         $newEvent->telegram_user_id = '3232323232323';
         $newEvent->group_id = 2;
-        $newEvent->notification_time = Carbon::now();
+        $newEvent->notification_time = $a;
 //        $newEvent->notification_time = $listEventDto->notification_time;
         $newEvent->period = 'annually';
         $newEvent->save();
