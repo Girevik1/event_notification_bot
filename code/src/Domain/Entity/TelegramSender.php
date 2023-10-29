@@ -85,7 +85,7 @@ class TelegramSender extends Model
      * @param mixed|null $keyboardData
      * @return bool|string
      */
-    public static function getKeyboard(string $type, mixed $keyboardData = null): bool|string
+    public static function getKeyboard(string $type, mixed $keyboardData = null)
     {
         return match ($type) {
             "process_set_event" => json_encode(
