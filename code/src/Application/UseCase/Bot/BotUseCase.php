@@ -317,7 +317,7 @@ class BotUseCase
     {
         if ($queueMessageByUser->type === 'CONFIRMATION') {
             $textKeyboard = 'confirmation_event';
-        } else if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+        } else if ($queueMessageByUser->type == 'NOTIFICATION_TYPE') {
             $textKeyboard = 'notification_type';
         } else {
             $textKeyboard = 'process_set_event';
