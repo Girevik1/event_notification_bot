@@ -299,6 +299,14 @@ class BotUseCase
 //                    }
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
+                    $this->telegram->editMessageText([
+                        'chat_id' => 500264009,
+                        'message_id' => $message['message_id'],
+                        'text' => $this->dataEditMessageDto->keyboard,
+                        'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+                        'parse_mode' => 'HTML',
+                    ]);
+
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
 
                     $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
@@ -317,7 +325,9 @@ class BotUseCase
     {
         if ($queueMessageByUser->type === 'CONFIRMATION') {
             $textKeyboard = 'confirmation_event';
-        } else if ($queueMessageByUser->type == 'NOTIFICATION_TYPE') {
+        }
+
+        if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
             $textKeyboard = 'notification_type';
         } else {
             $textKeyboard = 'process_set_event';
