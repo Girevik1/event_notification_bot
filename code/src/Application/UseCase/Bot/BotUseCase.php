@@ -322,13 +322,13 @@ class BotUseCase
 //                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
 //            };
 //        };
-//        $this->telegram->editMessageText([
-//            'chat_id' => 500264009,
-//            'message_id' => $messageId,
-//            'text' => 'testetetst',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
+        $this->telegram->editMessageText([
+            'chat_id' => 500264009,
+            'message_id' => $messageId,
+            'text' => 'testetetst',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
 
 //       $newEvent =  new ListEvent();
 //        $newEvent->name = $listEventDto->name;
