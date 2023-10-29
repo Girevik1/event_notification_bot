@@ -72,6 +72,8 @@ class BotUseCase
 //            'parse_mode' => 'HTML',
 //        ]);
 
+
+
         if (
             !isset($message['message_id']) ||
             $message['message_id'] === 0
@@ -310,22 +312,22 @@ class BotUseCase
      */
     private function dataMappingListEvent($queueMessagesByUser,$messageId)
     {
-//        $listEventDto = new ListEventDto();
-//        foreach ($queueMessagesByUser as $queueMessage) {
-//               match ($queueMessage->type) {
-//                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
-//                "DATE_OF_BIRTH" => $listEventDto->date_event = $queueMessage->answer,
-//                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
-//                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
-//                "PERIOD" => $listEventDto->period = $queueMessage->answer,
-//                "CONFIRMATION" => "",
-//                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
-//            };
-//        };
+        $listEventDto = new ListEventDto();
+        foreach ($queueMessagesByUser as $queueMessage) {
+               match ($queueMessage->type) {
+                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
+                "DATE_OF_BIRTH" => $listEventDto->date_event = Carbon::parse($queueMessage->answer),
+                "GROUP" => $listEventDto->group_id = $queueMessage->answer,
+                "TIME_NOTIFICATION" => $listEventDto->notification_time = $queueMessage->answer,
+                "PERIOD" => $listEventDto->period = $queueMessage->answer,
+                "CONFIRMATION" => "",
+                default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
+            };
+        };
         $this->telegram->editMessageText([
             'chat_id' => 500264009,
             'message_id' => $messageId,
-            'text' => 'testetetst',
+            'text' => $listEventDto->name,
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
@@ -340,20 +342,22 @@ class BotUseCase
 ////        $newEvent->notification_time = $listEventDto->notification_time;
 //        $newEvent->period = $listEventDto->period;
 //        $newEvent->save();
-        $a = new Carbon();
-        $a = $a->now()->format('Y-m-d');
-        $newEvent =  new ListEvent();
-        $newEvent->name = 'test';
-        $newEvent->date_event = $a;
-//        $newEvent->date_event = '2023-10-29';
-        $newEvent->type = 'birthday';
-        $newEvent->telegram_user_id = 1;
-        $newEvent->group_id = 2;
-        $date = date('Y-m-d H:i:s', strtotime('Wed, 21 Jul 2010 00:28:50 GMT'));
-        $newEvent->notification_time = $date;
-//        $newEvent->notification_time = $listEventDto->notification_time;
-        $newEvent->period = 'annually';
-        $newEvent->save();
+
+
+//        $dateEvent = Carbon::parse('2023-10-29');
+////        $a = $a->now()->format('Y-m-d');
+//        $newEvent =  new ListEvent();
+//        $newEvent->name = 'test';
+////        $newEvent->date_event_at = $a;
+//        $newEvent->date_event_at = $dateEvent;
+//        $newEvent->type = 'birthday';
+//        $newEvent->telegram_user_id = 1;
+//        $newEvent->group_id = 2;
+////        $date = date('Y-m-d H:i:s', strtotime('Wed, 21 Jul 2010 00:28:50 GMT'));
+//        $newEvent->notification_time_at = '12:00';
+////        $newEvent->notification_time = $listEventDto->notification_time;
+//        $newEvent->period = 'annually';
+//        $newEvent->save();
     }
 
     /**

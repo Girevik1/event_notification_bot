@@ -15,4 +15,5 @@ class ListEventDto
     public string $type;
     public int $group_id;
     public string $period;
+
 }
