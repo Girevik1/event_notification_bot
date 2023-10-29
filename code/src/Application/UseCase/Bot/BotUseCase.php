@@ -266,6 +266,11 @@ class BotUseCase
                     $previousMessage = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->previous_id);
 
                     if ($previousMessage !== null) {
+
+                        if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
+                            $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousMessage->previous_id);
+                        }
+
                         $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
 
                         if($previousMessage->type === 'NOTIFICATION_TYPE'){
