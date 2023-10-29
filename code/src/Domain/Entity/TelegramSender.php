@@ -126,7 +126,6 @@ class TelegramSender extends Model
             "notification_type" => json_encode(
                 [
                     'inline_keyboard' => [
-
                         [
                             [
                                 'text' => '🔙 назад',
@@ -137,18 +136,18 @@ class TelegramSender extends Model
                                 'callback_data' => 'changed_my_mind',
                             ]
                         ],
-                        [
-                            [
-                                'text' => '👤 лично',
-                                'callback_data' => 'personal_notice',
-                            ],
-                        ],
-                        [
-                            [
-                                'text' => '👥 в группе',
-                                'callback_data' => 'group_notice',
-                            ],
-                        ],
+//                        [
+//                            [
+//                                'text' => '👤 лично',
+//                                'callback_data' => 'personal_notice',
+//                            ],
+//                        ],
+//                        [
+//                            [
+//                                'text' => '👥 в группе',
+//                                'callback_data' => 'group_notice',
+//                            ],
+//                        ],
                     ],
                 ],
             ),
