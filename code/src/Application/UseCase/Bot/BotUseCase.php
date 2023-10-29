@@ -358,9 +358,9 @@ class BotUseCase
 //                    }
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
-//                    if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
-//                        $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
-//                    }
+                    if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
+                        $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+                    }
 
 //                    $messageSendDto = new MessageSendDto();
 //                    $messageSendDto->text = $this->dataEditMessageDto->text;
