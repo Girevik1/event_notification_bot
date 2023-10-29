@@ -300,7 +300,7 @@ class BotUseCase
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
                     $messageSendDto = new MessageSendDto();
-                    $messageSendDto->text = $queueMessageByUser->type;
+                    $messageSendDto->text = $this->dataEditMessageDto->keyboard;
                     $messageSendDto->user = $telegramUser;
                     $messageSendDto->command = 'test';
                     $messageSendDto->type_btn = '';
