@@ -341,15 +341,17 @@ class BotUseCase
 ////        $newEvent->notification_time = $listEventDto->notification_time;
 //        $newEvent->period = $listEventDto->period;
 //        $newEvent->save();
-        $date = new \DateTime();
-        $a =  $date->format('Y-m-d H:i:s.uO');
+        $date = strtotime('2023-10-29');
+        $a = date('Y-m-d', $date);
+
         $newEvent =  new ListEvent();
         $newEvent->name = 'test';
-        $newEvent->date_event = '2023-10-29';
+        $newEvent->date_event = $a;
+//        $newEvent->date_event = '2023-10-29';
         $newEvent->type = 'birthday';
-        $newEvent->telegram_user_id = '3232323232323';
+        $newEvent->telegram_user_id = 1;
         $newEvent->group_id = 2;
-        $newEvent->notification_time = $a;
+        $newEvent->notification_time = $date;
 //        $newEvent->notification_time = $listEventDto->notification_time;
         $newEvent->period = 'annually';
         $newEvent->save();
