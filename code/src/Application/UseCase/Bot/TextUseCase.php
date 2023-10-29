@@ -61,6 +61,16 @@ class TextUseCase
         return $text;
     }
 
+    public function getSuccessConfirmText(string $type): string
+    {
+        $text = '';
+        if ($type === 'birthday') {
+            $text = "<b>🎉 День рождения добавлено!</b>";
+        }
+
+        return $text;
+    }
+
     public function getAboutText(): string
     {
         $text = "<b>❔О проекте</b>";
