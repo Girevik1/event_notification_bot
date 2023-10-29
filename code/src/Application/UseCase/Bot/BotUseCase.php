@@ -220,6 +220,7 @@ class BotUseCase
                     return;
 
                 case "personal_notice":
+
                     $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                     $this->queueMessageRepository->updateFieldById('answer', 'personal', $lastSentQueueMessage->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
@@ -227,6 +228,25 @@ class BotUseCase
                     $this->queueMessageRepository->updateFieldById('answer', '0', $queueMessageByUser->id);
                     $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $messageId;
+
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                    return;
+
+                    case "group_notice":
+
+                    $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+                    $this->queueMessageRepository->updateFieldById('answer', 'group', $lastSentQueueMessage->id);
+                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
+
+//                    $this->queueMessageRepository->updateFieldById('answer', '0', $queueMessageByUser->id);
+//                    $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
+//                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
@@ -267,6 +287,9 @@ class BotUseCase
 
                     if ($previousMessage !== null) {
 
+                        /*
+                         * Пропустить раздел выбора группы - если это личное оповещение
+                         * */
                         if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
                             $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousMessage->previous_id);
                         }
