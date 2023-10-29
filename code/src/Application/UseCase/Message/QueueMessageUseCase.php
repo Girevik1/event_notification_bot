@@ -105,12 +105,25 @@ class QueueMessageUseCase
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: " . $queueMessage->answer,
             "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
-            "NOTIFICATION_TYPE" => "\nКак уведомлять: " . $queueMessage->answer === 'personal' ? 'Лично' : 'В группе',
+            "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
             "GROUP" => "\nГруппа: " . $queueMessage->answer,
             "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
             "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
         };
+    }
+
+    /**
+     * @param string $answer
+     * @return string
+     */
+    private static function getNotificationTypeByCondition(string $answer): string
+    {
+        if ($answer === 'personal') {
+            return "\nКак уведомлять: Лично";
+        }
+        return "\nКак уведомлять: В группе";
+
     }
 
 }
