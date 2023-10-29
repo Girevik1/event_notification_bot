@@ -20,13 +20,12 @@ class AddBirthdayUseCase
     public int $message_id;
     private QueueMessageUseCase $queueMessageUseCase;
     private QueueMessageRepositoryInterface $queueMessageRepository;
-//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(
         Api          $telegram,
         TelegramUser $telegramUser,
         int          $message_id,
-        QueueMessageRepositoryInterface $queueMessageRepository
+        QueueMessageRepositoryInterface  $queueMessageRepository
     )
     {
 
@@ -47,7 +46,6 @@ class AddBirthdayUseCase
     /**
      * @throws TelegramSDKException
      * @throws EventNotFoundException;
-     * @throws QueueTypeException;
      */
     public function addBirthday(): void
     {
@@ -55,20 +53,20 @@ class AddBirthdayUseCase
 
         $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser, 'birthday');
 
-        $firsQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
+        $firstQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 
 
 //                $this->telegram->editMessageText([
 //            'chat_id' => '500264009',
 //            'message_id' => $this->message_id,
-//            'text' => $firsQueueMessage->type,
+//            'text' => $firstQueueMessage->type,
 //            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
 //            'parse_mode' => 'HTML',
 //        ]);
 
 
 //        try {
-        $text = QueueMessageUseCase::getMessageByType($firsQueueMessage, $this->queueMessageRepository);
+        $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->queueMessageRepository);
 //        } catch (EventNotFoundException $e) {
 //            $this->telegram->sendMessage([
 //                'chat_id' => $this->telegramUser->telegram_chat_id,

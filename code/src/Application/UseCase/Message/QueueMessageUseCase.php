@@ -6,6 +6,7 @@ namespace Art\Code\Application\UseCase\Message;
 
 use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
+use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\EventNotFoundException;
@@ -40,10 +41,12 @@ class QueueMessageUseCase
         }
     }
 
-    /**
-     * @throws EventNotFoundException|QueueTypeException
-     */
-    public static function getMessageByType(QueueMessage $message, QueueMessageRepositoryInterface $queueMessageRepository): ?string
+    public static function getMessageByType(
+        QueueMessage                      $message,
+        QueueMessageRepositoryInterface   $queueMessageRepository,
+        ?TelegramGroupRepositoryInterface $groupRepository = null,
+        string                            $chatId = ''
+    ): ?string
     {
 
 //        $telegram->editMessageText([
@@ -66,7 +69,8 @@ class QueueMessageUseCase
 
             case "GROUP":
 //                $text .= self::getRubrics();
-                $text .= "\n   (или /cancel для отмены отзыва)";
+//                $text .= "\n   (или /cancel для отмены отзыва)";
+                $text .= self::getNamesGroup($groupRepository,$chatId);
                 break;
 
             case "DATE_OF_BIRTH":
@@ -100,7 +104,7 @@ class QueueMessageUseCase
     /**
      * @throws QueueTypeException
      */
-    private static function getTextConfirmationBirthday($queueMessage): string
+    private static function getTextConfirmationBirthday(QueueMessage $queueMessage): string
     {
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
@@ -124,6 +128,22 @@ class QueueMessageUseCase
         }
         return "\nКак уведомлять: <i>В группе</i>";
 
+    }
+
+    /**
+     * @param TelegramGroupRepositoryInterface $groupRepository
+     * @param string $chatId
+     * @return string
+     */
+    private static function getNamesGroup(TelegramGroupRepositoryInterface $groupRepository, string $chatId): string
+    {
+        $textNameGroup = "\n";
+        $groups = $groupRepository->getListByUser($chatId);
+        foreach ($groups as $group){
+            $textNameGroup .= "\n" . $group->id . ") <b>". $group->name . "</b>";
+        }
+
+        return $textNameGroup;
     }
 
 }

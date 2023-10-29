@@ -15,6 +15,7 @@ use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
+use Art\Code\Domain\Exception\EventNotFoundException;
 use Art\Code\Domain\Exception\QueueTypeException;
 use Art\Code\Domain\Exception\TelegramMessageDataException;
 use Carbon\Carbon;
@@ -229,7 +230,7 @@ class BotUseCase
                     $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
-                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
@@ -252,8 +253,7 @@ class BotUseCase
 //                    $this->queueMessageRepository->updateFieldById('answer', '0', $queueMessageByUser->id);
 //                    $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
 //                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
-
-                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+                        $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
@@ -309,7 +309,13 @@ class BotUseCase
                             $this->dataEditMessageDto->keyboard = 'process_set_event';
                         }
 
-                        $this->dataEditMessageDto->text = QueueMessageUseCase::getMessageByType($previousMessage, $this->queueMessageRepository);
+                        $this->dataEditMessageDto->text = QueueMessageUseCase::getMessageByType(
+                            $previousMessage,
+                            $this->queueMessageRepository,
+                            $this->telegramGroupRepository,
+                            $telegramUser->telegram_chat_id
+                        );
+
                         $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                         $this->dataEditMessageDto->message_id = $messageId;
 
@@ -353,7 +359,7 @@ class BotUseCase
 
                     $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
 
-                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
 //                    if ($queueMessageByUser->type === 'CONFIRMATION') {
 //                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
@@ -446,14 +452,20 @@ class BotUseCase
     }
 
     /**
-     * @throws Exception
      * @param QueueMessage $queueMessageByUser
+     * @param string $chatId
      * @return string|null
+     * @throws EventNotFoundException
      */
-    private function getTextByEventType(QueueMessage $queueMessageByUser): ?string
+    private function getTextByEventType(QueueMessage $queueMessageByUser, string $chatId = ''): ?string
     {
         return match ($queueMessageByUser->event_type) {
-            "birthday" => QueueMessageUseCase::getMessageByType($queueMessageByUser, $this->queueMessageRepository)
+            "birthday" => QueueMessageUseCase::getMessageByType(
+                $queueMessageByUser,
+                $this->queueMessageRepository,
+                $this->telegramGroupRepository,
+                $chatId
+            )
         };
     }
 
