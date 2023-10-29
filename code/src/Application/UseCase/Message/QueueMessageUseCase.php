@@ -103,11 +103,11 @@ class QueueMessageUseCase
     private static function getTextConfirmationBirthday($queueMessage): string
     {
         return match ($queueMessage->type) {
-            "NANE_WHOSE_BIRTHDAY" => "\nИмя: " . $queueMessage->answer,
-            "DATE_OF_BIRTH" => "\nДата рождения: " . $queueMessage->answer,
+            "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
+            "DATE_OF_BIRTH" => "\nДата рождения: <i>" . $queueMessage->answer . "</i>",
             "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
-            "GROUP" => "\nГруппа: " . $queueMessage->answer,
-            "TIME_NOTIFICATION" => "\nВремя оповещения: " . $queueMessage->answer,
+            "GROUP" => "\nГруппа: <i>" . $queueMessage->answer . "</i>",
+            "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",
             "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
         };
@@ -120,9 +120,9 @@ class QueueMessageUseCase
     private static function getNotificationTypeByCondition(string $answer): string
     {
         if ($answer === 'personal') {
-            return "\nКак уведомлять: Лично";
+            return "\nКак уведомлять: <i>Лично</i>";
         }
-        return "\nКак уведомлять: В группе";
+        return "\nКак уведомлять: <i>В группе</i>";
 
     }
 
