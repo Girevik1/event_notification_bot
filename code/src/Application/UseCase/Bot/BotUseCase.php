@@ -341,7 +341,7 @@ class BotUseCase
      * @throws QueueTypeException
      * @throws TelegramSDKException
      */
-    private function dataMappingListEvent(Collection $queueMessagesByUser, TelegramUser $telegramUser, int $messageId): void
+    private function dataMappingListEvent($queueMessagesByUser, TelegramUser $telegramUser, int $messageId): void
     {
         $listEventDto = new ListEventDto();
         foreach ($queueMessagesByUser as $queueMessage) {
