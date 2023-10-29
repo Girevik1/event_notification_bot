@@ -145,7 +145,7 @@ class TelegramSender extends Model
                         ],
                         [
                             [
-                                'text' => '👥 в группе (доступных: ' . $keyboardData . ')',
+                                'text' => '👥 в группе (доступны: ' . $keyboardData . ')',
                                 'callback_data' => 'group_notice',
                             ],
                         ],

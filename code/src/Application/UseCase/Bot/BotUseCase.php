@@ -240,6 +240,11 @@ class BotUseCase
 
                     case "group_notice":
 
+                    $countAccessGroup = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+                    if ($countAccessGroup === 0) {
+                        return;
+                    }
+
                     $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                     $this->queueMessageRepository->updateFieldById('answer', 'group', $lastSentQueueMessage->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
