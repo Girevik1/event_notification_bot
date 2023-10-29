@@ -213,8 +213,8 @@ class BotUseCase
                     return;
 
                 case "confirm_event":
-                    $queueMessagesByUser = $this->queueMessageRepository->getAllByUserId($telegramUser->id);
 
+                    $queueMessagesByUser = $this->queueMessageRepository->getAllByUserId($telegramUser->id);
                     $this->dataMappingListEvent($queueMessagesByUser, $telegramUser, $messageId);
 
                     return;
@@ -290,11 +290,14 @@ class BotUseCase
 
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser);
 
-                    if ($queueMessageByUser->type === 'CONFIRMATION') {
-                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
-                    } else {
-                        $this->dataEditMessageDto->keyboard = 'process_set_event';
-                    }
+//                    if ($queueMessageByUser->type === 'CONFIRMATION') {
+//                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
+//                    } else if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+//                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
+//                    } else {
+//                        $this->dataEditMessageDto->keyboard = 'process_set_event';
+//                    }
+                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
 
@@ -307,10 +310,27 @@ class BotUseCase
     }
 
     /**
+     * @param QueueMessage $queueMessageByUser
+     * @return string
+     */
+    private function gerKeyboardByQueueType(QueueMessage $queueMessageByUser): string
+    {
+        if ($queueMessageByUser->type === 'CONFIRMATION') {
+            $textKeyboard = 'confirmation_event';
+        } else if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+            $textKeyboard = 'notification_type';
+        } else {
+            $textKeyboard = 'process_set_event';
+        }
+
+        return $textKeyboard;
+    }
+
+    /**
      * @throws QueueTypeException
      * @throws TelegramSDKException
      */
-    private function dataMappingListEvent(Collection $queueMessagesByUser, TelegramUser $telegramUser, int $messageId)
+    private function dataMappingListEvent(Collection $queueMessagesByUser, TelegramUser $telegramUser, int $messageId): void
     {
         $listEventDto = new ListEventDto();
         foreach ($queueMessagesByUser as $queueMessage) {
