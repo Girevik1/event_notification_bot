@@ -56,7 +56,7 @@ class QueueMessageUseCase
 
         $message_texts = match ($message->event_type) {
             "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday(),
-//            "note" => ['NOTE_NAME'=>'in test..'],
+            "note" => ['NOTE_NAME'=>'in test..'],
             default => throw new EventNotFoundException($message->event_type . ' - такой вид эвента не существует')
         };
 
