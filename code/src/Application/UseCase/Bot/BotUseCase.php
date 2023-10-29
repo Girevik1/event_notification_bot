@@ -351,6 +351,7 @@ class BotUseCase
         $newEvent->type = 'birthday';
         $newEvent->telegram_user_id = 1;
         $newEvent->group_id = 2;
+        $date = date('Y-m-d H:i:s', strtotime('Wed, 21 Jul 2010 00:28:50 GMT'));
         $newEvent->notification_time = $date;
 //        $newEvent->notification_time = $listEventDto->notification_time;
         $newEvent->period = 'annually';
