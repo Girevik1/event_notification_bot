@@ -291,7 +291,7 @@ class BotUseCase
                          * */
                         if($previousMessage->type === 'GROUP' && $previousMessage->answer === '0'){
 //                            $lastSentQueueMessage = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-                            $this->queueMessageRepository->updateFieldById('state', 'NOT_SEND', $lastSentQueueMessage->id);
+                            $this->queueMessageRepository->updateFieldById('state', 'NOT_SEND', $previousMessage->id);
 
                             $this->queueMessageRepository->updateFieldById('answer', '', $previousMessage->id);
                             $previousMessage = $this->queueMessageRepository->getQueueMessageById($previousMessage->previous_id);
