@@ -30,7 +30,7 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
      */
     public function getListByUser(string $userChatId): Collection
     {
-        return TelegramGroup::select('name')
+        return TelegramGroup::select('id', 'name')
             ->where('user_chat_id', '=', $userChatId)
             ->get();
     }
