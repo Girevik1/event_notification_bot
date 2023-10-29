@@ -219,9 +219,9 @@ class BotUseCase
 
                     return;
 
-                case "personal_notice":
-                    // empty
-                    break;
+//                case "personal_notice":
+//                    // empty
+//                    break;
 
                 case "to_previous_question":
 
