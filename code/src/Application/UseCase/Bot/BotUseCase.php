@@ -205,7 +205,7 @@ final class BotUseCase
                     case "list_events":
 
                     $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
-                    $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents);
+                    $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                     $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;

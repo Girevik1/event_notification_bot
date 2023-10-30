@@ -55,7 +55,7 @@ class TextUseCase
         return "<b>Бот не добавлен в группы.</b>";
     }
 
-    public function getListEventText($listEvents): string
+    public function getListEventText($listEvents, $groupRepository): string
     {
         if (count($listEvents) > 0) {
 
@@ -65,9 +65,16 @@ class TextUseCase
 
                 $eventName = $this->getEventNameByType()[$event->type];
                 $dateOfEvent = Carbon::parse($event->date_event_at)->format('d.m.Y');
-                $notificationMethod = $event->group_id === 0 ? 'лично' : 'в группе';
                 $periodicity = $this->getPeriodText()[$event->period];
-                $groupName = 'еуые';
+
+                $groupName = '';
+                if($event->group_id === 0){
+                    $notificationMethod = 'лично';
+                }else{
+                    $notificationMethod = 'в группе';
+                    $group = $groupRepository->getFirstById($event->group_id);
+                    $groupName = $group->name;
+                }
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
                 $text .= "    Имя: <i>" . $event->name . "</i>\n";
