@@ -73,11 +73,10 @@ class TextUseCase
                     $notificationMethod = 'лично';
                 }else{
                     $notificationMethod = 'в группе';
-                    $group = $groupRepository->getFirstById(2);
+                    $group = $groupRepository->getFirstById((int)$event->group_id);
                     if($group != null){
                         $groupName = $group->name;
                     }
-
                 }
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
