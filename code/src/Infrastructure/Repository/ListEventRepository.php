@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Art\Code\Infrastructure\Repository;
 
-use Art\Code\Domain\Contract\listEventRepositoryInterface;
+use Art\Code\Domain\Contract\ListEventRepositoryInterface;
 use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Entity\ListEvent;
 
-class ListEventRepository implements listEventRepositoryInterface
+class ListEventRepository implements ListEventRepositoryInterface
 {
     public function create(ListEventDto $listEventDto): ListEvent
     {

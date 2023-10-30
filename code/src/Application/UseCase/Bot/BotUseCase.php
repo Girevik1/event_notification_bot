@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
+use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
@@ -39,7 +40,8 @@ final class BotUseCase
         public $telegramUserRepository,
         public $telegramMessageRepository,
         public $telegramGroupRepository,
-        public $queueMessageRepository,
+        public TelegramMessageRepositoryInterface $queueMessageRepository,
+        public $listEventRepository,
 //        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
 //        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
     )
@@ -188,6 +190,7 @@ final class BotUseCase
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                 return;
+
                 case "list_groups":
 
                     $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
@@ -199,6 +202,18 @@ final class BotUseCase
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
+
+                    case "list_events":
+
+//                    $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
+//                    $this->dataEditMessageDto->text = $this->textUseCase->getListGroupText($listGroups);
+//                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//                    $this->dataEditMessageDto->message_id = $messageId;
+//
+//                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+//
+//                    return;
 
                 case "add_birthday":
 

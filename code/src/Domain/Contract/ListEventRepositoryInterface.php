@@ -6,7 +6,7 @@ namespace Art\Code\Domain\Contract;
 use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Entity\ListEvent;
 
-interface listEventRepositoryInterface
+interface ListEventRepositoryInterface
 {
     public function create(ListEventDto $listEventDto): ListEvent;
 }
