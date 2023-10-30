@@ -64,14 +64,14 @@ class TextUseCase
             foreach ($listEvents as $key => $event) {
 
                 $eventName = $this->getEventNameByType()[$event->type];
-                $dateOfEvent = Carbon::parse($event->date_event_at)->format('d-m-Y');
+                $dateOfEvent = Carbon::parse($event->date_event_at)->format('d.m.Y');
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
-                $text .= " Имя: <i>" . $event->name . "</i>\n";
-                $text .= " Дата: <i>" .  $dateOfEvent . "</i>\n\n";
+//                $text .= " Имя: <i>" . $event->name . "</i>\n";
+//                $text .= " Дата: <i>" .  $dateOfEvent . "</i>\n\n";
             }
-            $text .= "<b>Для удаления события отправьте номер записи<b>";
-            $text .= "\n<b>через слэш</b> <i>(например: /1)</i>";
+//            $text .= "<b>Для удаления события отправьте номер записи<b>";
+//            $text .= "\n<b>через слэш</b> <i>(например: /1)</i>";
 
             return $text;
         }
