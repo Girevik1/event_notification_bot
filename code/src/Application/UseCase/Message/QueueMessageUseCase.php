@@ -41,6 +41,15 @@ class QueueMessageUseCase
         }
     }
 
+    /**
+     * @param QueueMessage $message
+     * @param QueueMessageRepositoryInterface $queueMessageRepository
+     * @param TelegramGroupRepositoryInterface|null $groupRepository
+     * @param string $chatId
+     * @return string|null
+     * @throws EventNotFoundException
+     * @throws QueueTypeException
+     */
     public static function getMessageByType(
         QueueMessage                      $message,
         QueueMessageRepositoryInterface   $queueMessageRepository,
@@ -86,7 +95,7 @@ class QueueMessageUseCase
                         if($queueMessage->type === 'GROUP' && $queueMessage->answer === '0'){
                             continue;
                         }
-                        $text .= self::getTextConfirmationBirthday($queueMessage);
+                        $text .= self::getTextConfirmationBirthday($queueMessage, $groupRepository);
                     }
                 }
                 break;
@@ -104,13 +113,13 @@ class QueueMessageUseCase
     /**
      * @throws QueueTypeException
      */
-    private static function getTextConfirmationBirthday(QueueMessage $queueMessage): string
+    private static function getTextConfirmationBirthday(QueueMessage $queueMessage, ?TelegramGroupRepositoryInterface $groupRepository): string
     {
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
             "DATE_OF_BIRTH" => "\nДата рождения: <i>" . $queueMessage->answer . "</i>",
             "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
-            "GROUP" => "\nГруппа: <i>" . $queueMessage->answer . "</i>",
+            "GROUP" => self::getNameGroup($queueMessage->answer, $groupRepository),
             "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",
             "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
@@ -137,13 +146,27 @@ class QueueMessageUseCase
      */
     private static function getNamesGroup(TelegramGroupRepositoryInterface $groupRepository, string $chatId): string
     {
-        $textNameGroup = "\n";
+        $textNameGroup = "";
         $groups = $groupRepository->getListByUser($chatId);
         foreach ($groups as $group){
             $textNameGroup .= "\n" . $group->id . ") <b>". $group->name . "</b>";
         }
 
         return $textNameGroup;
+    }
+
+    /**
+     * @param string $answer
+     * @param TelegramGroupRepositoryInterface|null $groupRepository
+     * @return string
+     */
+    private static function getNameGroup(string $answer, ?TelegramGroupRepositoryInterface $groupRepository): string
+    {
+        if ($groupRepository !== null) {
+            $group = $groupRepository->getFirstById((int)$answer);
+            return "\nГруппа: <i>" . $group->name . "</i>";
+        }
+        return "\nГруппа: <i>Не найдена!</i>";
     }
 
 }

@@ -24,7 +24,7 @@ use Illuminate\Support\Collection;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
-class BotUseCase
+final class BotUseCase
 {
     private Api $telegram;
     private TextUseCase $textUseCase;
@@ -431,7 +431,7 @@ class BotUseCase
         if($queueMessagesByUser[0]->event_type === 'birthday'){
             $listEventDto->period = 'annually';
         }
-
+        // вынести от сюда
         $newEvent = new ListEvent();
         $newEvent->name = $listEventDto->name;
         $newEvent->date_event_at = $listEventDto->date_event_at;

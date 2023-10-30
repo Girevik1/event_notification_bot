@@ -36,6 +36,17 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
     }
 
     /**
+     * @param int $id
+     * @return TelegramGroup
+     */
+    public function getFirstById(int $id): TelegramGroup
+    {
+        return TelegramGroup::select('id', 'name')
+            ->where('id', '=', $id)
+            ->first();
+    }
+
+    /**
      * @param string $chatId
      * @return mixed
      */
