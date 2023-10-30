@@ -48,7 +48,7 @@ class TextUseCase
         if(count($listGroups)>0){
             $text = "<b>Список добавленных групп\n\n</b>";
             foreach ($listGroups as $key => $group){
-                $text .= "<b>" . $key + 1 . "</b> " . $group->name . "\n";
+                $text .= "<b>" . $key + 1 . ".</b> " . $group->name . "\n";
             }
             return $text;
         }
@@ -64,12 +64,15 @@ class TextUseCase
             foreach ($listEvents as $key => $event) {
 
                 $eventName = $this->getEventNameByType()[$event->type];
-                $dateOfEvent = Carbon::parse($event->date_event_at)->format('d-m-Y');
+                $dateOfEvent = Carbon::parse($event->date_event_at)->format('d.m.Y');
 
-                $text .= "<b>" . $key + 1 . "</b> " . $eventName . "\n";
-                $text .= "<b>Имя:</b> " . $event->name . "\n";
-                $text .= "<b>Дата:</b> " .  $dateOfEvent . "\n";
+                $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
+                $text .= " Имя: <i>" . $event->name . "</i>\n";
+                $text .= " Дата: <i>" .  $dateOfEvent . "</i>\n\n";
             }
+            $text .= "<b>Для удаления события отправьте номер записи<b>";
+            $text .= "\n<b>через слэш</b> <i>(например: /1)</i>";
+
             return $text;
         }
         return "<b>Ошибка получения ваших событий.</b>";
