@@ -230,7 +230,7 @@ class TelegramSender extends Model
                         ],
                         [
                             [
-                                'text' => '📝 Список Ваших событий',
+                                'text' => '📝 Список ваших событий',
                                 'callback_data' => 'list_events',
                             ],
                         ],

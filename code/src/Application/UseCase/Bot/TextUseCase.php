@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Domain\Entity\TelegramUser;
+use Carbon\Carbon;
 
 class TextUseCase
 {
@@ -47,11 +48,31 @@ class TextUseCase
         if(count($listGroups)>0){
             $text = "<b>Список добавленных групп\n\n</b>";
             foreach ($listGroups as $key => $group){
-                $text .= $key + 1 . ") <i>". $group->name . "</i>\n";
+                $text .= "<b>" . $key + 1 . "</b> " . $group->name . "\n";
             }
             return $text;
         }
         return "<b>Бот не добавлен в группы.</b>";
+    }
+
+    public function getListEventText($listEvents): string
+    {
+        if (count($listEvents) > 0) {
+
+            $text = "<b>Список ваших coбытий\n\n</b>";
+
+            foreach ($listEvents as $key => $event) {
+
+                $eventName = $this->getEventNameByType()[$event->type];
+                $dateOfEvent = Carbon::parse($event->date_event_at)->format('d-m-Y');
+
+                $text .= "<b>" . $key + 1 . "</b> " . $eventName . "\n";
+                $text .= "<b>Имя:</b> " . $event->name . "\n";
+                $text .= "<b>Дата:</b> " .  $dateOfEvent . "\n";
+            }
+            return $text;
+        }
+        return "<b>Ошибка получения ваших событий.</b>";
     }
 
     public function getPrivateCabinetText(): string
@@ -121,5 +142,13 @@ class TextUseCase
         $text .= "\n\nWell done!";
 
         return $text;
+    }
+
+    private function getEventNameByType(): array
+    {
+        return [
+            'birthday' => 'День рождения',
+            'note' => 'Заметка'
+        ];
     }
 }

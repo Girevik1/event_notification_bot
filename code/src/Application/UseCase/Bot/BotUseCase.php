@@ -204,15 +204,15 @@ final class BotUseCase
 
                     case "list_events":
 
-//                    $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
-//                    $this->dataEditMessageDto->text = $this->textUseCase->getListGroupText($listGroups);
-//                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
-//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-//                    $this->dataEditMessageDto->message_id = $messageId;
-//
-//                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-//
-//                    return;
+                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+                    $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents);
+                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $messageId;
+
+                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                    return;
 
                 case "add_birthday":
 
