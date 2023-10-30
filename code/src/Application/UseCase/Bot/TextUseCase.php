@@ -74,9 +74,9 @@ class TextUseCase
                 }else{
                     $notificationMethod = 'в группе';
                     $group = $groupRepository->getFirstById((int)$event->group_id);
-                    if($group != null){
-                        $groupName = $group->name;
-                    }
+//                    if($group != null){
+//                        $groupName = $group->name;
+//                    }
 
                 }
 
