@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
-use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
@@ -40,7 +39,7 @@ final class BotUseCase
         public $telegramUserRepository,
         public $telegramMessageRepository,
         public $telegramGroupRepository,
-        public TelegramMessageRepositoryInterface $queueMessageRepository,
+        public $queueMessageRepository,
         public $listEventRepository,
 //        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
 //        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
