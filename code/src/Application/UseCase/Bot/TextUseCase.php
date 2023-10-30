@@ -65,10 +65,19 @@ class TextUseCase
 
                 $eventName = $this->getEventNameByType()[$event->type];
                 $dateOfEvent = Carbon::parse($event->date_event_at)->format('d.m.Y');
+                $notificationMethod = $event->group_id === 0 ? 'лично' : 'в группе';
+                $periodicity = $this->getPeriodText()[$event->period];
+                $groupName = 'еуые';
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
                 $text .= "    Имя: <i>" . $event->name . "</i>\n";
                 $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n\n";
+                $text .= "    Способ оповещения: <i>" .  $notificationMethod . "</i>\n\n";
+                if($event->group_id !== 0){
+                    $text .= "    Группа: <i>" .  $groupName . "</i>\n\n";
+                }
+                $text .= "    Время оповещения: <i>" .  $event->notification_time_at . "</i>\n\n";
+                $text .= "    Периодичность: <i>" .  $periodicity . "</i>\n\n";
             }
 
             $text .= "<b>Для удаления события отправьте номер записи</b>";
@@ -153,6 +162,18 @@ class TextUseCase
         return [
             'birthday' => 'День рождения',
             'note' => 'Заметка'
+        ];
+    }
+
+    private function getPeriodText(): array
+    {
+        return [
+            'annually' => 'раз в год',
+            'quarterly' => 'раз в квартал',
+            'monthly' => 'раз в месяц',
+            'weekly' => 'раз в неделю',
+            'daily' => 'ежедневно',
+            'once' => 'один раз',
         ];
     }
 }
