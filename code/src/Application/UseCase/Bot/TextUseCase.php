@@ -68,7 +68,7 @@ class TextUseCase
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
                 $text .= "    Имя: <i>" . $event->name . "</i>\n";
-                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n";
+                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n\n";
             }
 //            $text .= "<b>Для удаления события отправьте номер записи<b>";
 //            $text .= "\n<b>через слэш</b> <i>(например: /1)</i>";
