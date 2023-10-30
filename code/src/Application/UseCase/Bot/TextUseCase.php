@@ -7,6 +7,7 @@ namespace Art\Code\Application\UseCase\Bot;
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class TextUseCase
 {
@@ -56,7 +57,7 @@ class TextUseCase
         return "<b>Бот не добавлен в группы.</b>";
     }
 
-    public function getListEventText($listEvents, TelegramGroupRepositoryInterface $groupRepository): string
+    public function getListEventText(Collection $listEvents, TelegramGroupRepositoryInterface $groupRepository): string
     {
         if (count($listEvents) > 0) {
 
@@ -74,9 +75,7 @@ class TextUseCase
                 }else{
                     $notificationMethod = 'в группе';
                     $group = $groupRepository->getFirstById((int)$event->group_id);
-                    if($group != null){
-                        $groupName = $group->name;
-                    }
+                    $groupName = $group->name ?? 'группа не найдена!';
                 }
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
