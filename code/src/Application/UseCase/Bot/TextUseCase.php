@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
+use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
 use Carbon\Carbon;
 
@@ -55,7 +56,7 @@ class TextUseCase
         return "<b>Бот не добавлен в группы.</b>";
     }
 
-    public function getListEventText($listEvents, $groupRepository): string
+    public function getListEventText($listEvents, TelegramGroupRepositoryInterface $groupRepository): string
     {
         if (count($listEvents) > 0) {
 
