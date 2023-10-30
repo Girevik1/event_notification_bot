@@ -71,12 +71,12 @@ class TextUseCase
 
                 $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
                 $text .= "    Имя: <i>" . $event->name . "</i>\n";
-                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n\n";
-                $text .= "    Способ оповещения: <i>" .  $notificationMethod . "</i>\n\n";
+                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n";
+                $text .= "    Способ оповещения: <i>" .  $notificationMethod . "</i>\n";
                 if($event->group_id !== 0){
-                    $text .= "    Группа: <i>" .  $groupName . "</i>\n\n";
+                    $text .= "    Группа: <i>" .  $groupName . "</i>\n";
                 }
-                $text .= "    Время оповещения: <i>" .  $event->notification_time_at . "</i>\n\n";
+                $text .= "    Время оповещения: <i>" .  $event->notification_time_at . "</i>\n";
                 $text .= "    Периодичность: <i>" .  $periodicity . "</i>\n\n";
             }
 
