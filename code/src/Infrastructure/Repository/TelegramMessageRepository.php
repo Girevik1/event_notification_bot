@@ -7,7 +7,6 @@ namespace Art\Code\Infrastructure\Repository;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Illuminate\Database\Eloquent\Collection;
 
 class TelegramMessageRepository implements TelegramMessageRepositoryInterface
 {
@@ -29,11 +28,14 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
     }
 
     /**
+     * @param string $chat_id
      * @return TelegramMessage
      */
-    public function getLastMessage(): TelegramMessage
+    public function getLastMessage(string $chat_id): TelegramMessage
     {
-        return TelegramMessage::orderBy('id', 'desc')->first();
+        return TelegramMessage::where('chat_id', $chat_id)
+            ->orderBy('id', 'desc')
+            ->first();
     }
 
 //    /**

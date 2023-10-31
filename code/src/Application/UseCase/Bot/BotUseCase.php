@@ -351,20 +351,22 @@ final class BotUseCase
 //            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
 //            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
             case (bool)preg_match('/^event [0-9]{1,3}$/', $text):
+
                 $textArray = explode(' ', $text);
                 $idEvent = end($textArray);
                 $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
 
+                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+
                 if(!$result){
-                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
                     return;
                 }
-
+                $messageId = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-                $this->dataEditMessageDto->message_id = $messageDto->message_id;
+                $this->dataEditMessageDto->message_id = $messageId;
 
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 

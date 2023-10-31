@@ -11,7 +11,7 @@ interface TelegramMessageRepositoryInterface
 {
     public function create(MessageDto $message): TelegramMessage;
 
-    public function getLastMessage(): TelegramMessage;
+    public function getLastMessage(string $chat_id): TelegramMessage;
 
 //    public function getAllByUser(int $telegramUserId): ?Collection;
 
