@@ -86,7 +86,7 @@ class TextUseCase
 
             return $text;
         }
-        return "<b>Ошибка получения ваших событий.</b>";
+        return "<b>У вас нет добавленных событий.</b>";
     }
 
     public function getPrivateCabinetText(): string
