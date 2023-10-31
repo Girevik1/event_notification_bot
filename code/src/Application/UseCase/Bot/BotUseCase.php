@@ -538,8 +538,8 @@ final class BotUseCase
     {
         if (
             $message->text === "" ||
-            !isset($message['message_id']) ||
-            $message['message_id'] === 0
+            !isset($message->message_id) ||
+            $message->message_id === 0
         ) {
             return false;
         }
