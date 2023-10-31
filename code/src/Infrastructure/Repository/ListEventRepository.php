@@ -17,7 +17,15 @@ class ListEventRepository implements ListEventRepositoryInterface
      */
     public function create(ListEventDto $listEventDto): ListEvent
     {
-        return ListEvent::create($listEventDto);
+        return ListEvent::create([
+            'name' => $listEventDto->name,
+            'date_event_at' => $listEventDto->date_event_at,
+            'type' => $listEventDto->type,
+            'group_id' => $listEventDto->group_id,
+            'telegram_user_id' => $listEventDto->telegram_user_id,
+            'notification_time_at' => $listEventDto->notification_time_at,
+            'period' => $listEventDto->period
+        ]);
     }
 
     /**

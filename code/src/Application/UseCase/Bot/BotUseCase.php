@@ -10,7 +10,6 @@ use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
-use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -78,21 +77,16 @@ final class BotUseCase
 
 
 
-        if (
-            !isset($message['message_id']) ||
-            $message['message_id'] === 0
-        ) {
-            throw new TelegramMessageDataException('Some data is missing');
-        }
+
 
 
 
 //        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
-        $this->telegramMessageRepository->create($messageDto);
+//        $this->telegramMessageRepository->create($messageDto);
 
-        if (!$this->checkText($messageDto) && !$this->checkChatTitle($messageDto)) {
+        if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
             throw new TelegramMessageDataException('Some data is missing');
         };
 
@@ -199,6 +193,9 @@ final class BotUseCase
                     $this->dataEditMessageDto->message_id = $messageId;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                    $messageDto->command = 'list_groups';
+                    $this->telegramMessageRepository->create($messageDto);
 
                     return;
 
@@ -354,9 +351,7 @@ final class BotUseCase
 //            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
 //            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
             case (bool)preg_match('/^event [0-9]{1,3}$/', $text):
-//                $telegramMessage = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
-//                var_dump($telegramMessage->id);
-//                return;
+
                 $textArray = explode(' ', $text);
                 $idEvent = end($textArray);
                 $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
@@ -461,6 +456,8 @@ final class BotUseCase
      */
     private function dataMappingListEvent(Collection $queueMessagesByUser, TelegramUser $telegramUser, int $messageId): void
     {
+        if (count($queueMessagesByUser) === 0) return;
+
         $listEventDto = new ListEventDto();
         foreach ($queueMessagesByUser as $queueMessage) {
             match ($queueMessage->type) {
@@ -475,20 +472,18 @@ final class BotUseCase
             };
         };
 
-        if($queueMessagesByUser[0]->event_type === 'birthday'){
-            $listEventDto->period = 'annually';
-        }
-        // вынести от сюда
-        $newEvent = new ListEvent();
-        $newEvent->name = $listEventDto->name;
-        $newEvent->date_event_at = $listEventDto->date_event_at;
-        $newEvent->type = $queueMessagesByUser[0]->event_type;
-        $newEvent->telegram_user_id = $queueMessagesByUser[0]->telegram_user_id;
-        $newEvent->group_id = $listEventDto->group_id;
-        $newEvent->notification_time_at = $listEventDto->notification_time_at;
-        $newEvent->period = $listEventDto->period;
+//        if($queueMessagesByUser[0]->event_type === 'birthday'){
+//            $listEventDto->period = 'annually';
+//        }
+        $listEventDto->period = match ($queueMessagesByUser[0]->event_type) {
+            "birthday" => 'annually'
+        };
 
-        if($newEvent->save()){
+        $listEventDto->type = $queueMessagesByUser[0]->event_type;
+        $listEventDto->telegram_user_id = $queueMessagesByUser[0]->telegram_user_id;
+        $newEvent = $this->listEventRepository->create($listEventDto);
+
+        if ($newEvent) {
             $this->dataEditMessageDto->text = $this->textUseCase->getSuccessConfirmText($queueMessagesByUser[0]->event_type);
             $this->dataEditMessageDto->keyboard = 'settings_menu';
             $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
@@ -539,10 +534,12 @@ final class BotUseCase
      * @param $message
      * @return bool
      */
-    private function checkText($message): bool
+    private function checkMessage($message): bool
     {
         if (
-            $message->text === ""
+            $message->text === "" ||
+            !isset($message['message_id']) ||
+            $message['message_id'] === 0
         ) {
             return false;
         }
@@ -562,4 +559,6 @@ final class BotUseCase
         }
         return true;
     }
+
+
 }
