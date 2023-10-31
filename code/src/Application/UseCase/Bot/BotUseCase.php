@@ -354,9 +354,12 @@ final class BotUseCase
                 $textArray = explode(' ', $text);
                 $idEvent = end($textArray);
                 $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
+
                 if(!$result){
+                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
                     return;
                 }
+
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
@@ -364,7 +367,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->message_id = $messageDto->message_id;
 
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-//                var_dump($result);
+
                 return;
 
             default:

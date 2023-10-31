@@ -55,7 +55,7 @@ class TextUseCase
 
             $text = "<b>Список ваших coбытий\n\n</b>";
 
-            foreach ($listEvents as $key => $event) {
+            foreach ($listEvents as $event) {
 
                 $eventName = $this->getEventNameByType()[$event->type];
                 $dateOfEvent = Carbon::parse($event->date_event_at)->format('d.m.Y');
@@ -70,19 +70,19 @@ class TextUseCase
                     $groupName = $group->name ?? 'группа не найдена!';
                 }
 
-                $text .= "<b>" . $key + 1 . ".</b> " . $eventName . "\n";
-                $text .= "    Имя: <i>" . $event->name . "</i>\n";
-                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n";
-                $text .= "    Способ оповещения: <i>" .  $notificationMethod . "</i>\n";
+                $text .= "<b>" . $event->id . ".</b> " . $eventName . "\n";
+                $text .= "     Имя: <i>" . $event->name . "</i>\n";
+                $text .= "     Дата: <i>" .  $dateOfEvent . "</i>\n";
+                $text .= "     Способ оповещения: <i>" .  $notificationMethod . "</i>\n";
                 if($event->group_id !== 0){
-                    $text .= "    Группа: <i>" .  $groupName . "</i>\n";
+                    $text .= "     Группа: <i>" .  $groupName . "</i>\n";
                 }
-                $text .= "    Время оповещения: <i>" .  $event->notification_time_at . "</i>\n";
-                $text .= "    Периодичность: <i>" .  $periodicity . "</i>\n\n";
+                $text .= "     Время оповещения: <i>" .  $event->notification_time_at . "</i>\n";
+                $text .= "     Периодичность: <i>" .  $periodicity . "</i>\n\n";
             }
 
             $text .= "<b>Для удаления события отправьте номер записи</b>";
-            $text .= "\n<b>через слэш</b> <i>(например: /1)</i>";
+            $text .= "\n<b>после слова event</b> <i>(например: event 1)</i>";
 
             return $text;
         }
