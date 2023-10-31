@@ -181,6 +181,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->message_id = $messageId;
 
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
                 return;
 
@@ -294,6 +295,7 @@ final class BotUseCase
                         $this->dataEditMessageDto->message_id = $messageId;
 
                         TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                        $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
                         return;
                     }
@@ -348,6 +350,8 @@ final class BotUseCase
         switch ($text) {
             case "/start":
                 $this->start($telegramUser, $messageDto, $isNewUser);
+                $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
+
                 return;
 
 //            case (bool)preg_match('/\d{2}\.\d{2}\.\d{2}/', $text):
