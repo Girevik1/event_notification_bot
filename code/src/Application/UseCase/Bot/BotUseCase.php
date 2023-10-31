@@ -212,6 +212,9 @@ final class BotUseCase
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
+                        $messageDto->command = '$messageDto';
+                        $this->telegramMessageRepository->create($messageDto);
+
                     return;
 
                 case "add_birthday":
