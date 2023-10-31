@@ -51,7 +51,7 @@ class AddBirthdayUseCase
     {
         $queueBirthday = $this->getMessagesQueueBirthday();
 
-        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser, 'birthday');
+        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser, $this->message_id, 'birthday');
 
         $firstQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 

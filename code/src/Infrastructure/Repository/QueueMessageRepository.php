@@ -13,10 +13,11 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
     /**
      * @param int $telegramUserId
      * @param string $key
+     * @param int $messageId
      * @param string $eventType
      * @return QueueMessage|null
      */
-    public function createQueue(int $telegramUserId, string $key, string $eventType): ?QueueMessage
+    public function createQueue(int $telegramUserId, string $key, int $messageId, string $eventType): ?QueueMessage
     {
         $telegram_message = new QueueMessage();
         $telegram_message->telegram_user_id = $telegramUserId;
@@ -26,6 +27,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
         $telegram_message->previous_id = 0;
         $telegram_message->answer = "";
         $telegram_message->event_type = $eventType;
+        $telegram_message->message_id = $messageId;
         $telegram_message->save();
 
         return $telegram_message;

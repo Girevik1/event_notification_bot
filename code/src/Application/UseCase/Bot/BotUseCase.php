@@ -225,8 +225,8 @@ final class BotUseCase
 
                     $addBirthdayUseCase->addBirthday();
 
-                    $messageDto->command = 'add_birthday';
-                    $this->telegramMessageRepository->create($messageDto);
+//                    $messageDto->command = 'add_birthday';
+//                    $this->telegramMessageRepository->create($messageDto);
 
                     return;
 
@@ -401,7 +401,7 @@ final class BotUseCase
 
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
 
-                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
+//                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
 
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
@@ -420,12 +420,12 @@ final class BotUseCase
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
 
-                    $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
+                    $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
-                    $messageDto->command = $queueMessageByUser->type;
-                    $this->telegramMessageRepository->create($messageDto);
+//                    $messageDto->command = $queueMessageByUser->type;
+//                    $this->telegramMessageRepository->create($messageDto);
                 }
                 break;
         }
@@ -527,8 +527,8 @@ final class BotUseCase
         $messageSendDto->type_btn = 'main_menu';
 
 
-        $messageDto->command = '/start';
-        $this->telegramMessageRepository->create($messageDto);
+//        $messageDto->command = '/start';
+//        $this->telegramMessageRepository->create($messageDto);
 
         TelegramMessage::newMessage($messageSendDto);
     }

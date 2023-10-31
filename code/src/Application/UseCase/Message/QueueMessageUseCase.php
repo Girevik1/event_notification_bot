@@ -18,26 +18,26 @@ class QueueMessageUseCase
     {
     }
 
-    public function processQueueMessage(array $queue, TelegramUser $telegramUser, string $eventType): void
+    public function processQueueMessage(array $queue, TelegramUser $telegramUser, int $messageId, string $eventType): void
     {
         $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
-        $this->createQueueMessages($queue, $telegramUser->id, $eventType);
+        $this->createQueueMessages($queue, $telegramUser->id, $messageId, $eventType);
     }
 
-    private function createQueueMessages(array $queue, int $telegramUserId, string $eventType): void
+    private function createQueueMessages(array $queue, int $telegramUserId, int $messageId, string $eventType): void
     {
         $prev = null;
         foreach ($queue as $key => $value) {
-            $telegram_message = $this->queueMessageRepository->createQueue($telegramUserId, $key, $eventType);
+            $queueMessage = $this->queueMessageRepository->createQueue($telegramUserId, $key, $messageId, $eventType);
 
             if ($prev != null) {
-                $prev->next_id = $telegram_message->id;
+                $prev->next_id = $queueMessage->id;
                 $prev->save();
 
-                $telegram_message->previous_id = $prev->id;
-                $telegram_message->save();
+                $queueMessage->previous_id = $prev->id;
+                $queueMessage->save();
             }
-            $prev = $telegram_message;
+            $prev = $queueMessage;
         }
     }
 

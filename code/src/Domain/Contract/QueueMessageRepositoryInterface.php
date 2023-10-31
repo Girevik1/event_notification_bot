@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 interface QueueMessageRepositoryInterface
 {
-    public function createQueue(int $telegramUserId, string $key, string $eventType): ?QueueMessage;
+    public function createQueue(int $telegramUserId, string $key, int $messageId, string $eventType): ?QueueMessage;
 
 //    public function existUnfinishedQueueByUser(int $telegramUserId): ?QueueMessage;
 
