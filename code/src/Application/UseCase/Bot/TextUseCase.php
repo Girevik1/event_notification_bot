@@ -11,14 +11,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TextUseCase
 {
-    public function getChangeLoginText(string $username): string
-    {
-        $txt = "Вы сменили username в Telegram.";
-        $txt .= "\n\nВаш новый username перезаписан на @" . $username;
-
-        return $txt;
-    }
-
     public function getGreetingsText(bool $isNewUser): string
     {
         if ($isNewUser) {
@@ -45,7 +37,7 @@ class TextUseCase
         return $text;
     }
 
-    public function getListGroupText($listGroups): string
+    public function getListGroupText(Collection $listGroups): string
     {
         if(count($listGroups)>0){
             $text = "<b>Список добавленных групп\n\n</b>";

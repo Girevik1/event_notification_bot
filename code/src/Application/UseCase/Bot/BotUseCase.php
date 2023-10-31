@@ -347,6 +347,26 @@ final class BotUseCase
                 $this->start($telegramUser, $isNewUser);
                 return;
 
+//            case (bool)preg_match('/\d{2}\.\d{2}\.\d{2}/', $text):
+//            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
+//            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
+            case (bool)preg_match('/^event [0-9]{1,3}$/', $text):
+                $textArray = explode(' ', $text);
+                $idEvent = end($textArray);
+                $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
+                if(!$result){
+                    return;
+                }
+                $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+                $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
+                $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                $this->dataEditMessageDto->message_id = $messageDto->message_id;
+
+                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+//                var_dump($result);
+                return;
+
             default:
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                 if($queueMessageByUser && $text != ''){
@@ -469,7 +489,7 @@ final class BotUseCase
      * @param QueueMessage $queueMessageByUser
      * @param string $chatId
      * @return string|null
-     * @throws EventNotFoundException
+     * @throws EventNotFoundException|QueueTypeException
      */
     private function getTextByEventType(QueueMessage $queueMessageByUser, string $chatId = ''): ?string
     {

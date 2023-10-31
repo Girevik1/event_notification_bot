@@ -11,5 +11,7 @@ interface ListEventRepositoryInterface
 {
     public function create(ListEventDto $listEventDto): ListEvent;
 
-    public function getListByUser(int $id): Collection;
+    public function getListByUser(int $userId): Collection;
+
+    public function deleteEventById(int $id, int $userId): mixed;
 }
