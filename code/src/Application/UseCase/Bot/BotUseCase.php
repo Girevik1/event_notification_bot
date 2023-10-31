@@ -362,12 +362,12 @@ final class BotUseCase
                     return;
                 }
 
-                $messageId = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
+                $telegramMessage = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-                $this->dataEditMessageDto->message_id = $messageId;
+                $this->dataEditMessageDto->message_id = $telegramMessage->id ?? 0;
 
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
