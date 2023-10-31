@@ -17,14 +17,14 @@ class TelegramMessage extends Model
 
     protected $guarded = [];
 
-    private TelegramMessageRepository $telegramMessageRepository;
+//    private TelegramMessageRepository $telegramMessageRepository;
 
-    public function __construct(array $attributes = [])
+//    public function __construct(array $attributes = [])
 //    public function __construct(public TelegramMessageRepositoryInterface $telegramMessageRepository, array $attributes = [])
-    {
-        $this->telegramMessageRepository = new TelegramMessageRepository();
-        parent::__construct($attributes);
-    }
+//    {
+//        $this->telegramMessageRepository = new TelegramMessageRepository();
+//        parent::__construct($attributes);
+//    }
 
 //    public function setDataTestAttribute($value): void
 //    {
@@ -39,18 +39,18 @@ class TelegramMessage extends Model
     public static function newMessage(MessageSendDto $messageDataDto): void
     {
 //        $thisObj = new self();
-        $text_array = [$messageDataDto->text];
+        $textArray = [$messageDataDto->text];
 
         if (mb_strlen($messageDataDto->text, '8bit') > 4096) {
-            $text_array = [];
+            $textArray = [];
             $start = 0;
             do {
-                $text_array[] = mb_strcut($messageDataDto->text, $start, 4096);
+                $textArray[] = mb_strcut($messageDataDto->text, $start, 4096);
                 $start += 4096;
             } while (mb_strlen($messageDataDto->text, '8bit') > $start);
         }
 
-            foreach ($text_array as $textItem) {
+            foreach ($textArray as $textItem) {
                 if (
                     $_ENV['APP_ENV'] == 'prod' ||
                     $_ENV['APP_ENV'] == 'dev'

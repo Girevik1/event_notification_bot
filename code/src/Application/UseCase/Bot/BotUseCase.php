@@ -344,7 +344,7 @@ final class BotUseCase
 
         switch ($text) {
             case "/start":
-                $this->start($telegramUser, $isNewUser);
+                $this->start($telegramUser, $messageDto, $isNewUser);
                 return;
 
 //            case (bool)preg_match('/\d{2}\.\d{2}\.\d{2}/', $text):
@@ -402,13 +402,6 @@ final class BotUseCase
 
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
-//                    if ($queueMessageByUser->type === 'CONFIRMATION') {
-//                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
-//                    } else if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
-//                        $this->dataEditMessageDto->keyboard = 'confirmation_event';
-//                    } else {
-//                        $this->dataEditMessageDto->keyboard = 'process_set_event';
-//                    }
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
                     if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
@@ -427,6 +420,9 @@ final class BotUseCase
                     $this->dataEditMessageDto->message_id = $lastTelegramMessage->message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                    $messageDto->command = $queueMessageByUser->type;
+                    $this->telegramMessageRepository->create($messageDto);
                 }
                 break;
         }
@@ -439,15 +435,18 @@ final class BotUseCase
      */
     private function gerKeyboardByQueueType(QueueMessage $queueMessageByUser): string
     {
-        if ($queueMessageByUser->type === 'CONFIRMATION') {
-            $textKeyboard = 'confirmation_event';
-        } elseif ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
-            $textKeyboard = 'notification_type';
-        } else {
-            $textKeyboard = 'process_set_event';
-        }
-
-        return $textKeyboard;
+//        if ($queueMessageByUser->type === 'CONFIRMATION') {
+//            $textKeyboard = 'confirmation_event';
+//        } elseif ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
+//            $textKeyboard = 'notification_type';
+//        } else {
+//            $textKeyboard = 'process_set_event';
+//        }
+        return match($queueMessageByUser->type){
+            'CONFIRMATION'=>'confirmation_event',
+            'NOTIFICATION_TYPE'=>'notification_type',
+            default =>'process_set_event'
+        };
     }
 
     /**
@@ -472,9 +471,6 @@ final class BotUseCase
             };
         };
 
-//        if($queueMessagesByUser[0]->event_type === 'birthday'){
-//            $listEventDto->period = 'annually';
-//        }
         $listEventDto->period = match ($queueMessagesByUser[0]->event_type) {
             "birthday" => 'annually'
         };
@@ -517,7 +513,7 @@ final class BotUseCase
      * @return void
      * @throws TelegramSDKException
      */
-    private function start(TelegramUser $telegramUser, bool $isNewUser): void
+    private function start(TelegramUser $telegramUser, MessageDto $messageDto, bool $isNewUser): void
     {
         $text = $this->textUseCase->getGreetingsText($isNewUser);
 
@@ -526,6 +522,10 @@ final class BotUseCase
         $messageSendDto->user = $telegramUser;
         $messageSendDto->command = '/start';
         $messageSendDto->type_btn = 'main_menu';
+
+
+        $messageDto->command = '/start';
+        $this->telegramMessageRepository->create($messageDto);
 
         TelegramMessage::newMessage($messageSendDto);
     }
