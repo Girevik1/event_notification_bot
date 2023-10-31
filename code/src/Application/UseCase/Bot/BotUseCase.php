@@ -351,7 +351,9 @@ final class BotUseCase
 //            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
 //            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
             case (bool)preg_match('/^event [0-9]{1,3}$/', $text):
-
+//                $telegramMessage = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
+//                var_dump($telegramMessage->id);
+//                return;
                 $textArray = explode(' ', $text);
                 $idEvent = end($textArray);
                 $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
@@ -367,7 +369,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-                $this->dataEditMessageDto->message_id = $telegramMessage->id ?? 0;
+                $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
                 TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
@@ -514,6 +516,7 @@ final class BotUseCase
      * @param TelegramUser $telegramUser
      * @param bool $isNewUser
      * @return void
+     * @throws TelegramSDKException
      */
     private function start(TelegramUser $telegramUser, bool $isNewUser): void
     {
