@@ -212,7 +212,7 @@ final class BotUseCase
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
-                        $messageDto->command = '$messageDto';
+                        $messageDto->command = 'list_events';
                         $this->telegramMessageRepository->create($messageDto);
 
                     return;
@@ -367,7 +367,8 @@ final class BotUseCase
                     return;
                 }
 
-                $telegramMessage = $this->telegramMessageRepository->getLastMessage($telegramUser->telegram_chat_id);
+                $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_events');
+
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';

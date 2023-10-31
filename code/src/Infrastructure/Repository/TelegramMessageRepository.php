@@ -38,6 +38,19 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
             ->first();
     }
 
+    /**
+     * @param string $chat_id
+     * @param string $command
+     * @return TelegramMessage
+     */
+    public function getLastMessageByCommand(string $chat_id, string $command): TelegramMessage
+    {
+        return TelegramMessage::where('chat_id', $chat_id)
+            ->where('command', '=', $command)
+            ->orderBy('id', 'desc')
+            ->first();
+    }
+
 //    /**
 //     * @param int $telegramUserId
 //     * @return Collection|null

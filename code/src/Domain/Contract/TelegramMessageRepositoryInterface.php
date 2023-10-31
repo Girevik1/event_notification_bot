@@ -13,7 +13,7 @@ interface TelegramMessageRepositoryInterface
 
     public function getLastMessage(string $chat_id): TelegramMessage;
 
-//    public function getAllByUser(int $telegramUserId): ?Collection;
+    public function getLastMessageByCommand(string $chat_id, string $command): TelegramMessage;
 
     public function deleteByMessageId(int $message_id): mixed;
 
