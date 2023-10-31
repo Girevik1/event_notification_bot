@@ -91,7 +91,7 @@ final class BotUseCase
         };
 
         /*
-         * Create group in db on added in group
+         * Create or remove a group in db (on added in group or left)
          * */
         if ($this->checkChatTitle($messageDto)) {
             $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
@@ -107,15 +107,11 @@ final class BotUseCase
             return '';
         }
 
-        $text = $messageDto->text;
-        $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
-
-
 //        $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
 //        $isNewUser = false;
 //        $text = '';
 
-
+        $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
         $isNewUser = false;
         if ($telegramUser === null) {
             $telegramUser = $this->telegramUserRepository->create(new TelegramUserDto($message));
@@ -171,6 +167,7 @@ final class BotUseCase
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
+
                 case "settings_menu":
                 case "private_cabinet":
                 case "changed_my_mind":
@@ -347,6 +344,8 @@ final class BotUseCase
             }
         }
 
+        $text = $messageDto->text;
+
         switch ($text) {
             case "/start":
                 $this->start($telegramUser, $messageDto, $isNewUser);
@@ -373,6 +372,30 @@ final class BotUseCase
 
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
+                $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
+
+                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+                return;
+
+                case (bool)preg_match('/^group [0-9]{1,3}$/', $text):
+
+                $textArray = explode(' ', $text);
+                $idGroup = end($textArray);
+                $result = $this->telegramGroupRepository->deleteById((int)$idGroup, $telegramUser->telegram_chat_id);
+
+                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+
+                if(!$result){
+                    return;
+                }
+
+                $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_groups');
+
+                $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
+                $this->dataEditMessageDto->text = $this->textUseCase->getListGroupText($listGroups);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;

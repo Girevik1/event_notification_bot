@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Message;
 
 use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
+use Art\Code\Application\UseCase\Bot\GroupUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Entity\QueueMessage;
@@ -119,7 +120,7 @@ class QueueMessageUseCase
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
             "DATE_OF_BIRTH" => "\nДата рождения: <i>" . $queueMessage->answer . "</i>",
             "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
-            "GROUP" => self::getNameGroup($queueMessage->answer, $groupRepository),
+            "GROUP" => GroupUseCase::getNameGroup($queueMessage->answer, $groupRepository),
             "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",
             "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
@@ -154,19 +155,4 @@ class QueueMessageUseCase
 
         return $textNameGroup;
     }
-
-    /**
-     * @param string $answer
-     * @param TelegramGroupRepositoryInterface|null $groupRepository
-     * @return string
-     */
-    private static function getNameGroup(string $answer, ?TelegramGroupRepositoryInterface $groupRepository): string
-    {
-        if ($groupRepository !== null) {
-            $group = $groupRepository->getFirstById((int)$answer);
-            return "\nГруппа: <i>" . $group->name . "</i>";
-        }
-        return "\nГруппа: <i>Не найдена!</i>";
-    }
-
 }

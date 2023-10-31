@@ -29,9 +29,4 @@ final class TelegramUserId
     {
         return $this->value;
     }
-
-    public function isEq(self $user_id): bool
-    {
-        return 0 === strcasecmp($this->value, $user_id->getValue());
-    }
 }

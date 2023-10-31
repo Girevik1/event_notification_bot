@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
+use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Dto\TelegramGroupDto;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\GroupCreateException;
@@ -35,11 +36,18 @@ class GroupUseCase
 //        ]);//
 
         if (isset($message['left_chat_member'])) {
-            $resulDelete = $groupRepository->deleteByChatId((string)$message['chat']['id']);
+
+            $resulDelete = $groupRepository->deleteByChatId(
+                (string)$message['chat']['id'],
+                (string)$message['from']['id']
+            );
+
             if (!$resulDelete) {
                 throw new GroupDeleteException('Не удалось удалить группу с БД');
             }
+
             // TODO удалить все эвенты связанные с этой группой, upd эвенты оставить - сделать личное уведомление
+
             return true;
         }
 
@@ -59,5 +67,19 @@ class GroupUseCase
         ]);
 
         return true;
+    }
+
+    /**
+     * @param string $answer
+     * @param TelegramGroupRepositoryInterface|null $groupRepository
+     * @return string
+     */
+    public static function getNameGroup(string $answer, ?TelegramGroupRepositoryInterface $groupRepository): string
+    {
+        if ($groupRepository !== null) {
+            $group = $groupRepository->getFirstById((int)$answer);
+            return "\nГруппа: <i>" . $group->name . "</i>";
+        }
+        return "\nГруппа: <i>Не найдена!</i>";
     }
 }

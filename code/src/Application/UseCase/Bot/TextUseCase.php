@@ -40,10 +40,18 @@ class TextUseCase
     public function getListGroupText(Collection $listGroups): string
     {
         if(count($listGroups)>0){
+
             $text = "<b>Список добавленных групп\n\n</b>";
+
             foreach ($listGroups as $key => $group){
                 $text .= "<b>" . $key + 1 . ".</b> " . $group->name . "\n";
             }
+
+            $text .= "\n<b>Для удаления - отправьте номер группы,</b>";
+            $text .= "\n<b>после слова group</b> <i>(например: group 1)</b>";
+            $text .= "\n‼️<b>Учтите после удаления, все закрепленные</b>";
+            $text .= "\n<b>за группой события - будут оповещать лично</b>";
+
             return $text;
         }
         return "<b>Бот не добавлен в группы.</b>";

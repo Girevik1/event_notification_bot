@@ -47,12 +47,21 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
     }
 
     /**
-     * @param string $chatId
+     * @param string $groupChatId
+     * @param string $userChatId
      * @return mixed
      */
-    public function deleteByChatId(string $chatId): mixed
+    public function deleteByChatId(string $groupChatId, string $userChatId): mixed
     {
-        return TelegramGroup::where('group_chat_id', $chatId)
+        return TelegramGroup::where('group_chat_id', $groupChatId)
+            ->where('user_chat_id', $userChatId)
+            ->delete();
+    }
+
+    public function deleteById(int $id, string $userChatId): int
+    {
+        return TelegramGroup::where('id', $id)
+            ->where('user_chat_id', $userChatId)
             ->delete();
     }
 
