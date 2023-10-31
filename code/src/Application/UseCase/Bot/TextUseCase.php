@@ -43,14 +43,14 @@ class TextUseCase
 
             $text = "<b>Список добавленных групп\n\n</b>";
 
-            foreach ($listGroups as $key => $group){
-                $text .= "<b>" . $key + 1 . ".</b> " . $group->name . "\n";
+            foreach ($listGroups as $group){
+                $text .= "<b>" . $group->id . ".</b> " . $group->name . "\n";
             }
 
             $text .= "\n<b>Для удаления - отправьте номер группы,</b>";
             $text .= "\n<b>после слова group</b> <i>(например: group 1)</i>";
             $text .= "\n‼️<b>Учтите после удаления, все закрепленные</b>";
-            $text .= "\n<b>    за группой события - будут оповещать лично</b>";
+            $text .= "\n<b>за группой события - будут оповещать лично</b>";
 
             return $text;
         }
