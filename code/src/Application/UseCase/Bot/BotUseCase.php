@@ -225,6 +225,9 @@ final class BotUseCase
 
                     $addBirthdayUseCase->addBirthday();
 
+                    $messageDto->command = 'add_birthday';
+                    $this->telegramMessageRepository->create($messageDto);
+
                     return;
 
                 case "confirm_event":

@@ -10,6 +10,7 @@ use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\EventNotFoundException;
 use Art\Code\Domain\Exception\QueueTypeException;
+use Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -44,8 +45,7 @@ class AddBirthdayUseCase
     }
 
     /**
-     * @throws TelegramSDKException
-     * @throws EventNotFoundException;
+     * @throws Exception;
      */
     public function addBirthday(): void
     {
