@@ -149,7 +149,7 @@ class QueueMessageUseCase
         $textNameGroup = "";
         $groups = $groupRepository->getListByUser($chatId);
         foreach ($groups as $group){
-            $textNameGroup .= "\n" . $group->id . ") <b>". $group->name . "</b>";
+            $textNameGroup .= "\n<b>" . $group->id . ".</b> <i>". $group->name . "</i>";
         }
 
         return $textNameGroup;
