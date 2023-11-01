@@ -43,11 +43,11 @@ class AddImportantEventUseCase
     public static function getMessagesQueueImportantEvent(): array
     {
         return [
-            "NANE_EVENT" => "👶 <b>укажите имя события</b>",
-            "DATE_OF_BIRTH" => "📆 <b>дату годовщины</b> (формат: 01.01.1970)",
+            "NANE_EVENT" => "👶 <b>Укажите имя события</b>",
+            "DATE_OF_BIRTH" => "📆 <b>Дату годовщины</b> (формат: 01.01.1970)",
             "NOTIFICATION_TYPE" => "🔊 <b>Как уведомлять?</b>",
-            "GROUP" => "👥<b> укажите номер группы для оповещения</b> (например: 1) \n",
-            "TIME_NOTIFICATION" => "⏰  <b>укажите время оповещения в день рождения</b> (формат: 12:00)",
+            "GROUP" => "👥<b> Укажите номер группы для оповещения</b> (например: 1) \n",
+            "TIME_NOTIFICATION" => "⏰  <b>Укажите время оповещения в день рождения</b> (формат: 12:00)",
             "CONFIRMATION" => "<b>‼️ Подтвердите даннные:</b>",
         ];
     }

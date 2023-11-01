@@ -142,7 +142,7 @@ class QueueMessageUseCase
 
     /**
      * @param TelegramGroupRepositoryInterface $groupRepository
-     * @param string $chatId
+     * @param string $userChatId
      * @return string
      */
     private static function getNamesGroup(TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
@@ -150,7 +150,7 @@ class QueueMessageUseCase
         $textNameGroup = "";
         $groups = $groupRepository->getListByUser($userChatId);
         foreach ($groups as $group){
-            $textNameGroup .= "\n<b>" . $group->id . ".</b> <i>". $group->name . "</i>";
+            $textNameGroup .= "\n<b>" . $group->id . ".</b> ". $group->name;
         }
 
         return $textNameGroup;

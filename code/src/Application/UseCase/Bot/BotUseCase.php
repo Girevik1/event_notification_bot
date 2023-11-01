@@ -621,17 +621,34 @@ final class BotUseCase
                 break;
 
             case "DATE_OF_BIRTH":
-
-               $isValidFormat = preg_match('/\d{2}\.\d{2}\.\d{2}/', $text);
+                //                '/^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?$/'
+                $isValidFormat = preg_match('/^(\d{1,2})\.(\d{1,2}).(\d{4})$/', $text);
+//               $isValidFormat = preg_match('/\d{2}\.\d{2}\.\d{2}/', $text);
                 if (!$isValidFormat) {
                     $result = false;
                     $validationText = "\n\n‼️ <b>Указан некорректный формат даты!</b>";
                 }
                 break;
 
-                case "TIME_NOTIFICATION":
+            case "GROUP":
 
-               $isValidFormat = preg_match('/\d{2}\:\d{2}/', $text);
+                $isValidFormat = preg_match('/^(\d{1,4})$/', $text);
+                if (!$isValidFormat) {
+                    $result = false;
+                    $validationText = "\n\n‼️ <b>Указан некорректный формат, передайте номер группы!</b>";
+                    break;
+                }
+                $group = $this->telegramGroupRepository->getFirstById((int)$text, $telegramUser->telegram_chat_id);
+                if ($group === null) {
+                    $result = false;
+                    $validationText = "\n\n‼️ <b>Некорректый номер, группа не найдена!</b>";
+                }
+                break;
+
+            case "TIME_NOTIFICATION":
+
+                $isValidFormat = preg_match('/^(\d{1,2})\:(\d{1,2})$/', $text);
+//               $isValidFormat = preg_match('/\d{2}\:\d{2}/', $text);
                 if (!$isValidFormat) {
                     $result = false;
                     $validationText = "\n\n‼️ <b>Указан некорректный формат времени!</b>";

@@ -80,11 +80,11 @@ class AddBirthdayUseCase
     public static function getMessagesQueueBirthday(): array
     {
         return [
-            "NANE_WHOSE_BIRTHDAY" => "👶 <b>укажите имя</b>",
-            "DATE_OF_BIRTH" => "📆 <b>дата рождения</b> (формат: 01.01.1970)",
+            "NANE_WHOSE_BIRTHDAY" => "👶 <b>Укажите имя именинника(цы)</b>",
+            "DATE_OF_BIRTH" => "📆 <b>Дата рождения</b> (формат: 01.01.1970)",
             "NOTIFICATION_TYPE" => "🔊 <b>Как уведомлять?</b>",
-            "GROUP" => "👥<b> укажите номер группы для оповещения</b> (например: 1) \n",
-            "TIME_NOTIFICATION" => "⏰  <b>укажите время оповещения в день рождения</b> (формат: 12:00)",
+            "GROUP" => "👥 <b>Укажите номер группы для оповещения</b> (например: 1) \n",
+            "TIME_NOTIFICATION" => "⏰  <b>Укажите время оповещения в день рождения</b> (формат: 12:00)",
             "CONFIRMATION" => "<b>‼️ Подтвердите даннные:</b>",
         ];
     }
