@@ -75,20 +75,14 @@ final class BotUseCase
 //            'parse_mode' => 'HTML',
 //        ]);
 
-
-
-
-
-
-
 //        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
         $this->telegramMessageRepository->create($messageDto);
 
-//        if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
-//            throw new TelegramMessageDataException('Some data is missing');
-//        };
+        if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
+            throw new TelegramMessageDataException('Some data is missing');
+        };
 
         /*
          * Create or remove a group in db (on added in group or left)
@@ -106,18 +100,6 @@ final class BotUseCase
 
             return '';
         }
-
-//        $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
-//        $isNewUser = false;
-//        $text = '';
-
-        $this->telegram->editMessageText([
-            'chat_id' => 310670557,
-            'message_id' => $message['message_id'],
-            'text' => 'testetetst',
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
 
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
         $isNewUser = false;

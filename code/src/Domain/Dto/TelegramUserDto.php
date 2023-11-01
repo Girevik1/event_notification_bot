@@ -13,7 +13,8 @@ class TelegramUserDto
 
     public function __construct($message)
     {
-        $this->login = strtolower($message["chat"]["username"]) ?? '';
+        $login = $message["chat"]["username"] ?? '';
+        $this->login = strtolower($login);
         $this->telegram_chat_id = (string)$message["chat"]["id"];
         $this->name = $message["chat"]["first_name"] ?? '';
         $this->surname = $message["chat"]["last_name"] ?? '';
