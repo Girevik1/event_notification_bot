@@ -385,7 +385,8 @@ final class BotUseCase
                 $idGroup = end($textArray);
 
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
-//                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
+
+                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
 
@@ -394,20 +395,8 @@ final class BotUseCase
                 if(!$result){
                     return;
                 }
-//                $groups = ListEvent::where('group_id', '=', (int)$idGroup)
-//                    ->where('telegram_user_id', $telegramUser->id)
-//                    ->get();
-//
-//                foreach ($groups as $group){
-//                    $group->group_id = 0;
-//                    $group->save();
-//                }
 
                 $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
-
-//                ListEvent::where('group_id', '=', (int)$idGroup)
-//                    ->where('telegram_user_id', $telegramUser->id)
-//                    ->update(['group_id' => 0]);
 
 
                 $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_groups');
