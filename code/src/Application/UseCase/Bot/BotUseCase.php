@@ -594,8 +594,17 @@ final class BotUseCase
                 }
                 break;
 
+                case "TIME_NOTIFICATION":
+
+               $isValidFormat = preg_match('/\d{2}\:\d{2}/', $text);
+                if (!$isValidFormat) {
+                    $result = false;
+                    $validationText = "\n\n‼️<b>Указан некорректный формат времени!</b>";
+                }
+                break;
+
             default:
-                return false;
+                return true; // temp
         }
 
         if(!$result){
