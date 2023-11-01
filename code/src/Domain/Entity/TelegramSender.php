@@ -236,7 +236,7 @@ class TelegramSender extends Model
                         ],
                         [
                             [
-                                'text' => '📋 Список доступных групп',
+                                'text' => '📋 Список добавленных групп',
                                 'callback_data' => 'list_groups',
                             ],
                         ],

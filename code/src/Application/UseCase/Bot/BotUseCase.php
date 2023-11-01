@@ -447,27 +447,62 @@ final class BotUseCase
 
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
-                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
+                    $this->prepareTextForSend(
+                        $telegramUser,
+                        $queueMessageByUser,
+                        $message['message_id']
+                    );
+//                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
+//
+//                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
+//
+//                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+//
+//                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+//
+//                    if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
+//                        $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+//                    }
+//
+//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//
+//                    $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
+//
+//                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
-                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
 
-                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
-
-                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
-
-                    if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
-                        $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
-                    }
-
-                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-
-                    $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
-
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
                 }
                 break;
         }
         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+    }
+
+    private function prepareTextForSend(
+        TelegramUser $telegramUser,
+        QueueMessage $queueMessageByUser,
+        int          $messageId,
+        string       $additionalText = ''
+    ): void
+    {
+        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
+
+        $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+
+        if ($additionalText) {
+            $this->dataEditMessageDto->text .= $additionalText;
+        }
+
+        $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+
+        if ($queueMessageByUser->type === "NOTIFICATION_TYPE") {
+            $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+        }
+
+        $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+
+        $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
+
+        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
     }
 
     /**
@@ -577,11 +612,11 @@ final class BotUseCase
                 $lengthText = mb_strlen($text);
                 if ($lengthText > 64) {
                     $result = false;
-                    $validationText = "\n\n‼️<b>Превышен максимальный размер текста 64 символа!</b>";
+                    $validationText = "\n\n‼️ <b>Превышен максимальный размер текста 64 символа!</b>";
                 }
                 if ($lengthText < 2) {
                     $result = false;
-                    $validationText = "\n\n‼️<b>Минимальный размер текста 2 символа!</b>";
+                    $validationText = "\n\n‼️ <b>Минимальный размер текста 2 символа!</b>";
                 }
                 break;
 
@@ -590,7 +625,7 @@ final class BotUseCase
                $isValidFormat = preg_match('/\d{2}\.\d{2}\.\d{2}/', $text);
                 if (!$isValidFormat) {
                     $result = false;
-                    $validationText = "\n\n‼️<b>Указан некорректный формат даты!</b>";
+                    $validationText = "\n\n‼️ <b>Указан некорректный формат даты!</b>";
                 }
                 break;
 
@@ -599,7 +634,7 @@ final class BotUseCase
                $isValidFormat = preg_match('/\d{2}\:\d{2}/', $text);
                 if (!$isValidFormat) {
                     $result = false;
-                    $validationText = "\n\n‼️<b>Указан некорректный формат времени!</b>";
+                    $validationText = "\n\n‼️ <b>Указан некорректный формат времени!</b>";
                 }
                 break;
 
@@ -608,25 +643,30 @@ final class BotUseCase
         }
 
         if(!$result){
-//            $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+            $this->prepareTextForSend(
+                $telegramUser,
+                $queueMessageByUser,
+                $messageId,
+                $validationText
+            );
 
-            TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
-
-            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
-
-            $this->dataEditMessageDto->text .= $validationText;
-
-            $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
-
-            if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
-                $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
-            }
-
-            $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-
-            $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
-
-            TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+//            TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
+//
+//            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+//
+//            $this->dataEditMessageDto->text .= $validationText;
+//
+//            $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+//
+//            if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
+//                $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+//            }
+//
+//            $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//
+//            $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
+//
+//            TelegramSender::editMessageTextSend($this->dataEditMessageDto);
 
              return false;
         }

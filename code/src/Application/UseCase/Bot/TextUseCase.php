@@ -41,7 +41,7 @@ class TextUseCase
     {
         if(count($listGroups) > 0){
 
-            $text = "<b>Список добавленных групп\n\n</b>";
+            $text = "📋 <b>Список добавленных групп\n\n</b>";
 
             foreach ($listGroups as $group){
                 $text .= "<b>" . $group->id . ".</b> " . $group->name . "\n";
@@ -60,7 +60,7 @@ class TextUseCase
     {
         if (count($listEvents) > 0) {
 
-            $text = "<b>Список ваших coбытий\n\n</b>";
+            $text = "📝 <b>Список ваших coбытий\n\n</b>";
 
             foreach ($listEvents as $event) {
 
