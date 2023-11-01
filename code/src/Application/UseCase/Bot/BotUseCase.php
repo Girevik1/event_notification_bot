@@ -10,7 +10,6 @@ use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
-use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -403,9 +402,9 @@ final class BotUseCase
 //                    $group->group_id = 0;
 //                    $group->save();
 //                }
-                if ($group) {
-                    $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
-                }
+
+                $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
+
 //                ListEvent::where('group_id', '=', (int)$idGroup)
 //                    ->where('telegram_user_id', $telegramUser->id)
 //                    ->update(['group_id' => 0]);
