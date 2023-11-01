@@ -591,9 +591,9 @@ final class BotUseCase
 
             TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
 
-            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+//            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
-            $this->dataEditMessageDto->text .= $validationText;
+            $this->dataEditMessageDto->text = $validationText;
 
             $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
