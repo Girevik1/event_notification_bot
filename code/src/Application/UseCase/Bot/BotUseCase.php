@@ -397,7 +397,7 @@ final class BotUseCase
 
                 ListEvent::where('group_id', (int)$idGroup)
                     ->where('telegram_user_id', $telegramUser->id)
-                    ->where()->update(['group_id' => 0]);
+                    ->update(['group_id' => 0]);
 
 
                 $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_groups');

@@ -43,7 +43,7 @@ class GroupUseCase
             if($group){
                 ListEvent::where('group_id', $group->id)
                     ->where('telegram_user_id', $user->id)
-                    ->where()->update(['group_id' => 0]);
+                    ->update(['group_id' => 0]);
             }
 
             $resulDelete = $groupRepository->deleteByChatId(
