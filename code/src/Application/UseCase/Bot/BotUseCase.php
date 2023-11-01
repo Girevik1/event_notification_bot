@@ -437,7 +437,9 @@ final class BotUseCase
                     }
 
                     // VALIDATION
-                    $text = $this->validationIncomingText($text, $queueMessageByUser, $telegramUser,$message['message_id']);
+                    if(!$text = $this->validationIncomingText($text, $queueMessageByUser, $telegramUser,$message['message_id'])){
+                        return;
+                    }
 
                     // temp
                     $queueMessageByUser->answer = $text;
@@ -559,7 +561,7 @@ final class BotUseCase
         TelegramMessage::newMessage($messageSendDto);
     }
 
-    private function validationIncomingText(string $text, QueueMessage $queueMessageByUser, $telegramUser, $messageId):string
+    private function validationIncomingText(string $text, QueueMessage $queueMessageByUser, $telegramUser, $messageId):string|bool
     {
         $result = true;
         $validationText = '';
@@ -606,6 +608,8 @@ final class BotUseCase
             $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
 
             TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+
+             return false;
         }
 
         return $text;
