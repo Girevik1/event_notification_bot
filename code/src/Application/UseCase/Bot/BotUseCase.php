@@ -94,6 +94,7 @@ final class BotUseCase
             $this->groupUseCase->groupHandlerByMessage(
                 $message,
                 $this->telegramGroupRepository,
+                $this->listEventRepository,
                 $this->telegram,
                 $this->textUseCase,
                 $telegramUser
@@ -394,13 +395,16 @@ final class BotUseCase
                 if(!$result){
                     return;
                 }
-                $groups = ListEvent::where('group_id', '=', (int)$idGroup)
-                    ->where('telegram_user_id', $telegramUser->id)
-                    ->get();
-
-                foreach ($groups as $group){
-                    $group->group_id = 0;
-                    $group->save();
+//                $groups = ListEvent::where('group_id', '=', (int)$idGroup)
+//                    ->where('telegram_user_id', $telegramUser->id)
+//                    ->get();
+//
+//                foreach ($groups as $group){
+//                    $group->group_id = 0;
+//                    $group->save();
+//                }
+                if ($group) {
+                    $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
                 }
 //                ListEvent::where('group_id', '=', (int)$idGroup)
 //                    ->where('telegram_user_id', $telegramUser->id)

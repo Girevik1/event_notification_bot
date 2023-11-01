@@ -6,10 +6,10 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Dto\TelegramGroupDto;
-use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\GroupCreateException;
 use Art\Code\Domain\Exception\GroupDeleteException;
+use Art\Code\Infrastructure\Repository\ListEventRepository;
 use Art\Code\Infrastructure\Repository\TelegramGroupRepository;
 use Illuminate\Support\Collection;
 use Telegram\Bot\Api;
@@ -25,6 +25,7 @@ class GroupUseCase
     public function groupHandlerByMessage(
         Collection                   $message,
         TelegramGroupRepository $groupRepository,
+        ListEventRepository $listEventRepository,
         Api                     $telegram,
         TextUseCase             $textUseCase,
         TelegramUser $user
@@ -40,10 +41,8 @@ class GroupUseCase
 
             $group = $groupRepository->getFirstByGroupChatId((string)$message['chat']['id'], $user->telegram_chat_id);
 
-            if($group){
-                ListEvent::where('group_id', $group->id)
-                    ->where('telegram_user_id', $user->id)
-                    ->update(['group_id' => 0]);
+            if ($group) {
+                $listEventRepository->updateAllByGroup($group->id, $user->id, 'group_id', 0);
             }
 
             $resulDelete = $groupRepository->deleteByChatId(

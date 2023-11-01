@@ -14,4 +14,6 @@ interface ListEventRepositoryInterface
     public function getListByUser(int $userId): Collection;
 
     public function deleteEventById(int $id, int $userId): mixed;
+
+    public function updateAllByGroup(int $groupId, int $userId, string $field, mixed $value): int;
 }

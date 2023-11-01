@@ -48,4 +48,18 @@ class ListEventRepository implements ListEventRepositoryInterface
             ->where('telegram_user_id', $userId)
             ->delete();
     }
+
+    /**
+     * @param int $groupId
+     * @param int $userId
+     * @param string $field
+     * @param mixed $value
+     * @return int
+     */
+    public function updateAllByGroup(int $groupId, int $userId, string $field, mixed $value): int
+    {
+        return ListEvent::where('group_id', $groupId)
+            ->where('telegram_user_id', $userId)
+            ->update([$field => $value]);
+    }
 }
