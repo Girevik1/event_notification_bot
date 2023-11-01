@@ -56,7 +56,7 @@ class TextUseCase
         return "<b>Бот не добавлен в группы.</b>";
     }
 
-    public function getListEventText(Collection $listEvents, TelegramGroupRepositoryInterface $groupRepository): string
+    public function getListEventText(Collection $listEvents, TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
     {
         if (count($listEvents) > 0) {
 
@@ -73,7 +73,7 @@ class TextUseCase
                     $notificationMethod = 'лично';
                 }else{
                     $notificationMethod = 'в группе';
-                    $group = $groupRepository->getFirstById((int)$event->group_id);
+                    $group = $groupRepository->getFirstById($event->group_id, $userChatId);
                     $groupName = $group->name ?? 'группа не найдена!';
                 }
 

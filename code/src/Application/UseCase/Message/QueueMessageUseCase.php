@@ -46,7 +46,7 @@ class QueueMessageUseCase
      * @param QueueMessage $message
      * @param QueueMessageRepositoryInterface $queueMessageRepository
      * @param TelegramGroupRepositoryInterface|null $groupRepository
-     * @param string $chatId
+     * @param string $userChatId
      * @return string|null
      * @throws EventNotFoundException
      * @throws QueueTypeException
@@ -55,7 +55,7 @@ class QueueMessageUseCase
         QueueMessage                      $message,
         QueueMessageRepositoryInterface   $queueMessageRepository,
         ?TelegramGroupRepositoryInterface $groupRepository = null,
-        string                            $chatId = ''
+        string                            $userChatId = ''
     ): ?string
     {
 
@@ -80,7 +80,7 @@ class QueueMessageUseCase
             case "GROUP":
 //                $text .= self::getRubrics();
 //                $text .= "\n   (или /cancel для отмены отзыва)";
-                $text .= self::getNamesGroup($groupRepository,$chatId);
+                $text .= self::getNamesGroup($groupRepository, $userChatId);
                 break;
 
             case "DATE_OF_BIRTH":
@@ -96,7 +96,7 @@ class QueueMessageUseCase
                         if($queueMessage->type === 'GROUP' && $queueMessage->answer === '0'){
                             continue;
                         }
-                        $text .= self::getTextConfirmationBirthday($queueMessage, $groupRepository);
+                        $text .= self::getTextConfirmationBirthday($queueMessage, $groupRepository, $userChatId);
                     }
                 }
                 break;
@@ -114,13 +114,13 @@ class QueueMessageUseCase
     /**
      * @throws QueueTypeException
      */
-    private static function getTextConfirmationBirthday(QueueMessage $queueMessage, ?TelegramGroupRepositoryInterface $groupRepository): string
+    private static function getTextConfirmationBirthday(QueueMessage $queueMessage, ?TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
     {
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
             "DATE_OF_BIRTH" => "\nДата рождения: <i>" . $queueMessage->answer . "</i>",
             "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
-            "GROUP" => GroupUseCase::getNameGroup($queueMessage->answer, $groupRepository),
+            "GROUP" => GroupUseCase::getNameGroup($queueMessage->answer, $groupRepository, $userChatId),
             "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",
             "CONFIRMATION" => "",
             default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
@@ -145,10 +145,10 @@ class QueueMessageUseCase
      * @param string $chatId
      * @return string
      */
-    private static function getNamesGroup(TelegramGroupRepositoryInterface $groupRepository, string $chatId): string
+    private static function getNamesGroup(TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
     {
         $textNameGroup = "";
-        $groups = $groupRepository->getListByUser($chatId);
+        $groups = $groupRepository->getListByUser($userChatId);
         foreach ($groups as $group){
             $textNameGroup .= "\n<b>" . $group->id . ".</b> <i>". $group->name . "</i>";
         }

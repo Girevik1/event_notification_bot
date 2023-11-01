@@ -13,7 +13,9 @@ interface TelegramGroupRepositoryInterface
 
     public function getListByUser(string $userChatId):Collection;
 
-    public function getFirstById(int $id): ?TelegramGroup;
+    public function getFirstById(int $id, string $userChatId): ?TelegramGroup;
+
+    public function getFirstByGroupChatId(string $groupChatId, string $userChatId): ?TelegramGroup;
 
     public function deleteByChatId(string $groupChatId, string $userChatId): mixed;
 

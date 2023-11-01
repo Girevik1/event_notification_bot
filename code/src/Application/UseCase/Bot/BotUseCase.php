@@ -10,6 +10,7 @@ use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -190,7 +191,11 @@ final class BotUseCase
                     case "list_events":
 
                     $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
-                    $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
+                        $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
+                            $listEvents,
+                            $this->telegramGroupRepository,
+                            $telegramUser->telegram_chat_id
+                        );
                     $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
@@ -346,7 +351,7 @@ final class BotUseCase
 //            case (bool)preg_match('/\d{2}\.\d{2}\.\d{2}/', $text):
 //            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
 //            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
-            case (bool)preg_match('/^event [0-9]{1,3}$/', $text):
+            case (bool)preg_match('/^event [0-9]{1,3}$/i', $text):
 
                 $textArray = explode(' ', $text);
                 $idEvent = end($textArray);
@@ -361,7 +366,11 @@ final class BotUseCase
                 $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_events');
 
                 $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
-                $this->dataEditMessageDto->text = $this->textUseCase->getListEventText($listEvents, $this->telegramGroupRepository);
+                $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
+                    $listEvents,
+                    $this->telegramGroupRepository,
+                    $telegramUser->telegram_chat_id
+                );
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
@@ -370,17 +379,26 @@ final class BotUseCase
 
                 return;
 
-                case (bool)preg_match('/^group [0-9]{1,3}$/i', $text):
+            case (bool)preg_match('/^group [0-9]{1,3}$/i', $text):
 
                 $textArray = explode(' ', $text);
                 $idGroup = end($textArray);
-                $result = $this->telegramGroupRepository->deleteById((int)$idGroup, $telegramUser->telegram_chat_id);
+
+                $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
+                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
+
+                $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
 
                 TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
 
                 if(!$result){
                     return;
                 }
+
+                ListEvent::where('group_id', (int)$idGroup)
+                    ->where('telegram_user_id', $telegramUser->id)
+                    ->where()->update(['group_id' => 0]);
+
 
                 $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_groups');
 
@@ -395,7 +413,8 @@ final class BotUseCase
                 return;
 
             default:
-                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+
+            $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
                 if($queueMessageByUser && $text != ''){
 
                     // VALIDATION
