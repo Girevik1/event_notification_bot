@@ -424,21 +424,20 @@ final class BotUseCase
             default:
 
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-                /*
-                 * Принимаем ответы на сообщение очереди эвента от клиента
+                /* Принимаем ответы на сообщение очереди эвента от клиента
                  * */
                 if ($queueMessageByUser && $text !== '') {
 
-                    // VALIDATION
-
-                    /*
-                     * Если на этапе выбора "как уведомлять" -
+                    /* Если на этапе выбора "как уведомлять" -
                      * отправили текст, пересекаем
                      * */
                     if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
                         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
                         return;
                     }
+
+                    // VALIDATION
+                    $text = $this->validationIncomingText($text, $queueMessageByUser, $telegramUser,$message['message_id']);
 
                     // temp
                     $queueMessageByUser->answer = $text;
@@ -559,6 +558,59 @@ final class BotUseCase
 
         TelegramMessage::newMessage($messageSendDto);
     }
+
+    private function validationIncomingText(string $text, QueueMessage $queueMessageByUser, $telegramUser, $messageId):string
+    {
+        $result = true;
+        $validationText = '';
+
+        switch ($queueMessageByUser->type) {
+            case "NANE_WHOSE_BIRTHDAY":
+
+                $text = trim($text);
+//                $data = stripslashes($data);
+//                $data = htmlspecialchars($data);
+
+                if (mb_strlen($text) > 4) {
+                    $result = false;
+                    $validationText = 'Текст должен быть не более 4092 символов';
+                }
+                break;
+
+            case "DATE_OF_BIRTH":
+
+                $result = false;
+                break;
+
+            default:
+                break;
+        }
+
+        if(!$result){
+//            $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
+
+            TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
+
+            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+
+            $this->dataEditMessageDto->text .= $validationText;
+
+            $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
+
+            if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
+                $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+            }
+
+            $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+
+            $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
+
+            TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+        }
+
+        return $text;
+    }
+
 
     /**
      * @param $message
