@@ -394,8 +394,15 @@ final class BotUseCase
                 if(!$result){
                     return;
                 }
+                $groups = ListEvent::where('group_id', '=', (int)$idGroup)
+                    ->where('telegram_user_id', $telegramUser->id)
+                    ->get();
 
-//                ListEvent::where('group_id', (int)$idGroup)
+                foreach ($groups as $group){
+                    $group->group_id = 0;
+                    $group->save();
+                }
+//                ListEvent::where('group_id', '=', (int)$idGroup)
 //                    ->where('telegram_user_id', $telegramUser->id)
 //                    ->update(['group_id' => 0]);
 
