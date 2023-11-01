@@ -338,7 +338,7 @@ final class BotUseCase
 
         switch ($text) {
             case "/start":
-                $this->start($telegramUser, $messageDto, $isNewUser);
+                $this->start($telegramUser, $isNewUser);
                 $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
                 return;
@@ -370,7 +370,7 @@ final class BotUseCase
 
                 return;
 
-                case (bool)preg_match('/^group [0-9]{1,3}$/', $text):
+                case (bool)preg_match('/^group [0-9]{1,3}$/i', $text):
 
                 $textArray = explode(' ', $text);
                 $idGroup = end($textArray);
@@ -533,7 +533,7 @@ final class BotUseCase
      * @return void
      * @throws TelegramSDKException
      */
-    private function start(TelegramUser $telegramUser, MessageDto $messageDto, bool $isNewUser): void
+    private function start(TelegramUser $telegramUser, bool $isNewUser): void
     {
         $text = $this->textUseCase->getGreetingsText($isNewUser);
 
