@@ -566,26 +566,36 @@ final class BotUseCase
         $result = true;
         $validationText = '';
 
+        $text = trim($text);
+        $text = stripslashes($text);
+        $text = htmlspecialchars($text);
+
         switch ($queueMessageByUser->type) {
+
             case "NANE_WHOSE_BIRTHDAY":
 
-                $text = trim($text);
-                $text = stripslashes($text);
-                $text = htmlspecialchars($text);
-
-                if (mb_strlen($text) > 4) {
+                $lengthText = mb_strlen($text);
+                if ($lengthText > 64) {
                     $result = false;
-                    $validationText = "\n\n‼️<b>Превышен максимальный размер текста!</b>";
+                    $validationText = "\n\n‼️<b>Превышен максимальный размер текста 64 символа!</b>";
+                }
+                if ($lengthText < 2) {
+                    $result = false;
+                    $validationText = "\n\n‼️<b>Минимальный размер текста 2 символа!</b>";
                 }
                 break;
 
             case "DATE_OF_BIRTH":
 
-                $result = false;
+               $isValidFormat = preg_match('/\d{2}\.\d{2}\.\d{2}/', $text);
+                if (!$isValidFormat) {
+                    $result = false;
+                    $validationText = "\n\n‼️<b>Указан некорректный формат даты!</b>";
+                }
                 break;
 
             default:
-                break;
+                return false;
         }
 
         if(!$result){
