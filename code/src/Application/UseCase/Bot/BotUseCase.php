@@ -389,7 +389,7 @@ final class BotUseCase
 //                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 $params = [
-                    'chat_id' => $group->group_chat_id
+                    'chat_id' => '-1001743972342'
                 ];
                 $this->telegram->leaveChat($params);
 
