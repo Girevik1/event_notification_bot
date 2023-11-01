@@ -111,6 +111,14 @@ final class BotUseCase
 //        $isNewUser = false;
 //        $text = '';
 
+        $this->telegram->editMessageText([
+            'chat_id' => 310670557,
+            'message_id' => $message['message_id'],
+            'text' => 'testetetst',
+            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'parse_mode' => 'HTML',
+        ]);
+
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
         $isNewUser = false;
         if ($telegramUser === null) {
