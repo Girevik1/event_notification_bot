@@ -8,8 +8,9 @@ use Art\Code\Application\UseCase\Bot\BotUseCase;
 
 class CronController
 {
-    public function checkEvents(BotUseCase $botUseCase): void
+    public function checkEvents(BotUseCase $botUseCase)
     {
-        $botUseCase->cronTest();
+        return 1;
+//        $botUseCase->cronTest();
     }
 }

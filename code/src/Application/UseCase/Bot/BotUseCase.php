@@ -42,9 +42,8 @@ final class BotUseCase
         public $listEventRepository
     )
     {
-        $telegramToken = require '../config/telegram.php';
-//        $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
-        $this->telegram = new Api($telegramToken['TELEGRAM_BOT_TOKEN']);
+        $telegramConfig = require '../config/telegram.php';
+        $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
         $this->textUseCase = new TextUseCase();
         $this->groupUseCase = new GroupUseCase();
         $this->dataEditMessageDto = new DataEditMessageDto();
@@ -52,17 +51,6 @@ final class BotUseCase
 //        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
-    public function cronTest()
-    {
-        $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
-        $messageSendDto = new MessageSendDto();
-        $messageSendDto->text = 'test cron';
-        $messageSendDto->user = $telegramUser;
-        $messageSendDto->command = '/start';
-        $messageSendDto->type_btn = 'main_menu';
-
-        TelegramMessage::newMessage($messageSendDto);
-    }
     /**
      * @throws Exception
      */
@@ -369,9 +357,6 @@ final class BotUseCase
 
                 return;
 
-//            case (bool)preg_match('/\d{2}\.\d{2}\.\d{2}/', $text):
-//            case (bool)preg_match('/[0-9]+-[0-9]+-[0-9]+/', $text):
-//            case (bool)preg_match('/\/[0-9]{1,3}/', $text):
             case (bool)preg_match('/^event [0-9]{1,3}$/i', $text):
 
                 $textArray = explode(' ', $text);
@@ -613,9 +598,9 @@ final class BotUseCase
                 break;
 
             case "DATE_OF_BIRTH":
-                //                '/^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?$/'
+
                 $isValidFormat = preg_match('/^(\d{1,2})\.(\d{1,2}).(\d{4})$/', $text);
-//               $isValidFormat = preg_match('/\d{2}\.\d{2}\.\d{2}/', $text);
+
                 if (!$isValidFormat) {
                     $result = false;
                     $validationText = "\n\n‼️ <b>Указан некорректный формат даты!</b>";
@@ -640,7 +625,7 @@ final class BotUseCase
             case "TIME_NOTIFICATION":
 
                 $isValidFormat = preg_match('/^(\d{1,2})\:(\d{1,2})$/', $text);
-//               $isValidFormat = preg_match('/\d{2}\:\d{2}/', $text);
+
                 if (!$isValidFormat) {
                     $result = false;
                     $validationText = "\n\n‼️ <b>Указан некорректный формат времени!</b>";
