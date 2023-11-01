@@ -39,12 +39,12 @@ final class BotUseCase
         public $telegramMessageRepository,
         public $telegramGroupRepository,
         public $queueMessageRepository,
-        public $listEventRepository,
-//        private readonly TelegramUserRepositoryInterface    $telegramUserRepository,
-//        private readonly TelegramMessageRepositoryInterface $telegramMessageRepository
+        public $listEventRepository
     )
     {
-        $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
+        $telegramToken = require '../config/telegram.php';
+//        $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
+        $this->telegram = new Api($telegramToken['TELEGRAM_BOT_TOKEN']);
         $this->textUseCase = new TextUseCase();
         $this->groupUseCase = new GroupUseCase();
         $this->dataEditMessageDto = new DataEditMessageDto();
@@ -52,6 +52,17 @@ final class BotUseCase
 //        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
+    public function cronTest()
+    {
+        $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
+        $messageSendDto = new MessageSendDto();
+        $messageSendDto->text = 'test cron';
+        $messageSendDto->user = $telegramUser;
+        $messageSendDto->command = '/start';
+        $messageSendDto->type_btn = 'main_menu';
+
+        TelegramMessage::newMessage($messageSendDto);
+    }
     /**
      * @throws Exception
      */
@@ -452,25 +463,6 @@ final class BotUseCase
                         $queueMessageByUser,
                         $message['message_id']
                     );
-//                    TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
-//
-//                    $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
-//
-//                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
-//
-//                    $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
-//
-//                    if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
-//                        $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
-//                    }
-//
-//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-//
-//                    $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
-//
-//                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-
-
                 }
                 break;
         }
@@ -656,7 +648,7 @@ final class BotUseCase
                 break;
 
             default:
-                return true; // temp
+                return true;
         }
 
         if(!$result){
@@ -666,25 +658,6 @@ final class BotUseCase
                 $messageId,
                 $validationText
             );
-
-//            TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
-//
-//            $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
-//
-//            $this->dataEditMessageDto->text .= $validationText;
-//
-//            $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
-//
-//            if($queueMessageByUser->type === "NOTIFICATION_TYPE"){
-//                $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
-//            }
-//
-//            $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
-//
-//            $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
-//
-//            TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-
              return false;
         }
 

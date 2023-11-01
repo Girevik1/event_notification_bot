@@ -10,11 +10,11 @@ use Art\Code\Domain\Entity\TelegramUser;
 
 interface TelegramUserRepositoryInterface
 {
-    public function firstByChatId($chatId): ?TelegramUser;
+    public function firstByChatId(string $chatId): ?TelegramUser;
 
 //    public function firstById($id): ?TelegramUser;
 
-    public function firstByLogin($login): ?TelegramUser;
+    public function firstByLogin(string $login): ?TelegramUser;
 
 //    public function isExistByLogin($login): bool;
 

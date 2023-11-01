@@ -54,8 +54,8 @@ class TelegramMessage extends Model
                 if (
                     $_ENV['APP_ENV'] == 'prod' ||
                     $_ENV['APP_ENV'] == 'dev'
-                ) {
-                    $msg_id = TelegramSender::sendMessage($messageDataDto->user->login, $textItem, $messageDataDto->type_btn);
+                ) { // chat_id pass need
+                    $msg_id = TelegramSender::sendMessage($messageDataDto->user->telegram_chat_id, $textItem, $messageDataDto->type_btn);
                 }
 //                else {
 //                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();

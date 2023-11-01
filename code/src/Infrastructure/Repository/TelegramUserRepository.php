@@ -25,12 +25,12 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
 //        return TelegramUser::where('id','=', $id)->first();
 //    }
 
-    public function firstByChatId($chatId): ?TelegramUser
+    public function firstByChatId(string $chatId): ?TelegramUser
     {
         return TelegramUser::where('telegram_chat_id','=', $chatId)->first();
     }
 
-    public function firstByLogin($login): ?TelegramUser
+    public function firstByLogin(string $login): ?TelegramUser
     {
         return TelegramUser::where('login','=', $login)->first();
     }

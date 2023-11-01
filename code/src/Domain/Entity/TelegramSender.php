@@ -29,13 +29,14 @@ class TelegramSender extends Model
     /**
      * @throws TelegramSDKException
      */
-    public static function sendMessage($login, $message, string $typeBtn = '', $replyToMessageId = '')
+    public static function sendMessage(string $telegramChatId, $message, string $typeBtn = '', $replyToMessageId = '')
     {
         $thisObj = new self();
-        $user = $thisObj->telegramUserRepository->firstByLogin($login);
+//        $user = $thisObj->telegramUserRepository->firstByLogin($login);
 
         $dataForSend = [
-            'chat_id' => $user->telegram_chat_id,
+            'chat_id' => $telegramChatId,
+//            'chat_id' => $user->telegram_chat_id,
             'parse_mode' => 'HTML',
             'text' => $message,
             'reply_to_message_id' => $replyToMessageId
