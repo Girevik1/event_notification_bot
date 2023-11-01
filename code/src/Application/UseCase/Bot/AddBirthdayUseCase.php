@@ -67,20 +67,6 @@ class AddBirthdayUseCase
 
 //        try {
         $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->queueMessageRepository);
-//        } catch (EventNotFoundException $e) {
-//            $this->telegram->sendMessage([
-//                'chat_id' => $this->telegramUser->telegram_chat_id,
-//                'parse_mode' => 'HTML',
-//                'text' => $e->getMessage()
-//            ]);
-//        } catch (QueueTypeException $e) {
-//            $this->telegram->sendMessage([
-//                'chat_id' => $this->telegramUser->telegram_chat_id,
-//                'parse_mode' => 'HTML',
-//                'text' => $e->getMessage()
-//            ]);
-//        }
-
 
         $this->telegram->editMessageText([
             'chat_id' => $this->telegramUser->telegram_chat_id,
@@ -95,7 +81,7 @@ class AddBirthdayUseCase
     {
         return [
             "NANE_WHOSE_BIRTHDAY" => "👶 <b>укажите имя</b>",
-            "DATE_OF_BIRTH" => "📆 <b>дата рождения</b> (формат: 01-01-1970)",
+            "DATE_OF_BIRTH" => "📆 <b>дата рождения</b> (формат: 01.01.1970)",
             "NOTIFICATION_TYPE" => "🔊 <b>Как уведомлять?</b>",
             "GROUP" => "👥<b> укажите номер группы для оповещения</b> (например: 1) \n",
             "TIME_NOTIFICATION" => "⏰  <b>укажите время оповещения в день рождения</b> (формат: 12:00)",

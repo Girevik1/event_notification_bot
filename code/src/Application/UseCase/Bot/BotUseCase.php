@@ -208,6 +208,7 @@ final class BotUseCase
 
                     return;
 
+                case "add_anniversary":
                 case "add_birthday":
 
                     $addBirthdayUseCase = new AddBirthdayUseCase(
@@ -216,13 +217,21 @@ final class BotUseCase
                         $messageId,
                         $this->queueMessageRepository
                     );
-
                     $addBirthdayUseCase->addBirthday();
 
-//                    $messageDto->command = 'add_birthday';
-//                    $this->telegramMessageRepository->create($messageDto);
-
                     return;
+
+//                case "anniversary":
+//
+//                    $addImportantEventUseCase = new AddImportantEventUseCase();
+//                    $addImportantEventUseCase->addImportantEvent(
+//                        $this->telegram,
+//                        $telegramUser,
+//                        $messageId,
+//                        $this->queueMessageRepository
+//                    );
+//
+//                    return;
 
                 case "confirm_event":
 
@@ -250,7 +259,7 @@ final class BotUseCase
 
                     return;
 
-                    case "group_notice":
+                case "group_notice":
 
                     $countAccessGroup = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
                     if ($countAccessGroup === 0) {
@@ -388,10 +397,6 @@ final class BotUseCase
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
 
                 $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
-//                $params = [
-//                    'chat_id' => $group->group_chat_id
-//                ];
-//                $this->telegram->leaveChat($params);
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
 
@@ -418,13 +423,17 @@ final class BotUseCase
 
             default:
 
-            $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
-                if($queueMessageByUser && $text != ''){
+                $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+                /*
+                 * Принимаем ответы на сообщение очереди эвента от клиента
+                 * */
+                if ($queueMessageByUser && $text !== '') {
 
                     // VALIDATION
 
                     /*
-                     * Если на этапе выбора "как уведомлять" -> отправили текст, пересекаем
+                     * Если на этапе выбора "как уведомлять" -
+                     * отправили текст, пересекаем
                      * */
                     if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
                         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
@@ -441,8 +450,6 @@ final class BotUseCase
 
                     $this->telegramMessageRepository->deleteByMessageId($message['message_id']);
 
-//                    $lastTelegramMessage = $this->telegramMessageRepository->getLastByChatId($telegramUser->telegram_chat_id);
-
                     $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
@@ -451,21 +458,11 @@ final class BotUseCase
                         $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
                     }
 
-//                    $messageSendDto = new MessageSendDto();
-//                    $messageSendDto->text = $this->dataEditMessageDto->text;
-//                    $messageSendDto->user = $telegramUser;
-//                    $messageSendDto->command = 'test';
-//                    $messageSendDto->type_btn = '';
-//                    TelegramMessage::newMessage($messageSendDto);
-
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
 
                     $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
 
                     TelegramSender::editMessageTextSend($this->dataEditMessageDto);
-
-//                    $messageDto->command = $queueMessageByUser->type;
-//                    $this->telegramMessageRepository->create($messageDto);
                 }
                 break;
         }
@@ -478,13 +475,6 @@ final class BotUseCase
      */
     private function gerKeyboardByQueueType(QueueMessage $queueMessageByUser): string
     {
-//        if ($queueMessageByUser->type === 'CONFIRMATION') {
-//            $textKeyboard = 'confirmation_event';
-//        } elseif ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
-//            $textKeyboard = 'notification_type';
-//        } else {
-//            $textKeyboard = 'process_set_event';
-//        }
         return match($queueMessageByUser->type){
             'CONFIRMATION'=>'confirmation_event',
             'NOTIFICATION_TYPE'=>'notification_type',
@@ -515,7 +505,8 @@ final class BotUseCase
         };
 
         $listEventDto->period = match ($queueMessagesByUser[0]->event_type) {
-            "birthday" => 'annually'
+            "birthday" => 'annually',
+            "anniversary" => 'annually'
         };
 
         $listEventDto->type = $queueMessagesByUser[0]->event_type;
@@ -566,10 +557,6 @@ final class BotUseCase
         $messageSendDto->command = '/start';
         $messageSendDto->type_btn = 'main_menu';
 
-
-//        $messageDto->command = '/start';
-//        $this->telegramMessageRepository->create($messageDto);
-
         TelegramMessage::newMessage($messageSendDto);
     }
 
@@ -595,9 +582,7 @@ final class BotUseCase
      */
     private function checkChatTitle($message): bool
     {
-        if (
-            $message->chat_title === ""
-        ) {
+        if ($message->chat_title === "") {
             return false;
         }
         return true;

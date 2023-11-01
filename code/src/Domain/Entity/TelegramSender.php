@@ -218,16 +218,16 @@ class TelegramSender extends Model
                         ],
                         [
                             [
-                                'text' => '➕ Добавить событие',
-                                'callback_data' => 'add_event',
+                                'text' => '➕ Добавить годовщину',
+                                'callback_data' => 'add_anniversary',
                             ],
                         ],
-                        [
-                            [
-                                'text' => ' ➕ Добавить заметку',
-                                'callback_data' => 'add_note',
-                            ],
-                        ],
+//                        [
+//                            [
+//                                'text' => ' ➕ Добавить заметку',
+//                                'callback_data' => 'add_note',
+//                            ],
+//                        ],
                         [
                             [
                                 'text' => '📝 Список ваших событий',
