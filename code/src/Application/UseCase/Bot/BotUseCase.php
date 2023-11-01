@@ -84,6 +84,7 @@ final class BotUseCase
             throw new TelegramMessageDataException('Some data is missing');
         };
 
+
         /*
          * Create or remove a group in db (on added in group or left)
          * */
@@ -385,14 +386,8 @@ final class BotUseCase
                 $idGroup = end($textArray);
 
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
-//
-//                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
-                $params = [
-                    'chat_id' => '-1001743972342'
-                ];
-                $this->telegram->leaveChat($params);
-
+                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
 
@@ -404,10 +399,10 @@ final class BotUseCase
 
                 $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
 
-
                 $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_groups');
 
                 $listGroups = $this->telegramGroupRepository->getListByUser($telegramUser->telegram_chat_id);
+
                 $this->dataEditMessageDto->text = $this->textUseCase->getListGroupText($listGroups);
                 $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
