@@ -385,8 +385,14 @@ final class BotUseCase
                 $idGroup = end($textArray);
 
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
+//
+//                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
-                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
+                $params = [
+                    'chat_id' => $group->group_chat_id
+                ];
+                $this->telegram->leaveChat($params);
+
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
 
