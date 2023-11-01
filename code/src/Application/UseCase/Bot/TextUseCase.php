@@ -47,8 +47,8 @@ class TextUseCase
                 $text .= "<b>" . $group->id . ".</b> " . $group->name . "\n";
             }
 
-            $text .= "\n<b>Для удаления - отправьте номер группы,</b>";
-            $text .= "\n<b>после слова group</b> <i>(например: group 1)</i>";
+            $text .= "\n<b>Для удаления - отправьте номер группы после слова group</b>";
+            $text .= "\n<i>(например: group 1)</i>";
             $text .= "\n‼️<b>Учтите после удаления, все закрепленные</b>";
             $text .= "\n<b>за группой события - будут оповещать лично</b>";
 
@@ -79,18 +79,18 @@ class TextUseCase
                 }
 
                 $text .= "<b>" . $event->id . ".</b> " . $eventName . "\n";
-                $text .= "     Имя: <i>" . $event->name . "</i>\n";
-                $text .= "     Дата: <i>" .  $dateOfEvent . "</i>\n";
-                $text .= "     Способ оповещения: <i>" .  $notificationMethod . "</i>\n";
+                $text .= "    Имя: <i>" . $event->name . "</i>\n";
+                $text .= "    Дата: <i>" .  $dateOfEvent . "</i>\n";
+                $text .= "    Способ оповещения: <i>" .  $notificationMethod . "</i>\n";
                 if($event->group_id !== 0){
-                    $text .= "     Группа: <i>" .  $groupName . "</i>\n";
+                    $text .= "    Группа: <i>" .  $groupName . "</i>\n";
                 }
-                $text .= "     Время оповещения: <i>" .  $event->notification_time_at . "</i>\n";
-                $text .= "     Периодичность: <i>" .  $periodicity . "</i>\n\n";
+                $text .= "    Время оповещения: <i>" .  $event->notification_time_at . "</i>\n";
+                $text .= "    Периодичность: <i>" .  $periodicity . "</i>\n\n";
             }
 
-            $text .= "<b>Для удаления события отправьте номер записи</b>";
-            $text .= "\n<b>после слова event</b> <i>(например: event 1)</i>";
+            $text .= "<b>Для удаления события отправьте номер записи после слова event</b>";
+            $text .= "\n<i>(например: event 1)</i>";
 
             return $text;
         }
