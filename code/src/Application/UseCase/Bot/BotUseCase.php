@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
+use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
-use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
-use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -250,12 +249,10 @@ final class BotUseCase
                 case "add_anniversary":
                 case "add_birthday":
 
-                    $birthdayUseCase = new BirthdayUseCase(
-                        $this->telegram,
-                        $telegramUser,
-                        $messageId,
-                        $this->queueMessageRepository
-                    );
+                $this->botRequestDto->telegramUser = $telegramUser;
+                $this->botRequestDto->messageId = $messageId;
+                $birthdayUseCase = new BirthdayUseCase($this->botRequestDto);
+
                 $birthdayUseCase->addBirthday();
 
                     return;
@@ -499,57 +496,8 @@ final class BotUseCase
      */
     public function checkBirthdayToday(): void
     {
-
-//        $birthdayUseCase = new BirthdayUseCase(
-//            $this->telegram,
-//            $telegramUser,
-//            $messageId,
-//            $this->queueMessageRepository
-//        );
-
-
         BirthdayUseCase::checkBirthdayByCron($this->botRequestDto);
-//        $now = Carbon::now()->addHours(3);
-//
-//        $listBirthdayEvents = ListEvent::where('type', 'birthday')
-//            ->whereMonth('date_event_at', $now->format('m'))
-//            ->whereDay('date_event_at', $now->format('d'))
-//            ->where('notification_time_at', $now->format('H:i'))
-//            ->get();
-//
-//        foreach ($listBirthdayEvents as $event) {
-//
-//            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
-//
-//            if($event->group_id === 0){
-//                $chat_id = $telegramUser->telegram_chat_id;
-//            }else{
-//               $group = $this->telegramGroupRepository->getFirstById($event->group_id, $telegramUser->telegram_chat_id);
-//                $chat_id = $group->group_chat_id;
-//            }
-//
-//            $dateOfBirth = Carbon::parse($event->date_event_at);
-//            $diffYears = $dateOfBirth->diffInYears($now);
-//            $correctFormat = $this->yearTextArg($diffYears);
-//
-//            $messageSendDto = new MessageSendDto();
-//            $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
-//            $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
-//            $messageSendDto->chat_id = $chat_id;
-//            $messageSendDto->command = 'cron_birthday';
-//
-//            TelegramMessage::newMessage($messageSendDto);
-//        }
     }
-
-//    private function yearTextArg($year): string
-//    {
-//        $year = abs($year);
-//        $t1 = $year % 10;
-//        $t2 = $year % 100;
-//
-//        return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
-//    }
 
     /**
      * @throws EventNotFoundException

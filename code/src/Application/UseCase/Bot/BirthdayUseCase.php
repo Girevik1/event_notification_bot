@@ -19,24 +19,19 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class BirthdayUseCase
 {
-    private Api $telegram;
-    private TelegramUser $telegramUser;
-    public int $message_id;
+//    private Api $telegram;
+//    private TelegramUser $telegramUser;
+//    public int $message_id;
     private QueueMessageUseCase $queueMessageUseCase;
-    private QueueMessageRepositoryInterface $queueMessageRepository;
+//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
-    public function __construct(
-        Api          $telegram,
-        TelegramUser $telegramUser,
-        int          $message_id,
-        QueueMessageRepositoryInterface $queueMessageRepository
-    )
+    public function __construct(public BotRequestDto $botRequestDto)
     {
-        $this->message_id = $message_id;
-        $this->telegram = $telegram;
-        $this->telegramUser = $telegramUser;
-        $this->queueMessageRepository = $queueMessageRepository;
-        $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
+//        $this->message_id = $botRequestDto->messageId;
+//        $this->telegram = $botRequestDto->telegram;
+//        $this->telegramUser = $botRequestDto->telegramUser;
+//        $this->queueMessageRepository = $botRequestDto->queueMessageRepository;
+        $this->queueMessageUseCase = new QueueMessageUseCase($this->botRequestDto->queueMessageRepository);
     }
 
     /**
@@ -46,15 +41,20 @@ class BirthdayUseCase
     {
         $queueBirthday = $this->getMessagesQueueBirthday();
 
-        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser, $this->message_id, 'birthday');
+        $this->queueMessageUseCase->processQueueMessage(
+            $queueBirthday,
+            $this->botRequestDto->telegramUser,
+            $this->botRequestDto->messageId,
+            'birthday'
+        );
 
-        $firstQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
+        $firstQueueMessage = $this->botRequestDto->queueMessageRepository->getFirstOpenMsg($this->botRequestDto->telegramUser->id);
 
-        $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->queueMessageRepository);
+        $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->botRequestDto->queueMessageRepository);
 
-        $this->telegram->editMessageText([
-            'chat_id' => $this->telegramUser->telegram_chat_id,
-            'message_id' => $this->message_id,
+        $this->botRequestDto->telegram->editMessageText([
+            'chat_id' => $this->botRequestDto->telegramUser->telegram_chat_id,
+            'message_id' => $this->botRequestDto->messageId,
             'text' => $text,
             'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
