@@ -42,7 +42,7 @@ class ListEventRepository implements ListEventRepositoryInterface
      * @param int $userId
      * @return mixed
      */
-    public function deleteEventById(int $id, int $userId): mixed
+    public function deleteEventById(int $id, int $userId): int
     {
         return ListEvent::where('id', $id)
             ->where('telegram_user_id', $userId)

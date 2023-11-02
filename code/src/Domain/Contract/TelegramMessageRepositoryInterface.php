@@ -5,7 +5,6 @@ namespace Art\Code\Domain\Contract;
 
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Illuminate\Database\Eloquent\Collection;
 
 interface TelegramMessageRepositoryInterface
 {
@@ -15,7 +14,7 @@ interface TelegramMessageRepositoryInterface
 
     public function getLastMessageByCommand(string $chat_id, string $command): TelegramMessage;
 
-    public function deleteByMessageId(int $message_id): mixed;
+    public function deleteByMessageId(int $message_id): int;
 
     public function getLastByChatId(string $telegramChatId): ?TelegramMessage;
 }

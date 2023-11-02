@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
+use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\TelegramGroupDto;
-use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\GroupCreateException;
 use Art\Code\Domain\Exception\GroupDeleteException;
-use Art\Code\Infrastructure\Repository\ListEventRepository;
-use Art\Code\Infrastructure\Repository\TelegramGroupRepository;
-use Illuminate\Support\Collection;
-use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class GroupUseCase
@@ -22,57 +18,45 @@ class GroupUseCase
      * @throws GroupCreateException
      * @throws GroupDeleteException
      */
-    public function groupHandlerByMessage(
-        Collection                   $message,
-        TelegramGroupRepository $groupRepository,
-        ListEventRepository $listEventRepository,
-        Api                     $telegram,
-        TextUseCase             $textUseCase,
-        TelegramUser $user
-    ): bool
+    public function groupHandlerByMessage(BotRequestDto $botRequestDto): bool
     {
-//        $telegram->sendMessage([
-//            'chat_id' => -1001743972342,
-//            'parse_mode' => 'HTML',
-//            'text' => 'testest'
-//        ]);//
+        $message = $botRequestDto->message;
 
         if (isset($message['left_chat_member'])) {
 
-            $group = $groupRepository->getFirstByGroupChatId((string)$message['chat']['id'], $user->telegram_chat_id);
+            $group = $botRequestDto->telegramGroupRepository->getFirstByGroupChatId(
+                (string)$message['chat']['id'],
+                $botRequestDto->telegramUser->telegram_chat_id
+            );
 
             if ($group) {
-                $listEventRepository->updateAllByGroup($group->id, $user->id, 'group_id', 0);
+                $botRequestDto->listEventRepository->updateAllByGroup(
+                    $group->id,
+                    $botRequestDto->telegramUser->id,
+                    'group_id', 0
+                );
             }
 
-            $resulDelete = $groupRepository->deleteByChatId(
+            $resultOfDelete = $botRequestDto->telegramGroupRepository->deleteByChatId(
                 (string)$message['chat']['id'],
                 (string)$message['from']['id']
             );
 
-            if (!$resulDelete) {
-                throw new GroupDeleteException('Не удалось удалить группу с БД');
-            }
-
-
-            // TODO удалить все эвенты связанные с этой группой, upd эвенты оставить - сделать личное уведомление
+            if (!$resultOfDelete) throw new GroupDeleteException('Не удалось удалить группу с БД');
 
             return true;
         }
 
-        $telegramGroupDto = new TelegramGroupDto($message);
+        $telegramGroupDto = new TelegramGroupDto($botRequestDto->message);
 
-        if (!$groupRepository->create($telegramGroupDto)) {
-            throw new GroupCreateException('Ошибка добавления группы в БД');
-        }
+        if (!$botRequestDto->telegramGroupRepository->create($telegramGroupDto)) throw new GroupCreateException('Ошибка добавления группы в БД');
 
-        $message = $textUseCase->getGreetingsGroupText($user);
+        $text = $botRequestDto->textUseCase->getGreetingsGroupText($botRequestDto->telegramUser);
 
-        $telegram->sendMessage([
-//            'chat_id' => -1001743972342,
+        $botRequestDto->telegram->sendMessage([
             'chat_id' => $telegramGroupDto->group_chat_id,
             'parse_mode' => 'HTML',
-            'text' => $message
+            'text' => $text
         ]);
 
         return true;
@@ -84,7 +68,11 @@ class GroupUseCase
      * @param string $userChatId
      * @return string
      */
-    public static function getNameGroup(string $answer, ?TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
+    public static function getNameGroup(
+        string                            $answer,
+        ?TelegramGroupRepositoryInterface $groupRepository,
+        string                            $userChatId
+    ): string
     {
         if ($groupRepository !== null) {
             $group = $groupRepository->getFirstById((int)$answer, $userChatId);

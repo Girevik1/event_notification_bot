@@ -12,6 +12,7 @@ use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
+use Illuminate\Support\Collection;
 use Telegram\Bot\Api;
 
 class BotRequestDto
@@ -27,4 +28,5 @@ class BotRequestDto
     public GroupUseCase $groupUseCase;
     public TelegramUser $telegramUser;
     public int $messageId;
+    public Collection $message;
 }

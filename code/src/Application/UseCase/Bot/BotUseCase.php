@@ -89,7 +89,7 @@ final class BotUseCase
 //        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
 
-        $this->telegramMessageRepository->create($messageDto);
+//        $this->telegramMessageRepository->create($messageDto);
 
         if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
             throw new TelegramMessageDataException('Some data is missing');
@@ -100,18 +100,11 @@ final class BotUseCase
          * Create or remove a group in db (on added in group or left)
          * */
         if ($this->checkChatTitle($messageDto)) {
-            $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
+            $this->botRequestDto->telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
+            $this->botRequestDto->message = $message;
+            $this->groupUseCase->groupHandlerByMessage($this->botRequestDto);
 
-            $this->groupUseCase->groupHandlerByMessage(
-                $message,
-                $this->telegramGroupRepository,
-                $this->listEventRepository,
-                $this->telegram,
-                $this->textUseCase,
-                $telegramUser
-            );
-
-            return '';
+            return;
         }
 
         $telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->chat_id);
@@ -120,33 +113,6 @@ final class BotUseCase
             $telegramUser = $this->telegramUserRepository->create(new TelegramUserDto($message));
             $isNewUser = true;
         }
-
-//        $now = Carbon::now()->addHours(3);
-//
-//        $listBirthdayEvents = ListEvent::where('type', 'birthday')
-//            ->whereMonth('date_event_at', $now->format('m'))
-//            ->whereDay('date_event_at', $now->format('d'))
-//            ->where('notification_time_at', $now->format('H:i'))
-//            ->get();
-//
-//        foreach ($listBirthdayEvents as $event) {
-//            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
-//
-//            $dateOfBirth = Carbon::parse($event->date_event_at);
-//            $diffYears = $dateOfBirth->diffInYears($now);
-//            $correctFormat = $this->yearTextArg($diffYears);
-//
-//            $messageSendDto = new MessageSendDto();
-//            $messageSendDto->text = "<b>Сегодня день рождение</b>!";
-////            $messageSendDto->text .= "\n\n" . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
-//            $messageSendDto->user = $telegramUser;
-//            $messageSendDto->command = 'cron_birthday';
-//
-//            var_dump($messageSendDto);
-//            TelegramMessage::newMessage($messageSendDto);
-//        }
-
-
 
         /*
          * It`s callback of line keyboard
@@ -259,7 +225,7 @@ final class BotUseCase
 
 //                case "anniversary":
 //
-//                    $addImportantEventUseCase = new AddImportantEventUseCase();
+//                    $addImportantEventUseCase = new AnniversaryUseCase();
 //                    $addImportantEventUseCase->addImportantEvent(
 //                        $this->telegram,
 //                        $telegramUser,

@@ -9,7 +9,7 @@ use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
 use Telegram\Bot\Api;
 
-class AddImportantEventUseCase
+class AnniversaryUseCase
 {
     private Api $telegram;
     private TelegramUser $telegramUser;
@@ -31,7 +31,7 @@ class AddImportantEventUseCase
         $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
     }
 
-    public function addImportantEvent(): void
+    public function addAnniversary(): void
     {
         $queueBirthday = $this->getMessagesQueueImportantEvent();
 

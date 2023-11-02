@@ -5,32 +5,21 @@ declare(strict_types=1);
 namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
-use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
-use Art\Code\Domain\Entity\TelegramUser;
 use Carbon\Carbon;
 use Exception;
-use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class BirthdayUseCase
 {
-//    private Api $telegram;
-//    private TelegramUser $telegramUser;
-//    public int $message_id;
     private QueueMessageUseCase $queueMessageUseCase;
-//    private QueueMessageRepositoryInterface $queueMessageRepository;
 
     public function __construct(public BotRequestDto $botRequestDto)
     {
-//        $this->message_id = $botRequestDto->messageId;
-//        $this->telegram = $botRequestDto->telegram;
-//        $this->telegramUser = $botRequestDto->telegramUser;
-//        $this->queueMessageRepository = $botRequestDto->queueMessageRepository;
         $this->queueMessageUseCase = new QueueMessageUseCase($this->botRequestDto->queueMessageRepository);
     }
 
@@ -119,8 +108,4 @@ class BirthdayUseCase
 
         return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
     }
-
-
-
-
 }

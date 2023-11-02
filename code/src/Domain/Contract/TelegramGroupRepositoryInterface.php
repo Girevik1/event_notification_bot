@@ -17,7 +17,7 @@ interface TelegramGroupRepositoryInterface
 
     public function getFirstByGroupChatId(string $groupChatId, string $userChatId): ?TelegramGroup;
 
-    public function deleteByChatId(string $groupChatId, string $userChatId): mixed;
+    public function deleteByChatId(string $groupChatId, string $userChatId): int;
 
     public function deleteById(int $id, string $userChatId): int;
 

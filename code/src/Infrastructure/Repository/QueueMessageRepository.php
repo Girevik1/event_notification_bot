@@ -37,7 +37,7 @@ class QueueMessageRepository implements QueueMessageRepositoryInterface
      * @param int $telegramUserId
      * @return mixed
      */
-    public function deleteAllMessageByUser(int $telegramUserId): mixed
+    public function deleteAllMessageByUser(int $telegramUserId): int
     {
         return QueueMessage::where("telegram_user_id", '=', $telegramUserId)
             ->delete();
