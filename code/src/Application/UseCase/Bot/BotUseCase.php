@@ -10,6 +10,7 @@ use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
@@ -454,6 +455,25 @@ final class BotUseCase
         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
     }
 
+    public function checkBirthdayToday(){
+        $now = Carbon::now();
+        $listEvents = ListEvent::where('checkBirthdayToday',$now)
+//            ->where('notification_time_at',$now->format('h:i'))
+            ->get();
+        foreach ($listEvents as $event){
+            if($event->type ==='birthday'){
+                $telegramUser = $this->telegramUserRepository->firstByChatId('500264009');
+                $messageSendDto = new MessageSendDto();
+                $messageSendDto->text = 'С днем рождения Артур!';
+                $messageSendDto->user = $telegramUser;
+                $messageSendDto->command = 'cron';
+                $messageSendDto->type_btn = 'main_menu';
+
+                TelegramMessage::newMessage($messageSendDto);
+            }
+        }
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws TelegramSDKException
@@ -663,7 +683,6 @@ final class BotUseCase
         return $text;
     }
 
-
     /**
      * @param $message
      * @return bool
@@ -691,6 +710,4 @@ final class BotUseCase
         }
         return true;
     }
-
-
 }
