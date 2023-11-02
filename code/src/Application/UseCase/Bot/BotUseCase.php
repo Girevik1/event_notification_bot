@@ -491,7 +491,7 @@ final class BotUseCase
         $listBirthdayEvents = ListEvent::where('type', 'birthday')
             ->whereMonth('date_event_at', $now->format('m'))
             ->whereDay('date_event_at', $now->format('d'))
-            ->where('notification_time_at', $now->format('h:i'))
+            ->where('notification_time_at', $now->format('H:i'))
             ->get();
 //
 //        foreach ($listBirthdayEvents as $event) {
