@@ -15,7 +15,7 @@ class MessageDto
     public int $reply_to;
     public string $command;
     public int $is_deleted_from_chat;
-    public ?string $data_test;
+//    public ?string $data_test;
 
     public function __construct($message)
     {
@@ -29,6 +29,6 @@ class MessageDto
         $this->reply_to = $message["reply_to_message"] ?? 0;
         $this->command = $message["command"] ?? '';
         $this->is_deleted_from_chat = $message["is_deleted_from_chat"] ?? 0;
-        $this->data_test = json_encode($message);
+//        $this->data_test = json_encode($message);
     }
 }

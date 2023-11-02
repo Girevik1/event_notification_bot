@@ -66,7 +66,7 @@ final class BotUseCase
     /**
      * @throws Exception
      */
-    public function hook()
+    public function hook(): void
     {
         $message = [];
 
@@ -351,6 +351,8 @@ final class BotUseCase
             }
         }
 
+        /* Прием и обработка отравленного текста в чат
+         * */
         $text = $messageDto->text;
 
         switch ($text) {

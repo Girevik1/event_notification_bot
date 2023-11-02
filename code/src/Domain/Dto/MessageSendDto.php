@@ -12,7 +12,6 @@ class MessageSendDto
     public string $text;
     public string $command;
     public string $model = '';
-    public int $model_id = 0;
     public array $reply_to_message = [];
     public string $type_btn = '';
     public TelegramMessageRepositoryInterface $telegramMessageRepository;
