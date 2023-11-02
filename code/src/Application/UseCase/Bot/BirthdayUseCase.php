@@ -93,6 +93,7 @@ class BirthdayUseCase
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
             $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
+            $messageSendDto->text .= "\n\n     Год рождения: <b>" . $dateOfBirth->format('Y') . " год</b>";
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
             $messageSendDto->telegramMessageRepository = $botRequestDto->telegramMessageRepository;
@@ -101,6 +102,10 @@ class BirthdayUseCase
         }
     }
 
+    /**
+     * @param $year
+     * @return string
+     */
     private static function yearTextArg($year): string
     {
         $year = abs($year);
@@ -108,5 +113,18 @@ class BirthdayUseCase
         $t2 = $year % 100;
 
         return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
+    }
+
+    /**
+     * @param $month
+     * @param $day
+     * @return string
+     */
+    private static function getZodiacalSign($month, $day): string
+    {
+        $signs = ["Козерог", "Водолей", "Рыбы", "Овен", "Телец", "Близнецы", "Рак", "Лев", "Девы", "Весы", "Скорпион", "Стрелец"];
+        $signsStart = [1 => 21, 2 => 20, 3 => 20, 4 => 20, 5 => 20, 6 => 20, 7 => 21, 8 => 22, 9 => 23, 10 => 23, 11 => 23, 12 => 23];
+
+        return $day < $signsStart[$month + 1] ? $signs[$month - 1] : $signs[$month % 12];
     }
 }
