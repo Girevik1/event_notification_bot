@@ -21,7 +21,8 @@ class TelegramSender extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $this->telegram = new Api($_ENV['TELEGRAM_BOT_TOKEN']);
+        $telegramConfig = require '../config/telegram.php';
+        $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
         $this->telegramUserRepository = new TelegramUserRepository();
         parent::__construct($attributes);
     }

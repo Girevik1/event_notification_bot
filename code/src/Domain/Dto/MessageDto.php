@@ -9,7 +9,7 @@ class MessageDto
     public string $chat_id;
     public string $chat_title;
     public string $user_name;
-    public int $from_id;
+    public string $from_id;
     public int $message_id;
     public string $text;
     public int $reply_to;
@@ -24,7 +24,7 @@ class MessageDto
         $this->chat_title = $message["chat"]["title"] ?? '';
         $this->user_name = strtolower($userName);
         $this->message_id = $message["message_id"] ?? 0;
-        $this->from_id = $message["from"]['id'] ?? 0;
+        $this->from_id = (string)$message["from"]['id'] ?? 0;
         $this->text = $message["text"] ?? '';
         $this->reply_to = $message["reply_to_message"] ?? 0;
         $this->command = $message["command"] ?? '';
