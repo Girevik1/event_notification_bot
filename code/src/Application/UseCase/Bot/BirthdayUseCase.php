@@ -79,10 +79,13 @@ class BirthdayUseCase
 
             $telegramUser = $botRequestDto->telegramUserRepository->firstById($event->telegram_user_id);
 
-            if($event->group_id === 0){
+            if ($event->group_id === 0) {
                 $chat_id = $telegramUser->telegram_chat_id;
-            }else{
-                $group = $botRequestDto->telegramGroupRepository->getFirstById($event->group_id, $telegramUser->telegram_chat_id);
+            } else {
+                $group = $botRequestDto->telegramGroupRepository->getFirstById(
+                    $event->group_id,
+                    $telegramUser->telegram_chat_id
+                );
                 $chat_id = $group->group_chat_id;
             }
 
@@ -90,12 +93,14 @@ class BirthdayUseCase
             $diffYears = $dateOfBirth->diffInYears($now);
             $correctFormat = self::yearTextArg($diffYears);
             $zodiac = self::getZodiacalSign($dateOfBirth->format('m'), $dateOfBirth->format('d'));
+            $onEasternCalendar = self::getOnEasternCalendar((int)$dateOfBirth->format('Y'));
 
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
             $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
             $messageSendDto->text .= "\n\n     Год рождения: <b>" . $dateOfBirth->format('Y') . "г.</b>";
             $messageSendDto->text .= "\n     Знак задиака: <b>" . $zodiac . "</b>";
+            $messageSendDto->text .= "\n     По восточному календарю: <b>" . $onEasternCalendar . "</b>";
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
             $messageSendDto->telegramMessageRepository = $botRequestDto->telegramMessageRepository;
@@ -128,5 +133,40 @@ class BirthdayUseCase
         $signsStart = [1 => 21, 2 => 20, 3 => 20, 4 => 20, 5 => 20, 6 => 20, 7 => 21, 8 => 22, 9 => 23, 10 => 23, 11 => 23, 12 => 23];
 
         return $day < $signsStart[$month + 1] ? $signs[$month - 1] : $signs[$month % 12];
+    }
+
+    /**
+     * @param int $needYear
+     * @return string
+     */
+    private static function getOnEasternCalendar(int $needYear): string
+    {
+        $zodiac = [
+            "1" => "Год крысы",
+            "2" => "Год коровы",
+            "3" => "Год тигра",
+            "4" => "Год зайца",
+            "5" => "Год дракона",
+            "6" => "Год змеи",
+            "7" => "Год лошади",
+            "8" => "Год овцы",
+            "9" => "Год обезьяны",
+            "10" => "Год петуха",
+            "11" => "Год собаки",
+            "12" => "Год свиньи"
+        ];
+
+        $start_year = 1900;
+        $start_zodiac = 1;
+
+        $sign = '';
+
+        while (!($start_year > $needYear)) {
+            $start_year++;
+            $sign = $zodiac[$start_zodiac++];
+            if ($start_zodiac == 13) $start_zodiac = 1;
+        }
+
+        return $sign;
     }
 }
