@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Art\Code\Domain\Dto;
 
-use Art\Code\Domain\ValueObject\TelegramChatId;
-
 class MessageDto
 {
-    public TelegramChatId $chat_id;
+    public string $chat_id;
     public string $chat_title;
     public string $user_name;
     public string $from_id;
