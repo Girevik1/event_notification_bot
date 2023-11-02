@@ -20,10 +20,10 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
         ]);
     }
 
-//    public function firstById($id): ?TelegramUser
-//    {
-//        return TelegramUser::where('id','=', $id)->first();
-//    }
+    public function firstById(int $id): ?TelegramUser
+    {
+        return TelegramUser::where('id','=', $id)->first();
+    }
 
     public function firstByChatId(string $chatId): ?TelegramUser
     {

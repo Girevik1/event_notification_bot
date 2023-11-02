@@ -12,7 +12,7 @@ interface TelegramUserRepositoryInterface
 {
     public function firstByChatId(string $chatId): ?TelegramUser;
 
-//    public function firstById($id): ?TelegramUser;
+    public function firstById(int $id): ?TelegramUser;
 
     public function firstByLogin(string $login): ?TelegramUser;
 

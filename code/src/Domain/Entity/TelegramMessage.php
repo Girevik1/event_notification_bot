@@ -50,57 +50,27 @@ class TelegramMessage extends Model
             } while (mb_strlen($messageDataDto->text, '8bit') > $start);
         }
 
-            foreach ($textArray as $textItem) {
-                if (
-                    $_ENV['APP_ENV'] == 'prod' ||
-                    $_ENV['APP_ENV'] == 'dev'
-                ) { // chat_id pass need
-                    $msg_id = TelegramSender::sendMessage($messageDataDto->user->telegram_chat_id, $textItem, $messageDataDto->type_btn);
+        foreach ($textArray as $textItem) {
+            if (
+                $_ENV['APP_ENV'] === 'prod' ||
+                $_ENV['APP_ENV'] === 'dev'
+            ) { // chat_id pass need
+                $msg_id = TelegramSender::sendMessage($messageDataDto->user->telegram_chat_id, $textItem, $messageDataDto->type_btn);
+
+                $message = new TelegramMessage();
+                $message->telegram_user_id = $messageDataDto->user->id;
+                $message->message_id = $msg_id;
+                $message->text = $textItem;
+                $message->command = $messageDataDto->command;
+
+                if (count($messageDataDto->reply_to_message) > 0) {
+                    $message->reply_to = $messageDataDto->reply_to_message['message_id'];
+                } else {
+                    $message->reply_to = 0;
                 }
-//                else {
-//                    $last_message = $thisObj->telegramMessageRepository->getLastMessage();
-//                    if ($last_message) {
-//                        $msg_id = 1000001 + $last_message->message_id;
-//                    } else {
-//                        $msg_id = 1000000;
-//                    }
-//                }
-//
-//                $message = new TelegramMessage();
-//                $message->telegram_user_id = $messageDataDto->user->id;
-//                $message->message_id = $msg_id;
-//                $message->text = $textItem;
-//                $message->command = $messageDataDto->command;
-//
-//                if (count($messageDataDto->reply_to_message) > 0) {
-//                    $message->reply_to = $messageDataDto->reply_to_message['message_id'];
-//                } else {
-//                    $message->reply_to = 0;
-//                }
-//                $message->save();
+                $message->save();
             }
 
+        }
     }
-//    private ?string $data_test;
-
-//    public function __construct(
-//        protected  TelegramUserId $telegram_user_id,
-//        protected  string         $text,
-//        array                     $data_test,
-//        protected  string         $telegram_chat_id
-//    )
-//    {
-//        $this->data_test = json_encode($data_test);
-//        parent::__construct();
-//    }
-
-//    public function getUserId(): TelegramUserId
-//    {
-//        return $this->telegram_user_id;
-//    }
-//
-//    public function getText(): TelegramUserId
-//    {
-//        return $this->telegram_user_id;
-//    }
 }
