@@ -457,7 +457,8 @@ final class BotUseCase
 
     public function checkBirthdayToday(){
         $now = Carbon::now();
-        $listEvents = ListEvent::where('date_event_at', $now)
+        $listEvents = ListEvent::where('type', 'birthday')
+            ->where('date_event_at', $now->format('m-d'))
             ->where('notification_time_at', $now->addHours(3)->format('h:i'))
             ->get();
         foreach ($listEvents as $event){
