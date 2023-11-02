@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Message;
 
-use Art\Code\Application\UseCase\Bot\AddBirthdayUseCase;
+use Art\Code\Application\UseCase\Bot\BirthdayUseCase;
 use Art\Code\Application\UseCase\Bot\GroupUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
@@ -68,7 +68,7 @@ class QueueMessageUseCase
 //        ]);
 
         $message_texts = match ($message->event_type) {
-            "birthday" => AddBirthdayUseCase::getMessagesQueueBirthday(),
+            "birthday" => BirthdayUseCase::getMessagesQueueBirthday(),
             "note" => ['NOTE_NAME' => 'in test..'],
             default => throw new EventNotFoundException($message->event_type . ' - такой вид эвента не существует')
         };

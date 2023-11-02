@@ -210,13 +210,13 @@ final class BotUseCase
                 case "add_anniversary":
                 case "add_birthday":
 
-                    $addBirthdayUseCase = new AddBirthdayUseCase(
+                    $birthdayUseCase = new BirthdayUseCase(
                         $this->telegram,
                         $telegramUser,
                         $messageId,
                         $this->queueMessageRepository
                     );
-                    $addBirthdayUseCase->addBirthday();
+                $birthdayUseCase->addBirthday();
 
                     return;
 
@@ -454,6 +454,11 @@ final class BotUseCase
         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws TelegramSDKException
+     * @throws QueueTypeException
+     */
     private function prepareTextForSend(
         TelegramUser $telegramUser,
         QueueMessage $queueMessageByUser,
@@ -518,8 +523,7 @@ final class BotUseCase
         };
 
         $listEventDto->period = match ($queueMessagesByUser[0]->event_type) {
-            "birthday" => 'annually',
-            "anniversary" => 'annually'
+            "birthday", "anniversary" => 'annually'
         };
 
         $listEventDto->type = $queueMessagesByUser[0]->event_type;
@@ -573,7 +577,17 @@ final class BotUseCase
         TelegramMessage::newMessage($messageSendDto);
     }
 
-    private function validationIncomingText(string $text, QueueMessage $queueMessageByUser, $telegramUser, $messageId):string|bool
+    /**
+     * @throws EventNotFoundException
+     * @throws TelegramSDKException
+     * @throws QueueTypeException
+     */
+    private function validationIncomingText(
+        string $text,
+        QueueMessage $queueMessageByUser,
+        TelegramUser $telegramUser,
+        int $messageId
+    ):string|bool
     {
         $result = true;
         $validationText = '';

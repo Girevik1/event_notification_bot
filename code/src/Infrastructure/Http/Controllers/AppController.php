@@ -39,11 +39,11 @@ final class AppController
      */
     public function run(): void
     {
-        if ($this->uri === '') {
+        if ($this->uri === 'bot') {
             (new BotController())->runHook($this->botUseCase);
         }
         if ($this->uri === 'cron') {
-            (new CronController())->checkEvents($this->botUseCase);
+            (new CronController())->checkAvailableEvents($this->botUseCase);
         }
     }
 

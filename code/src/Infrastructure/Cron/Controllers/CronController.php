@@ -8,9 +8,10 @@ use Art\Code\Application\UseCase\Bot\BotUseCase;
 
 class CronController
 {
-    public function checkEvents(BotUseCase $botUseCase)
+    public function checkAvailableEvents(BotUseCase $botUseCase)
     {
-        return 1;
-//        $botUseCase->cronTest();
+        $botUseCase->checkBirthdayToday();
+        $botUseCase->checkAnniversaryToday();
+
     }
 }

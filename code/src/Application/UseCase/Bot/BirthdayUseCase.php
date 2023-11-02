@@ -14,7 +14,7 @@ use Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
-class AddBirthdayUseCase
+class BirthdayUseCase
 {
     private Api $telegram;
     private TelegramUser $telegramUser;
