@@ -56,19 +56,19 @@ class TelegramMessage extends Model
                 $_ENV['APP_ENV'] === 'dev'
             ) { // chat_id pass need
                 $msg_id = TelegramSender::sendMessage($messageDataDto->user->telegram_chat_id, $textItem, $messageDataDto->type_btn);
-
-                $message = new TelegramMessage();
-                $message->telegram_user_id = $messageDataDto->user->id;
-                $message->message_id = $msg_id;
-                $message->text = $textItem;
-                $message->command = $messageDataDto->command;
-
-                if (count($messageDataDto->reply_to_message) > 0) {
-                    $message->reply_to = $messageDataDto->reply_to_message['message_id'];
-                } else {
-                    $message->reply_to = 0;
-                }
-                $message->save();
+//
+//                $message = new TelegramMessage();
+//                $message->telegram_user_id = $messageDataDto->user->id;
+//                $message->message_id = $msg_id;
+//                $message->text = $textItem;
+//                $message->command = $messageDataDto->command;
+//
+//                if (count($messageDataDto->reply_to_message) > 0) {
+//                    $message->reply_to = $messageDataDto->reply_to_message['message_id'];
+//                } else {
+//                    $message->reply_to = 0;
+//                }
+//                $message->save();
             }
 
         }
