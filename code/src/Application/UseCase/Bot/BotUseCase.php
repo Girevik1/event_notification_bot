@@ -485,7 +485,8 @@ final class BotUseCase
     /**
      * @throws TelegramSDKException
      */
-    public function checkBirthdayToday(){
+    public function checkBirthdayToday(): void
+    {
         $now = Carbon::now()->addHours(3);
 
         $listBirthdayEvents = ListEvent::where('type', 'birthday')
@@ -493,34 +494,34 @@ final class BotUseCase
             ->whereDay('date_event_at', $now->format('d'))
             ->where('notification_time_at', $now->format('H:i'))
             ->get();
-//
-//        foreach ($listBirthdayEvents as $event) {
-//
-//            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
-//
-//            $dateOfBirth = Carbon::parse($event->date_event_at);
-//            $diffYears = $dateOfBirth->diffInYears($now);
-//            $correctFormat = $this->yearTextArg($diffYears);
-//
-//            $messageSendDto = new MessageSendDto();
-//            $messageSendDto->text = "<b>Сегодня день рождение</b>!";
-//            $messageSendDto->text .= "\n\n" . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
-//            $messageSendDto->user = $telegramUser;
-//            $messageSendDto->command = 'cron_birthday';
-//
-//            TelegramMessage::newMessage($messageSendDto);
-//        }
 
-        if(count($listBirthdayEvents)){
+        foreach ($listBirthdayEvents as $event) {
 
-            $telegramUser = $this->telegramUserRepository->firstById(4);
+            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
+
+            $dateOfBirth = Carbon::parse($event->date_event_at);
+            $diffYears = $dateOfBirth->diffInYears($now);
+            $correctFormat = $this->yearTextArg($diffYears);
+
             $messageSendDto = new MessageSendDto();
-            $messageSendDto->text = "wewe! " . $listBirthdayEvents[0]->name;
+            $messageSendDto->text = "🎂<b>Сегодня день рождение</b>!";
+            $messageSendDto->text .= "\n\n    " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
             $messageSendDto->user = $telegramUser;
             $messageSendDto->command = 'cron_birthday';
 
             TelegramMessage::newMessage($messageSendDto);
         }
+
+//        if(count($listBirthdayEvents)){
+//
+//            $telegramUser = $this->telegramUserRepository->firstById(4);
+//            $messageSendDto = new MessageSendDto();
+//            $messageSendDto->text = "wewe! " . $listBirthdayEvents[0]->name;
+//            $messageSendDto->user = $telegramUser;
+//            $messageSendDto->command = 'cron_birthday';
+//
+//            TelegramMessage::newMessage($messageSendDto);
+//        }
 
     }
 
