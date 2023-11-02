@@ -65,7 +65,7 @@ class BirthdayUseCase
     /**
      * @throws TelegramSDKException
      */
-    public static  function checkBirthdayByCron(BotRequestDto $botRequestDto): void
+    public static function checkBirthdayByCron(BotRequestDto $botRequestDto): void
     {
         $now = Carbon::now()->addHours(3);
 
@@ -95,6 +95,7 @@ class BirthdayUseCase
             $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
+            $messageSendDto->telegramMessageRepository = $botRequestDto->telegramMessageRepository;
 
             TelegramMessage::newMessage($messageSendDto);
         }

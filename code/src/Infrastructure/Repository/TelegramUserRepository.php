@@ -10,6 +10,10 @@ use Art\Code\Domain\Entity\TelegramUser;
 
 class TelegramUserRepository implements TelegramUserRepositoryInterface
 {
+    /**
+     * @param TelegramUserDto $telegramUserDto
+     * @return TelegramUser
+     */
     public function create(TelegramUserDto $telegramUserDto): TelegramUser
     {
         return TelegramUser::create([
@@ -20,31 +24,30 @@ class TelegramUserRepository implements TelegramUserRepositoryInterface
         ]);
     }
 
+    /**
+     * @param int $id
+     * @return TelegramUser|null
+     */
     public function firstById(int $id): ?TelegramUser
     {
         return TelegramUser::where('id','=', $id)->first();
     }
 
+    /**
+     * @param string $chatId
+     * @return TelegramUser|null
+     */
     public function firstByChatId(string $chatId): ?TelegramUser
     {
         return TelegramUser::where('telegram_chat_id','=', $chatId)->first();
     }
 
+    /**
+     * @param string $login
+     * @return TelegramUser|null
+     */
     public function firstByLogin(string $login): ?TelegramUser
     {
         return TelegramUser::where('login','=', $login)->first();
     }
-
-//    public function isExistByLogin($login): bool
-//    {
-//        return (bool) TelegramUser::where('login','=', $login)->first();
-//    }
-
-//    public function updateByField(TelegramUser $telegramUser, string $field, mixed $value): TelegramUser
-//    {
-//        $telegramUser->$field = $value;
-//        $telegramUser->save();
-//
-//        return $telegramUser;
-//    }
 }

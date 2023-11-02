@@ -515,7 +515,11 @@ final class BotUseCase
      * @throws QueueTypeException
      * @throws TelegramSDKException
      */
-    private function dataMappingListEvent(Collection $queueMessagesByUser, TelegramUser $telegramUser, int $messageId): void
+    private function dataMappingListEvent(
+        Collection $queueMessagesByUser,
+        TelegramUser $telegramUser,
+        int $messageId
+    ): void
     {
         if (count($queueMessagesByUser) === 0) return;
 
@@ -581,10 +585,10 @@ final class BotUseCase
 
         $messageSendDto = new MessageSendDto();
         $messageSendDto->text = $text;
-//        $messageSendDto->user = $telegramUser;
         $messageSendDto->chat_id = $telegramUser->telegram_chat_id;
         $messageSendDto->command = '/start';
         $messageSendDto->type_btn = 'main_menu';
+        $messageSendDto->telegramMessageRepository = $this->telegramMessageRepository;
 
         TelegramMessage::newMessage($messageSendDto);
     }

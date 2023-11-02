@@ -6,15 +6,16 @@ namespace Art\Code\Infrastructure\Repository;
 
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Dto\MessageDto;
+use Art\Code\Domain\Dto\TelegramMessageDto;
 use Art\Code\Domain\Entity\TelegramMessage;
 
 class TelegramMessageRepository implements TelegramMessageRepositoryInterface
 {
     /**
-     * @param MessageDto $message
+     * @param MessageDto|TelegramMessageDto $message
      * @return TelegramMessage
      */
-    public function create(MessageDto $message): TelegramMessage
+    public function create(MessageDto|TelegramMessageDto $message): TelegramMessage
     {
         return TelegramMessage::create([
             'chat_id' => $message->chat_id,
