@@ -89,11 +89,13 @@ class BirthdayUseCase
             $dateOfBirth = Carbon::parse($event->date_event_at);
             $diffYears = $dateOfBirth->diffInYears($now);
             $correctFormat = self::yearTextArg($diffYears);
+            $zodiac = self::getZodiacalSign($dateOfBirth->format('m'), $dateOfBirth->format('d'));
 
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
             $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
-            $messageSendDto->text .= "\n\n     Год рождения: <b>" . $dateOfBirth->format('Y') . " год</b>";
+            $messageSendDto->text .= "\n\n     Год рождения: <b>" . $dateOfBirth->format('Y') . "г.</b>";
+            $messageSendDto->text .= "\n     Знак задиака: <b>" . $zodiac . "</b>";
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
             $messageSendDto->telegramMessageRepository = $botRequestDto->telegramMessageRepository;
