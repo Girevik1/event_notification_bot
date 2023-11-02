@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Art\Code\Domain\Dto;
 
-use Art\Code\Domain\Entity\TelegramUser;
-
 class MessageSendDto
 {
-    public TelegramUser $user;
+//    public TelegramUser $user;
+    public string $chat_id;
     public string $text;
     public string $command;
     public string $model = '';

@@ -497,7 +497,12 @@ final class BotUseCase
 
         foreach ($listBirthdayEvents as $event) {
 
-            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
+            if($event->group_id === 0){
+                $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
+                $chat_id = $telegramUser->telegram_chat_id;
+            }else{
+                $chat_id = $event->group_id;
+            }
 
             $dateOfBirth = Carbon::parse($event->date_event_at);
             $diffYears = $dateOfBirth->diffInYears($now);
@@ -505,24 +510,12 @@ final class BotUseCase
 
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "🎂<b>Сегодня день рождение</b>!";
-            $messageSendDto->text .= "\n\n    " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
-            $messageSendDto->user = $telegramUser;
+            $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
+            $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
 
             TelegramMessage::newMessage($messageSendDto);
         }
-
-//        if(count($listBirthdayEvents)){
-//
-//            $telegramUser = $this->telegramUserRepository->firstById(4);
-//            $messageSendDto = new MessageSendDto();
-//            $messageSendDto->text = "wewe! " . $listBirthdayEvents[0]->name;
-//            $messageSendDto->user = $telegramUser;
-//            $messageSendDto->command = 'cron_birthday';
-//
-//            TelegramMessage::newMessage($messageSendDto);
-//        }
-
     }
 
     private function yearTextArg($year)
@@ -650,7 +643,8 @@ final class BotUseCase
 
         $messageSendDto = new MessageSendDto();
         $messageSendDto->text = $text;
-        $messageSendDto->user = $telegramUser;
+//        $messageSendDto->user = $telegramUser;
+        $messageSendDto->chat_id = $telegramUser->telegram_chat_id;
         $messageSendDto->command = '/start';
         $messageSendDto->type_btn = 'main_menu';
 
