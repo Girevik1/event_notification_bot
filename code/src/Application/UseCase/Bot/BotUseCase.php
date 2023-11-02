@@ -497,11 +497,13 @@ final class BotUseCase
 
         foreach ($listBirthdayEvents as $event) {
 
+            $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
+
             if($event->group_id === 0){
-                $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
                 $chat_id = $telegramUser->telegram_chat_id;
             }else{
-                $chat_id = $event->group_id;
+               $group = $this->telegramGroupRepository->getFirstById($event->group_id, $telegramUser->telegram_chat_id);
+                $chat_id = $group->group_chat_id;
             }
 
             $dateOfBirth = Carbon::parse($event->date_event_at);
