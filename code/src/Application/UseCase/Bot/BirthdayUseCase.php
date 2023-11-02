@@ -6,10 +6,13 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
+use Art\Code\Domain\Dto\BotRequestDto;
+use Art\Code\Domain\Dto\MessageSendDto;
+use Art\Code\Domain\Entity\ListEvent;
+use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
-use Art\Code\Domain\Exception\EventNotFoundException;
-use Art\Code\Domain\Exception\QueueTypeException;
+use Carbon\Carbon;
 use Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -26,22 +29,14 @@ class BirthdayUseCase
         Api          $telegram,
         TelegramUser $telegramUser,
         int          $message_id,
-        QueueMessageRepositoryInterface  $queueMessageRepository
+        QueueMessageRepositoryInterface $queueMessageRepository
     )
     {
-
         $this->message_id = $message_id;
         $this->telegram = $telegram;
         $this->telegramUser = $telegramUser;
         $this->queueMessageRepository = $queueMessageRepository;
         $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
-//        $this->telegram->editMessageText([
-//            'chat_id' => '500264009',
-//            'message_id' => $this->message_id,
-//            'text' => 'test',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
     }
 
     /**
@@ -55,17 +50,6 @@ class BirthdayUseCase
 
         $firstQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
 
-
-//                $this->telegram->editMessageText([
-//            'chat_id' => '500264009',
-//            'message_id' => $this->message_id,
-//            'text' => $firstQueueMessage->type,
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
-
-
-//        try {
         $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->queueMessageRepository);
 
         $this->telegram->editMessageText([
@@ -87,6 +71,53 @@ class BirthdayUseCase
             "TIME_NOTIFICATION" => "⏰  <b>Укажите время оповещения в день рождения</b> (формат: 12:00)",
             "CONFIRMATION" => "<b>‼️ Подтвердите даннные:</b>",
         ];
+    }
+
+    /**
+     * @throws TelegramSDKException
+     */
+    public static  function checkBirthdayByCron(BotRequestDto $botRequestDto): void
+    {
+        $now = Carbon::now()->addHours(3);
+
+        $listBirthdayEvents = ListEvent::where('type', 'birthday')
+            ->whereMonth('date_event_at', $now->format('m'))
+            ->whereDay('date_event_at', $now->format('d'))
+            ->where('notification_time_at', $now->format('H:i'))
+            ->get();
+
+        foreach ($listBirthdayEvents as $event) {
+
+            $telegramUser = $botRequestDto->telegramUserRepository->firstById($event->telegram_user_id);
+
+            if($event->group_id === 0){
+                $chat_id = $telegramUser->telegram_chat_id;
+            }else{
+                $group = $botRequestDto->telegramGroupRepository->getFirstById($event->group_id, $telegramUser->telegram_chat_id);
+                $chat_id = $group->group_chat_id;
+            }
+
+            $dateOfBirth = Carbon::parse($event->date_event_at);
+            $diffYears = $dateOfBirth->diffInYears($now);
+            $correctFormat = self::yearTextArg($diffYears);
+
+            $messageSendDto = new MessageSendDto();
+            $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
+            $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
+            $messageSendDto->chat_id = $chat_id;
+            $messageSendDto->command = 'cron_birthday';
+
+            TelegramMessage::newMessage($messageSendDto);
+        }
+    }
+
+    private static function yearTextArg($year): string
+    {
+        $year = abs($year);
+        $t1 = $year % 10;
+        $t2 = $year % 100;
+
+        return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
     }
 
 
