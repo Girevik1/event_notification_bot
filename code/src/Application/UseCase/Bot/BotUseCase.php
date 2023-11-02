@@ -456,10 +456,15 @@ final class BotUseCase
     }
 
     public function checkBirthdayToday(){
-        $now = Carbon::now();
+        $now = Carbon::now()->addHours(3);
+//        $listEvents = ListEvent::where('type', 'birthday')
+//            ->where('date_event_at', $now)
+//            ->where('notification_time_at', $now->addHours(3)->format('h:i'))
+//            ->get();
         $listEvents = ListEvent::where('type', 'birthday')
-            ->where('date_event_at', $now->format('m-d'))
-            ->where('notification_time_at', $now->addHours(3)->format('h:i'))
+            ->whereMonth('date_event_at', $now->format('m'))
+            ->whereDay('date_event_at', $now->format('d'))
+            ->where('notification_time_at', $now->format('h:i'))
             ->get();
         foreach ($listEvents as $event){
             if($event->type ==='birthday'){
