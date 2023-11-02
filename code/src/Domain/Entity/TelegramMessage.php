@@ -58,7 +58,7 @@ class TelegramMessage extends Model
                 $msg_id = TelegramSender::sendMessage($messageDataDto->user->telegram_chat_id, $textItem, $messageDataDto->type_btn);
 
                 $message = new TelegramMessage();
-                $message->telegram_user_id = $messageDataDto->user->id;
+                $message->chat_id = $messageDataDto->user->telegram_chat_id;
                 $message->message_id = $msg_id;
                 $message->text = $textItem;
                 $message->command = $messageDataDto->command;
