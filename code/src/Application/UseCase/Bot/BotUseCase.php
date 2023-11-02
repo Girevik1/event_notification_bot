@@ -482,6 +482,9 @@ final class BotUseCase
         TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
     }
 
+    /**
+     * @throws TelegramSDKException
+     */
     public function checkBirthdayToday(){
         $now = Carbon::now()->addHours(3);
 
@@ -495,13 +498,13 @@ final class BotUseCase
 
             $telegramUser = $this->telegramUserRepository->firstById($event->telegram_user_id);
 
-//            $dateOfBirth = Carbon::parse($event->date_event_at);
-//            $diffYears = $dateOfBirth->diffInYears($now);
-//            $correctFormat = $this->yearTextArg($diffYears);
+            $dateOfBirth = Carbon::parse($event->date_event_at);
+            $diffYears = $dateOfBirth->diffInYears($now);
+            $correctFormat = $this->yearTextArg($diffYears);
 
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "<b>Сегодня день рождение</b>!";
-//            $messageSendDto->text .= "\n\n" . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
+            $messageSendDto->text .= "\n\n" . $event->name . " <b>" . $diffYears . " " . $correctFormat . "</b>!";
             $messageSendDto->user = $telegramUser;
             $messageSendDto->command = 'cron_birthday';
 
