@@ -71,6 +71,11 @@ class TelegramGroupRepository implements TelegramGroupRepositoryInterface
             ->delete();
     }
 
+    /**
+     * @param int $id
+     * @param string $userChatId
+     * @return int
+     */
     public function deleteById(int $id, string $userChatId): int
     {
         return TelegramGroup::where('id', $id)

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Art\Code\Domain\ValueObject\TelegramUser;
+namespace Art\Code\Domain\ValueObject;
 
 use Art\Code\Domain\Exception\Error;
 
-final class TelegramUserId
+final class TelegramChatId
 {
     private string $value;
 
