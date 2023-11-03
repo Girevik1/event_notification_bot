@@ -8,4 +8,5 @@ return [
     \Art\Code\Domain\Contract\TelegramGroupRepositoryInterface::class => new \Art\Code\Infrastructure\Repository\TelegramGroupRepository(),
     \Art\Code\Domain\Contract\QueueMessageRepositoryInterface::class => new \Art\Code\Infrastructure\Repository\QueueMessageRepository(),
     \Art\Code\Domain\Contract\ListEventRepositoryInterface::class => new \Art\Code\Infrastructure\Repository\ListEventRepository(),
+    \Art\Code\Domain\Contract\TelegramHandlerInterface::class => new \Art\Code\Infrastructure\Telegram\TelegramHandler(),
 ];

@@ -37,7 +37,7 @@ class TelegramMessage extends Model
                 $_ENV['APP_ENV'] === 'prod' ||
                 $_ENV['APP_ENV'] === 'dev'
             ) {
-                $msg_id = TelegramSender::sendMessage($messageDataDto->chat_id, $textItem, $messageDataDto->type_btn);
+                $msg_id = $messageDataDto->telegram::sendMessage($messageDataDto->chat_id, $textItem, $messageDataDto->type_btn);
 
                 $telegramMessage = new TelegramMessageDto();
                 $telegramMessage->chat_id = $messageDataDto->chat_id;

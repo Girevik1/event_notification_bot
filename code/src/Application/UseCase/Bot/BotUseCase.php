@@ -26,7 +26,7 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 
 final class BotUseCase
 {
-    private Api $telegram;
+//    private Api $telegram;
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
     private mixed $newRequest;
@@ -41,11 +41,13 @@ final class BotUseCase
         public $telegramMessageRepository,
         public $telegramGroupRepository,
         public $queueMessageRepository,
-        public $listEventRepository
+        public $listEventRepository,
+        public $telegram
+
     )
     {
-        $telegramConfig = require '../config/telegram.php';
-        $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
+//        $telegramConfig = require '../config/telegram.php';
+//        $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
         $this->textUseCase = new TextUseCase();
         $this->groupUseCase = new GroupUseCase();
         $this->dataEditMessageDto = new DataEditMessageDto();
@@ -60,7 +62,7 @@ final class BotUseCase
         $this->botRequestDto->textUseCase = $this->textUseCase;
         $this->botRequestDto->groupUseCase = $this->groupUseCase;
 
-//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
+        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
     /**
@@ -70,7 +72,7 @@ final class BotUseCase
     {
         $message = [];
 
-//        $message = $this->newRequest;
+        $message = $this->newRequest;
 //        $updates['callback_query'] = $message['callback_query'];
 
         if ($_ENV['APP_ENV'] === 'prod') {
@@ -130,7 +132,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "to_the_beginning":
@@ -140,7 +142,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "what_can_bot":
@@ -150,7 +152,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
                 case "how_use":
@@ -160,7 +162,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
 
@@ -173,7 +175,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $messageId;
 
-                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                $this->telegram::editMessageTextSend($this->dataEditMessageDto);
                 $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
                 return;
@@ -186,7 +188,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     $messageDto->command = 'list_groups';
                     $this->telegramMessageRepository->create($messageDto);
@@ -205,7 +207,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                        $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                         $messageDto->command = 'list_events';
                         $this->telegramMessageRepository->create($messageDto);
@@ -257,7 +259,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
 
@@ -280,7 +282,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                    TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                     return;
 
@@ -298,7 +300,7 @@ final class BotUseCase
                         $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                         $this->dataEditMessageDto->message_id = $messageId;
 
-                        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                        $this->telegram::editMessageTextSend($this->dataEditMessageDto);
                         $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
                         return;
@@ -342,7 +344,7 @@ final class BotUseCase
                         $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                         $this->dataEditMessageDto->message_id = $messageId;
 
-                        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                        $this->telegram::editMessageTextSend($this->dataEditMessageDto);
                     }
                     return;
 
@@ -368,7 +370,7 @@ final class BotUseCase
                 $idEvent = end($textArray);
                 $result = $this->listEventRepository->deleteEventById((int)$idEvent, $telegramUser->id);
 
-                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+                $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
 
                 if(!$result){
                     return;
@@ -386,7 +388,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
-                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                 return;
 
@@ -395,7 +397,7 @@ final class BotUseCase
                 $textArray = explode(' ', $text);
                 $idGroup = end($textArray);
 
-                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+                $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
 
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
                 if (!$group) return;
@@ -416,7 +418,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
-                TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+                $this->telegram::editMessageTextSend($this->dataEditMessageDto);
 
                 return;
 
@@ -431,7 +433,7 @@ final class BotUseCase
                      * отправили текст, пересекаем
                      * */
                     if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
-                        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
+                        $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
                         return;
                     }
 
@@ -454,7 +456,7 @@ final class BotUseCase
                 }
                 break;
         }
-        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+        $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
     }
 
     /**
@@ -477,7 +479,7 @@ final class BotUseCase
         string       $additionalText = ''
     ): void
     {
-        TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageId);
+        $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $messageId);
 
         $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
 
@@ -495,7 +497,7 @@ final class BotUseCase
 
         $this->dataEditMessageDto->message_id = $queueMessageByUser->message_id;
 
-        TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+        $this->telegram::editMessageTextSend($this->dataEditMessageDto);
     }
 
     /**
@@ -551,7 +553,7 @@ final class BotUseCase
             $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
             $this->dataEditMessageDto->message_id = $messageId;
 
-            TelegramSender::editMessageTextSend($this->dataEditMessageDto);
+            $this->telegram::editMessageTextSend($this->dataEditMessageDto);
         }
     }
 
@@ -589,6 +591,7 @@ final class BotUseCase
         $messageSendDto->command = '/start';
         $messageSendDto->type_btn = 'main_menu';
         $messageSendDto->telegramMessageRepository = $this->telegramMessageRepository;
+        $messageSendDto->telegram = $this->telegram;
 
         TelegramMessage::newMessage($messageSendDto);
     }

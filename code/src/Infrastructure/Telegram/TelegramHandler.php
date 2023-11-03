@@ -2,46 +2,51 @@
 
 declare(strict_types=1);
 
-namespace Art\Code\Domain\Entity;
+namespace Art\Code\Infrastructure\Telegram;
 
+use Art\Code\Domain\Contract\TelegramHandlerInterface;
 use Art\Code\Domain\Dto\DataEditMessageDto;
+use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Infrastructure\Repository\TelegramUserRepository;
 use CurlHandle;
-use Illuminate\Database\Eloquent\Model;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
-class TelegramSender extends Model
+class TelegramHandler implements TelegramHandlerInterface
 {
-    public TelegramUserRepository $telegramUserRepository;
+//    public TelegramUserRepository $telegramUserRepository;
     private Api $telegram;
 
     /**
      * @throws TelegramSDKException
      */
-    public function __construct(array $attributes = [])
+    public function __construct(
+//        public TelegramUserRepository $telegramUserRepository
+    )
     {
         $telegramConfig = require '../config/telegram.php';
         $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
-        $this->telegramUserRepository = new TelegramUserRepository();
-        parent::__construct($attributes);
+//        $this->telegramUserRepository = new TelegramUserRepository();
     }
 
+//    public function dsfsf(array $sendParams){
+//        $this->telegram->sendMessage($sendParams);
+//    }
     /**
      * @throws TelegramSDKException
      */
     public static function sendMessage(
         string $telegramChatId,
-        $message,
+              string $text,
         string $typeBtn = '',
-        $replyToMessageId = '')
+            int   $replyToMessageId = 0)
     {
         $thisObj = new self();
 
         $dataForSend = [
             'chat_id' => $telegramChatId,
             'parse_mode' => 'HTML',
-            'text' => $message,
+            'text' => $text,
             'reply_to_message_id' => $replyToMessageId
         ];
 
@@ -64,7 +69,7 @@ class TelegramSender extends Model
             'chat_id' => $dataEditMessage->chat_id,
             'message_id' => $dataEditMessage->message_id,
             'text' => $dataEditMessage->text,
-            'reply_markup' => TelegramSender::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
+            'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
             'parse_mode' => 'HTML',
         ]);
     }
@@ -74,7 +79,7 @@ class TelegramSender extends Model
      * @param $msg_id
      * @return CurlHandle|bool
      */
-    public static function deleteMessage($telegram_chat_id, $msg_id): CurlHandle|bool
+    public static function deleteMessage(string $telegram_chat_id, int $msg_id): CurlHandle|bool
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . $_ENV['TELEGRAM_BOT_TOKEN'] . "/deleteMessage?chat_id=" . $telegram_chat_id . "&message_id=" . $msg_id);
@@ -220,12 +225,12 @@ class TelegramSender extends Model
                                 'callback_data' => 'add_birthday',
                             ],
                         ],
-                        [
-                            [
-                                'text' => '➕ Добавить годовщину',
-                                'callback_data' => 'add_anniversary',
-                            ],
-                        ],
+//                        [
+//                            [
+//                                'text' => '➕ Добавить годовщину',
+//                                'callback_data' => 'add_anniversary',
+//                            ],
+//                        ],
 //                        [
 //                            [
 //                                'text' => ' ➕ Добавить заметку',

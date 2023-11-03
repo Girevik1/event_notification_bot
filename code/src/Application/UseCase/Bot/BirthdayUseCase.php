@@ -45,7 +45,8 @@ class BirthdayUseCase
             'chat_id' => $this->botRequestDto->telegramUser->telegram_chat_id,
             'message_id' => $this->botRequestDto->messageId,
             'text' => $text,
-            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+            'reply_markup' => $this->botRequestDto->telegram::getKeyboard('process_set_event'),
+//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
             'parse_mode' => 'HTML',
         ]);
     }

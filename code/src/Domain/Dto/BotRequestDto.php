@@ -9,6 +9,7 @@ use Art\Code\Application\UseCase\Bot\TextUseCase;
 use Art\Code\Domain\Contract\ListEventRepositoryInterface;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramGroupRepositoryInterface;
+use Art\Code\Domain\Contract\TelegramHandlerInterface;
 use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Contract\TelegramUserRepositoryInterface;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -23,7 +24,8 @@ class BotRequestDto
     public QueueMessageRepositoryInterface $queueMessageRepository;
     public ListEventRepositoryInterface $listEventRepository;
 
-    public Api $telegram;
+//    public Api $telegram;
+    public TelegramHandlerInterface $telegram;
     public TextUseCase $textUseCase;
     public GroupUseCase $groupUseCase;
     public TelegramUser $telegramUser;

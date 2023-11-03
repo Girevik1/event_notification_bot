@@ -53,11 +53,7 @@ class GroupUseCase
 
         $text = $botRequestDto->textUseCase->getGreetingsGroupText($botRequestDto->telegramUser);
 
-        $botRequestDto->telegram->sendMessage([
-            'chat_id' => $telegramGroupDto->group_chat_id,
-            'parse_mode' => 'HTML',
-            'text' => $text
-        ]);
+        $botRequestDto->telegram::sendMessage($telegramGroupDto->group_chat_id, $text);
 
         return true;
     }
