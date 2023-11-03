@@ -6,8 +6,6 @@ namespace Art\Code\Infrastructure\Telegram;
 
 use Art\Code\Domain\Contract\TelegramHandlerInterface;
 use Art\Code\Domain\Dto\DataEditMessageDto;
-use Art\Code\Domain\Entity\TelegramSender;
-use Art\Code\Infrastructure\Repository\TelegramUserRepository;
 use CurlHandle;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -37,9 +35,9 @@ class TelegramHandler implements TelegramHandlerInterface
      */
     public static function sendMessage(
         string $telegramChatId,
-              string $text,
+        string $text,
         string $typeBtn = '',
-            int   $replyToMessageId = 0)
+        int    $replyToMessageId = 0)
     {
         $thisObj = new self();
 

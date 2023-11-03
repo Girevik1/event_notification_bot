@@ -402,7 +402,7 @@ final class BotUseCase
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
                 if (!$group) return;
 
-                $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
+                $this->telegram->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
                 if (!$result) return;

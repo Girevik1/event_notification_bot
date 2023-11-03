@@ -10,7 +10,6 @@ use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Art\Code\Domain\Entity\TelegramSender;
 use Carbon\Carbon;
 use Exception;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -113,6 +112,7 @@ class BirthdayUseCase
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
             $messageSendDto->telegramMessageRepository = $botRequestDto->telegramMessageRepository;
+            $messageSendDto->telegram = $botRequestDto->telegram;
 
             TelegramMessage::newMessage($messageSendDto);
         }
