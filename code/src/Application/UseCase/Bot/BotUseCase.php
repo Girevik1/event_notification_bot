@@ -395,17 +395,15 @@ final class BotUseCase
                 $textArray = explode(' ', $text);
                 $idGroup = end($textArray);
 
+                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
+
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
+                if (!$group) return;
 
                 $this->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
-
-                TelegramSender::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
-
-                if(!$result){
-                    return;
-                }
+                if (!$result) return;
 
                 $this->listEventRepository->updateAllByGroup($group->id, $telegramUser->id, 'group_id', 0);
 
