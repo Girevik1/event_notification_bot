@@ -76,7 +76,7 @@ final class BotUseCase
 //        $updates['callback_query'] = $message['callback_query'];
 
         if ($_ENV['APP_ENV'] === 'prod') {
-            $updates = $this->telegram->getWebhookUpdate();
+            $updates = $this->telegram->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
 

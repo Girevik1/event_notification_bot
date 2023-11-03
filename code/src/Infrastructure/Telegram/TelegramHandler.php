@@ -15,7 +15,7 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class TelegramHandler implements TelegramHandlerInterface
 {
 //    public TelegramUserRepository $telegramUserRepository;
-    private Api $telegram;
+    public Api $telegram;
 
     /**
      * @throws TelegramSDKException
