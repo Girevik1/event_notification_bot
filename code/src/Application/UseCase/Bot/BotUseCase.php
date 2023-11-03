@@ -70,7 +70,7 @@ final class BotUseCase
     {
         $message = [];
 
-        $message = $this->newRequest;
+//        $message = $this->newRequest;
 //        $updates['callback_query'] = $message['callback_query'];
 
         if ($_ENV['APP_ENV'] === 'prod') {
