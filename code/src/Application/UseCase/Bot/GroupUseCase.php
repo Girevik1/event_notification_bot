@@ -9,12 +9,10 @@ use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\TelegramGroupDto;
 use Art\Code\Domain\Exception\GroupCreateException;
 use Art\Code\Domain\Exception\GroupDeleteException;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class GroupUseCase
 {
     /**
-     * @throws TelegramSDKException
      * @throws GroupCreateException
      * @throws GroupDeleteException
      */

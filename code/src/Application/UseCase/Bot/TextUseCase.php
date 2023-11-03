@@ -98,9 +98,7 @@ class TextUseCase
 
     public function getPrivateCabinetText(): string
     {
-        $text = "<b>🏠 Личный кабинет\n\n</b>";
-
-        return $text;
+        return "<b>🏠 Личный кабинет\n\n</b>";
     }
 
     public function getSuccessConfirmText(string $type): string

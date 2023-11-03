@@ -8,5 +8,4 @@ use Exception;
 
 class EventNotFoundException extends Exception
 {
-
 }

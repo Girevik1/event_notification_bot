@@ -25,14 +25,24 @@ class QueueMessageUseCase
         $this->createQueueMessages($queue, $telegramUser->id, $messageId, $eventType);
     }
 
-    private function createQueueMessages(array $queue, int $telegramUserId, int $messageId, string $eventType): void
+    private function createQueueMessages(
+        array $queue,
+        int $telegramUserId,
+        int $messageId,
+        string $eventType
+    ): void
     {
         $prev = null;
         foreach ($queue as $key => $value) {
-            $queueMessage = $this->queueMessageRepository->createQueue($telegramUserId, $key, $messageId, $eventType);
+            $queueMessage = $this->queueMessageRepository->createQueue(
+                $telegramUserId,
+                $key,
+                $messageId,
+                $eventType
+            );
 
             if ($prev != null) {
-                $prev->next_id = $queueMessage->id;
+                $prev->next_id = $queueMessage->id; // temp
                 $prev->save();
 
                 $queueMessage->previous_id = $prev->id;
@@ -58,15 +68,6 @@ class QueueMessageUseCase
         string                            $userChatId = ''
     ): ?string
     {
-
-//        $telegram->editMessageText([
-//            'chat_id' => '500264009',
-//            'message_id' => $message_id,
-//            'text' => 'test434',
-////            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
-
         $message_texts = match ($message->event_type) {
             "birthday" => BirthdayUseCase::getMessagesQueueBirthday(),
             "note" => ['NOTE_NAME' => 'in test..'],
@@ -78,13 +79,8 @@ class QueueMessageUseCase
         switch ($message->type) {
 
             case "GROUP":
-//                $text .= self::getRubrics();
-//                $text .= "\n   (или /cancel для отмены отзыва)";
-                $text .= self::getNamesGroup($groupRepository, $userChatId);
-                break;
 
-            case "DATE_OF_BIRTH":
-                $text .= '';
+                $text .= self::getNamesGroup($groupRepository, $userChatId);
                 break;
 
             case "CONFIRMATION":
@@ -104,8 +100,7 @@ class QueueMessageUseCase
             default:
                 break;
         }
-
-        $message->state = "SENT";
+        $message->state = "SENT"; // temp
         $message->save();
 
         return $text;

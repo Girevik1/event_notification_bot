@@ -16,4 +16,6 @@ interface ListEventRepositoryInterface
     public function deleteEventById(int $id, int $userId): int;
 
     public function updateAllByGroup(int $groupId, int $userId, string $field, mixed $value): int;
+
+    public function findEventsToday($month, $day, $notificationTime): Collection;
 }

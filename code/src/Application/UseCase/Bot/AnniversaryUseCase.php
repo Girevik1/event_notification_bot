@@ -4,40 +4,15 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Bot;
 
-use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
-use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
-use Art\Code\Domain\Entity\TelegramUser;
-use Telegram\Bot\Api;
-
 class AnniversaryUseCase
 {
-    private Api $telegram;
-    private TelegramUser $telegramUser;
-    public int $message_id;
-    private QueueMessageUseCase $queueMessageUseCase;
-    private QueueMessageRepositoryInterface $queueMessageRepository;
-
-    public function __construct(
-        Api          $telegram,
-        TelegramUser $telegramUser,
-        int          $message_id,
-        QueueMessageRepositoryInterface  $queueMessageRepository
-    )
+    public function __construct()
     {
-        $this->message_id = $message_id;
-        $this->telegram = $telegram;
-        $this->telegramUser = $telegramUser;
-        $this->queueMessageRepository = $queueMessageRepository;
-        $this->queueMessageUseCase = new QueueMessageUseCase($this->queueMessageRepository);
     }
 
     public function addAnniversary(): void
     {
-        $queueBirthday = $this->getMessagesQueueImportantEvent();
-
-        $this->queueMessageUseCase->processQueueMessage($queueBirthday, $this->telegramUser, $this->message_id, 'important_event');
-
-        $firstQueueMessage = $this->queueMessageRepository->getFirstOpenMsg($this->telegramUser->id);
+       // TODO раздел в разработке - но вид эвента
     }
 
     public static function getMessagesQueueImportantEvent(): array

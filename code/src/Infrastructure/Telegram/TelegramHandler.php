@@ -10,34 +10,32 @@ use CurlHandle;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
-class TelegramHandler implements TelegramHandlerInterface
+final class TelegramHandler implements TelegramHandlerInterface
 {
-//    public TelegramUserRepository $telegramUserRepository;
     public Api $telegram;
 
     /**
      * @throws TelegramSDKException
      */
-    public function __construct(
-//        public TelegramUserRepository $telegramUserRepository
-    )
+    public function __construct()
     {
         $telegramConfig = require '../config/telegram.php';
         $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
-//        $this->telegramUserRepository = new TelegramUserRepository();
     }
 
-//    public function dsfsf(array $sendParams){
-//        $this->telegram->sendMessage($sendParams);
-//    }
     /**
+     * @param string $telegramChatId
+     * @param string $text
+     * @param string $typeBtn
+     * @param int $replyToMessageId
+     * @return mixed
      * @throws TelegramSDKException
      */
     public static function sendMessage(
         string $telegramChatId,
         string $text,
         string $typeBtn = '',
-        int    $replyToMessageId = 0)
+        int    $replyToMessageId = 0): mixed
     {
         $thisObj = new self();
 
@@ -73,8 +71,8 @@ class TelegramHandler implements TelegramHandlerInterface
     }
 
     /**
-     * @param $telegram_chat_id
-     * @param $msg_id
+     * @param string $telegram_chat_id
+     * @param int $msg_id
      * @return CurlHandle|bool
      */
     public static function deleteMessage(string $telegram_chat_id, int $msg_id): CurlHandle|bool

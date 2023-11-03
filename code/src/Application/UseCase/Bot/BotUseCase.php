@@ -13,7 +13,6 @@ use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
-use Art\Code\Domain\Entity\TelegramSender;
 use Art\Code\Domain\Entity\TelegramUser;
 use Art\Code\Domain\Exception\EventNotFoundException;
 use Art\Code\Domain\Exception\QueueTypeException;
@@ -21,21 +20,15 @@ use Art\Code\Domain\Exception\TelegramMessageDataException;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
-use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 final class BotUseCase
 {
-//    private Api $telegram;
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
-    private mixed $newRequest;
     private DataEditMessageDto $dataEditMessageDto;
     private BotRequestDto $botRequestDto;
 
-    /**
-     * @throws TelegramSDKException
-     */
     public function __construct(
         public $telegramUserRepository,
         public $telegramMessageRepository,
@@ -43,11 +36,8 @@ final class BotUseCase
         public $queueMessageRepository,
         public $listEventRepository,
         public $telegram
-
     )
     {
-//        $telegramConfig = require '../config/telegram.php';
-//        $this->telegram = new Api($telegramConfig['TELEGRAM_BOT_TOKEN']);
         $this->textUseCase = new TextUseCase();
         $this->groupUseCase = new GroupUseCase();
         $this->dataEditMessageDto = new DataEditMessageDto();
@@ -61,8 +51,6 @@ final class BotUseCase
         $this->botRequestDto->telegram = $this->telegram;
         $this->botRequestDto->textUseCase = $this->textUseCase;
         $this->botRequestDto->groupUseCase = $this->groupUseCase;
-
-//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
     /**
@@ -72,31 +60,16 @@ final class BotUseCase
     {
         $message = [];
 
-//        $message = $this->newRequest;
-//        $updates['callback_query'] = $message['callback_query'];
-
         if ($_ENV['APP_ENV'] === 'prod') {
             $updates = $this->telegram->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
 
-//        $this->telegram->editMessageText([
-//            'chat_id' => 500264009,
-//            'message_id' => $message['message_id'],
-//            'text' => 'testetetst',
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]);
-
-//        $message['callback_query'] = $updates->callback_query ?? '';
         $messageDto = new MessageDto($message);
-
-//        $this->telegramMessageRepository->create($messageDto);
 
         if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
             throw new TelegramMessageDataException('Some data is missing');
         };
-
 
         /*
          * Create or remove a group in db (on added in group or left)
@@ -225,18 +198,6 @@ final class BotUseCase
 
                     return;
 
-//                case "anniversary":
-//
-//                    $addImportantEventUseCase = new AnniversaryUseCase();
-//                    $addImportantEventUseCase->addImportantEvent(
-//                        $this->telegram,
-//                        $telegramUser,
-//                        $messageId,
-//                        $this->queueMessageRepository
-//                    );
-//
-//                    return;
-
                 case "confirm_event":
 
                     $queueMessagesByUser = $this->queueMessageRepository->getAllByUserId($telegramUser->id);
@@ -274,10 +235,7 @@ final class BotUseCase
                     $this->queueMessageRepository->updateFieldById('answer', 'group', $lastSentQueueMessage->id);
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($lastSentQueueMessage->next_id);
 
-//                    $this->queueMessageRepository->updateFieldById('answer', '0', $queueMessageByUser->id);
-//                    $this->queueMessageRepository->updateFieldById('state', 'SENT', $queueMessageByUser->id);
-//                    $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
-                        $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
+                    $this->dataEditMessageDto->text = $this->getTextByEventType($queueMessageByUser, $telegramUser->telegram_chat_id);
                     $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
@@ -425,6 +383,7 @@ final class BotUseCase
             default:
 
                 $queueMessageByUser = $this->queueMessageRepository->getLastSentMsg($telegramUser->id);
+
                 /* Принимаем ответы на сообщение очереди эвента от клиента
                  * */
                 if ($queueMessageByUser && $text !== '') {
@@ -433,25 +392,28 @@ final class BotUseCase
                      * отправили текст, пересекаем
                      * */
                     if ($queueMessageByUser->type === 'NOTIFICATION_TYPE') {
-                        $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $message['message_id']);
+                        $this->telegram::deleteMessage($telegramUser->telegram_chat_id, $messageDto->message_id);
                         return;
                     }
 
-                    // VALIDATION
-                    if(!$text = $this->validationIncomingText($text, $queueMessageByUser, $telegramUser,$message['message_id'])){
+                    if(!$text = $this->validationIncomingText(
+                        $text,
+                        $queueMessageByUser,
+                        $telegramUser,
+                        $messageDto->message_id)
+                    ){
                         return;
                     }
 
                     // temp
                     $queueMessageByUser->answer = $text;
                     $queueMessageByUser->save(); //
-
                     $queueMessageByUser = $this->queueMessageRepository->getQueueMessageById($queueMessageByUser->next_id);
 
                     $this->prepareTextForSend(
                         $telegramUser,
                         $queueMessageByUser,
-                        $message['message_id']
+                        $messageDto->message_id
                     );
                 }
                 break;

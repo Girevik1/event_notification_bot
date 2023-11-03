@@ -7,7 +7,6 @@ namespace Art\Code\Infrastructure\Http\Controllers;
 use Art\Code\Application\UseCase\Bot\BotUseCase;
 use Art\Code\Domain\Exception\DatabaseConnectionException;
 use Art\Code\Infrastructure\Cron\Controllers\CronController;
-use Art\Code\Infrastructure\Telegram\TelegramHandler;
 use Exception;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 

@@ -62,4 +62,13 @@ class ListEventRepository implements ListEventRepositoryInterface
             ->where('telegram_user_id', $userId)
             ->update([$field => $value]);
     }
+
+    public function findEventsToday($month, $day, $notificationTime): Collection
+    {
+        return ListEvent::where('type', 'birthday')
+            ->whereMonth('date_event_at', $month)
+            ->whereDay('date_event_at', $day)
+            ->where('notification_time_at', $notificationTime)
+            ->get();
+    }
 }

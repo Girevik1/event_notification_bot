@@ -8,7 +8,6 @@ use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Dto\BotRequestDto;
 use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
-use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Carbon\Carbon;
 use Exception;
@@ -47,17 +46,11 @@ class BirthdayUseCase
         $dataEditMessageDto->text = $text;
         $dataEditMessageDto->keyboard = 'process_set_event';
         $this->botRequestDto->telegram::editMessageTextSend($dataEditMessageDto);
-//            [s
-//            'chat_id' => $this->botRequestDto->telegramUser->telegram_chat_id,
-//            'message_id' => $this->botRequestDto->messageId,
-//            'text' => $text,
-//            'reply_markup' => $this->botRequestDto->telegram::getKeyboard('process_set_event'),
-////            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-//            'parse_mode' => 'HTML',
-//        ]
-//        );
     }
 
+    /**
+     * @return string[]
+     */
     public static function getMessagesQueueBirthday(): array
     {
         return [
@@ -76,12 +69,11 @@ class BirthdayUseCase
     public static function checkBirthdayByCron(BotRequestDto $botRequestDto): void
     {
         $now = Carbon::now()->addHours(3);
-
-        $listBirthdayEvents = ListEvent::where('type', 'birthday')
-            ->whereMonth('date_event_at', $now->format('m'))
-            ->whereDay('date_event_at', $now->format('d'))
-            ->where('notification_time_at', $now->format('H:i'))
-            ->get();
+        $listBirthdayEvents = $botRequestDto->listEventRepository->findEventsToday(
+            $now->format('m'),
+            $now->format('d'),
+            $now->format('H:i')
+        );
 
         foreach ($listBirthdayEvents as $event) {
 

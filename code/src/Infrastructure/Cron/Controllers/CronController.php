@@ -15,6 +15,5 @@ class CronController
     public function checkAvailableEvents(BotUseCase $botUseCase): void
     {
         $botUseCase->checkBirthdayToday();
-//        $botUseCase->checkAnniversaryToday();
     }
 }
