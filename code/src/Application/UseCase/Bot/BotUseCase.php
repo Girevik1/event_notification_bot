@@ -62,7 +62,7 @@ final class BotUseCase
         $this->botRequestDto->textUseCase = $this->textUseCase;
         $this->botRequestDto->groupUseCase = $this->groupUseCase;
 
-        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
+//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
     /**
@@ -72,7 +72,7 @@ final class BotUseCase
     {
         $message = [];
 
-        $message = $this->newRequest;
+//        $message = $this->newRequest;
 //        $updates['callback_query'] = $message['callback_query'];
 
         if ($_ENV['APP_ENV'] === 'prod') {
