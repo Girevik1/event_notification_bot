@@ -6,6 +6,7 @@ namespace Art\Code\Application\UseCase\Bot;
 
 use Art\Code\Application\UseCase\Message\QueueMessageUseCase;
 use Art\Code\Domain\Dto\BotRequestDto;
+use Art\Code\Domain\Dto\DataEditMessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\TelegramMessage;
@@ -41,14 +42,21 @@ class BirthdayUseCase
 
         $text = QueueMessageUseCase::getMessageByType($firstQueueMessage, $this->botRequestDto->queueMessageRepository);
 
-        $this->botRequestDto->telegram->editMessageText([
-            'chat_id' => $this->botRequestDto->telegramUser->telegram_chat_id,
-            'message_id' => $this->botRequestDto->messageId,
-            'text' => $text,
-            'reply_markup' => $this->botRequestDto->telegram::getKeyboard('process_set_event'),
-//            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
-            'parse_mode' => 'HTML',
-        ]);
+        $dataEditMessageDto = new DataEditMessageDto();
+        $dataEditMessageDto->message_id = $this->botRequestDto->messageId;
+        $dataEditMessageDto->chat_id = $this->botRequestDto->telegramUser->telegram_chat_id;
+        $dataEditMessageDto->text = $text;
+        $dataEditMessageDto->keyboard = 'process_set_event';
+        $this->botRequestDto->telegram::editMessageTextSend($dataEditMessageDto);
+//            [s
+//            'chat_id' => $this->botRequestDto->telegramUser->telegram_chat_id,
+//            'message_id' => $this->botRequestDto->messageId,
+//            'text' => $text,
+//            'reply_markup' => $this->botRequestDto->telegram::getKeyboard('process_set_event'),
+////            'reply_markup' => TelegramSender::getKeyboard('process_set_event'),
+//            'parse_mode' => 'HTML',
+//        ]
+//        );
     }
 
     public static function getMessagesQueueBirthday(): array
