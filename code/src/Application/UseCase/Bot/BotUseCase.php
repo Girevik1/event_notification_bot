@@ -60,7 +60,7 @@ final class BotUseCase
         $this->botRequestDto->textUseCase = $this->textUseCase;
         $this->botRequestDto->groupUseCase = $this->groupUseCase;
 
-        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
+//        $this->newRequest = json_decode(file_get_contents("php://input"), true); // for test/
     }
 
     /**
