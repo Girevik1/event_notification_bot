@@ -23,7 +23,7 @@ jobs:
       # Шаг 1: собираем сервисы в режиме тестирования
       - uses: actions/checkout@v3
       - name: Build the stack
-        run: docker-compose -f docker-compose.yaml up -d --build
+        run: docker-compose -f docker-compose.yml up -d --build
       # Шаг 2: запускаем тесты с небольшой детализацией
       - name: Run tests
         run: ./vendor/bin/phpunit --verbose tests
