@@ -1,5 +1,5 @@
 # Имя флоу
-name: Deploy on server hw15
+name: Deploy on bot server
 
 # Когда действие запустится (триггеры)
 on:

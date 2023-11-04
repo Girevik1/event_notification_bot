@@ -12,7 +12,7 @@ class AnniversaryUseCase
 
     public function addAnniversary(): void
     {
-       // TODO раздел в разработке - но вид эвента
+       // TODO раздел в разработке - новый вид эвента
     }
 
     public static function getMessagesQueueImportantEvent(): array
