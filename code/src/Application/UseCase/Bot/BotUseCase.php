@@ -594,7 +594,7 @@ final class BotUseCase
 
             case "DATE_OF_BIRTH":
 
-                $isValidFormat = preg_match('/^(0[1-9]|[12][0-9]|3[01])[\-\/\.](0[1-9]|1[012])[\-\/\.](19|20)\d\d$/', $text);
+                $isValidFormat = preg_match('/^(0[1-9]|[12][0-9]|3[01])[\-\.](0[1-9]|1[012])[\-\.](19|20)\d\d$/', $text);
 
                 if (!$isValidFormat) {
                     $result = false;
