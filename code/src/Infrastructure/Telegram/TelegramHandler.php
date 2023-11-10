@@ -68,7 +68,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                 $textArray[] = mb_strcut($text, $start, 4096);
                 $start += 4096;
             } while (mb_strlen($text, '8bit') > $start);
-        $textArray = ['renewrw'];
+        $textArray = $textArray[0];
 
         foreach ($textArray as $textItem) {
             $typeBtnForLastMsg = '';
