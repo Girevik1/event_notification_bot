@@ -64,10 +64,10 @@ final class TelegramHandler implements TelegramHandlerInterface
     {
             $textArray = [];
             $start = 0;
-            do {
+//            do {
                 $textArray[] = mb_strcut($text, $start, 4096);
-                $start += 4096;
-            } while (mb_strlen($text, '8bit') > $start);
+//                $start += 4096;
+//            } while (mb_strlen($text, '8bit') > $start);
 
 
         foreach ($textArray as $textItem) {
@@ -105,7 +105,7 @@ final class TelegramHandler implements TelegramHandlerInterface
             self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
 
             $thisObj->newMessage(
-                '$dataEditMessage->text',
+                $dataEditMessage->text,
                 $dataEditMessage->chat_id,
                 $dataEditMessage->keyboard,
                 $telegramMessageRepository
