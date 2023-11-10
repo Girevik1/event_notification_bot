@@ -58,13 +58,43 @@ final class TelegramHandler implements TelegramHandlerInterface
     /**
      * @throws TelegramSDKException
      */
+    private function newMessage($text, $chatId, $typeBtn=''): void
+    {
+            $textArray = [];
+            $start = 0;
+            do {
+                $textArray[] = mb_strcut($text, $start, 4096);
+                $start += 4096;
+            } while (mb_strlen($text, '8bit') > $start);
+
+
+        foreach ($textArray as $textItem) {
+            self::sendMessage($chatId, $textItem, $typeBtn);
+        }
+    }
+
+    /**
+     * @throws TelegramSDKException
+     */
     public static function editMessageTextSend(DataEditMessageDto $dataEditMessage): void
     {
         $thisObj = new self();
 
         if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
             self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
-            self::sendMessage($dataEditMessage->chat_id, $dataEditMessage->text, $dataEditMessage->keyboard);
+
+            $thisObj->newMessage($dataEditMessage->text,$dataEditMessage->chat_id);
+//            self::sendMessage($dataEditMessage->chat_id, $dataEditMessage->text, $dataEditMessage->keyboard);
+
+//            $messageSendDto = new MessageSendDto();
+//            $messageSendDto->text = $text;
+//            $messageSendDto->chat_id = $telegramUser->telegram_chat_id;
+//            $messageSendDto->command = '/start';
+//            $messageSendDto->type_btn = 'main_menu';
+//            $messageSendDto->telegramMessageRepository = $this->telegramMessageRepository;
+//            $messageSendDto->telegram = $this->telegram;
+//
+//            TelegramMessage::newMessage();
         } else {
 
             $thisObj->telegram->editMessageText([
