@@ -63,12 +63,12 @@ final class TelegramHandler implements TelegramHandlerInterface
     private function newMessage($text, $chatId, $typeBtn, $telegramMessageRepository): void
     {
             $textArray = [];
-//            $start = 0;
-//            do {
-//                $textArray[] = mb_strcut($text, $start, 4096);
-//                $start += 4096;
-//            } while (mb_strlen($text, '8bit') > $start);
-        $textArray[] = (string)mb_strlen($text, '8bit');
+            $start = 0;
+            do {
+                $textArray[] = mb_strcut($text, $start, 4096);
+                $start += 4096;
+            } while (mb_strlen($text, '8bit') > $start);
+//        $textArray[] = (string)mb_strlen($text, '8bit');
 
         foreach ($textArray as $textItem) {
             $typeBtnForLastMsg = '';
