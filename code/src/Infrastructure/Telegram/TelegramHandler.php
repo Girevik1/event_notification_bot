@@ -60,38 +60,20 @@ final class TelegramHandler implements TelegramHandlerInterface
      */
     public static function editMessageTextSend(DataEditMessageDto $dataEditMessage): void
     {
-        $textArray = [$dataEditMessage->text];
-
-        if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
-            $textArray = [];
-            $start = 0;
-            do {
-                $textArray[] = mb_strcut($dataEditMessage->text, $start, 4096);
-                $start += 4096;
-            } while (mb_strlen($dataEditMessage->text, '8bit') > $start);
-        }
         $thisObj = new self();
 
-        $countText = count($textArray);
-        foreach ($textArray as $textItem) {
+        if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
+            self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
+            self::sendMessage($dataEditMessage->chat_id, $dataEditMessage->text, $dataEditMessage->keyboard);
+        } else {
 
-            if ($textItem == end($textArray)) {
-
-                if ($countText > 1) {
-                    self::sendMessage($dataEditMessage->chat_id, $textItem, $dataEditMessage->keyboard);
-                } else {
-                    $thisObj->telegram->editMessageText([
-                        'chat_id' => $dataEditMessage->chat_id,
-                        'message_id' => $dataEditMessage->message_id,
-                        'text' => $dataEditMessage->text,
-                        'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
-                        'parse_mode' => 'HTML',
-                    ]);
-                }
-
-            }
-
-            self::sendMessage($dataEditMessage->chat_id, $textItem);
+            $thisObj->telegram->editMessageText([
+                'chat_id' => $dataEditMessage->chat_id,
+                'message_id' => $dataEditMessage->message_id,
+                'text' => $dataEditMessage->text,
+                'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
+                'parse_mode' => 'HTML',
+            ]);
         }
     }
 
