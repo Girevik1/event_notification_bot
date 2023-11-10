@@ -72,17 +72,23 @@ final class TelegramHandler implements TelegramHandlerInterface
         }
         $thisObj = new self();
 
+        $countText = count($textArray);
         foreach ($textArray as $textItem) {
 
             if ($textItem == end($textArray)) {
 
-                $thisObj->telegram->editMessageText([
-                    'chat_id' => $dataEditMessage->chat_id,
-                    'message_id' => $dataEditMessage->message_id,
-                    'text' => $dataEditMessage->text,
-                    'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
-                    'parse_mode' => 'HTML',
-                ]);
+                if ($countText > 1) {
+                    self::sendMessage($dataEditMessage->chat_id, $textItem, $dataEditMessage->keyboard);
+                } else {
+                    $thisObj->telegram->editMessageText([
+                        'chat_id' => $dataEditMessage->chat_id,
+                        'message_id' => $dataEditMessage->message_id,
+                        'text' => $dataEditMessage->text,
+                        'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
+                        'parse_mode' => 'HTML',
+                    ]);
+                }
+
             }
 
             self::sendMessage($dataEditMessage->chat_id, $textItem);
