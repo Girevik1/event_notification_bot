@@ -60,14 +60,33 @@ final class TelegramHandler implements TelegramHandlerInterface
      */
     public static function editMessageTextSend(DataEditMessageDto $dataEditMessage): void
     {
+        $textArray = [$dataEditMessage->text];
+
+        if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
+            $textArray = [];
+            $start = 0;
+            do {
+                $textArray[] = mb_strcut($dataEditMessage->text, $start, 4096);
+                $start += 4096;
+            } while (mb_strlen($dataEditMessage->text, '8bit') > $start);
+        }
         $thisObj = new self();
-        $thisObj->telegram->editMessageText([
-            'chat_id' => $dataEditMessage->chat_id,
-            'message_id' => $dataEditMessage->message_id,
-            'text' => $dataEditMessage->text,
-            'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
-            'parse_mode' => 'HTML',
-        ]);
+
+        foreach ($textArray as $textItem) {
+
+            if ($textItem == end($textArray)) {
+
+                $thisObj->telegram->editMessageText([
+                    'chat_id' => $dataEditMessage->chat_id,
+                    'message_id' => $dataEditMessage->message_id,
+                    'text' => $dataEditMessage->text,
+                    'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
+                    'parse_mode' => 'HTML',
+                ]);
+            }
+
+            self::sendMessage($dataEditMessage->chat_id, $textItem);
+        }
     }
 
     /**

@@ -171,6 +171,7 @@ final class BotUseCase
                     case "list_events":
 
                     $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+
                         $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
                             $listEvents,
                             $this->telegramGroupRepository,
