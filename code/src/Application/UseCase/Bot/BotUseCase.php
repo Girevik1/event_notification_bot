@@ -148,6 +148,13 @@ final class BotUseCase
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $messageId;
 
+                // Удаляем все сообщения в чате по юзеру
+                $allTelegramMessageByUser = $this->telegramMessageRepository->getAllMessageByChatId($telegramUser->telegram_chat_id);
+                foreach ($allTelegramMessageByUser as $msg){
+                    $this->telegram::deleteMessage($msg->chat_id, $msg->message_id);
+                    $this->telegramMessageRepository->deleteByMessageId($msg->message_id);
+                } //
+
                 $this->telegram::editMessageTextSend($this->dataEditMessageDto);
                 $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);
 
@@ -181,7 +188,7 @@ final class BotUseCase
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
-                        $this->telegram::editMessageTextSend($this->dataEditMessageDto);
+                        $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
                         $messageDto->command = 'list_events';
                         $this->telegramMessageRepository->create($messageDto);

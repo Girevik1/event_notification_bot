@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Art\Code\Infrastructure\Telegram;
 
 use Art\Code\Domain\Contract\TelegramHandlerInterface;
+use Art\Code\Domain\Contract\TelegramMessageRepositoryInterface;
 use Art\Code\Domain\Dto\DataEditMessageDto;
+use Art\Code\Domain\Dto\TelegramMessageDto;
 use CurlHandle;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -58,7 +60,7 @@ final class TelegramHandler implements TelegramHandlerInterface
     /**
      * @throws TelegramSDKException
      */
-    private function newMessage($text, $chatId, $typeBtn): void
+    private function newMessage($text, $chatId, $typeBtn, $telegramMessageRepository): void
     {
             $textArray = [];
             $start = 0;
@@ -73,21 +75,39 @@ final class TelegramHandler implements TelegramHandlerInterface
             if ($textItem == end($textArray)) {
                 $typeBtnForLastMsg = $typeBtn;
             }
-            self::sendMessage($chatId, $textItem, $typeBtnForLastMsg);
+
+            $msg_id = self::sendMessage($chatId, $textItem, $typeBtnForLastMsg);
+
+            $telegramMessage = new TelegramMessageDto();
+            $telegramMessage->chat_id = $chatId;
+            $telegramMessage->message_id = $msg_id;
+            $telegramMessage->text = $textItem;
+            $telegramMessage->command = 'new_message';
+            $telegramMessage->reply_to = 0;
+
+            $telegramMessageRepository->create($telegramMessage);
         }
     }
 
     /**
      * @throws TelegramSDKException
      */
-    public static function editMessageTextSend(DataEditMessageDto $dataEditMessage): void
+    public static function editMessageTextSend(
+        DataEditMessageDto                 $dataEditMessage,
+        TelegramMessageRepositoryInterface $telegramMessageRepository = null
+    ): void
     {
         $thisObj = new self();
 
         if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
             self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
 
-            $thisObj->newMessage($dataEditMessage->text, $dataEditMessage->chat_id, $dataEditMessage->keyboard);
+            $thisObj->newMessage(
+                $dataEditMessage->text,
+                $dataEditMessage->chat_id,
+                $dataEditMessage->keyboard,
+                $telegramMessageRepository
+            );
 
         } else {
 
