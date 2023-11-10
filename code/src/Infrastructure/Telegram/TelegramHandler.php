@@ -65,9 +65,21 @@ final class TelegramHandler implements TelegramHandlerInterface
             $textArray = [];
             $start = 0;
             do {
-                $textArray[] = mb_strcut($text, $start, 16000);
-                $start += 16000;
-            } while (mb_strlen($text, '8bit') > $start);
+                $textArray[] = mb_substr($text, $start, 4096);
+//                $textArray[] = mb_strcut($text, $start, 7300);
+                $start += 4096;
+            } while (mb_strlen($text, 'UTF-8') > $start);
+//            } while (mb_strlen($text, '8bit') > $start);
+
+//        do {
+//            //Chop off and send the first message
+//            $data['text'] = mb_substr($text, 0, 4096);
+//            $response     = self::send('sendMessage', $data);
+//
+//            //Prepare the next message
+//            $text = mb_substr($text, 4096);
+//        } while (mb_strlen($text, 'UTF-8') > 0);
+
 //        $textArray[] = (string)mb_strlen($text, '8bit');
 
         foreach ($textArray as $textItem) {
