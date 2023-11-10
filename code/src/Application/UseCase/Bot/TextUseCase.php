@@ -93,6 +93,7 @@ class TextUseCase
 
             return $text;
         }
+
         return "<b>У вас нет добавленных событий.</b>";
     }
 
