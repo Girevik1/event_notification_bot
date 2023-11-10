@@ -195,8 +195,10 @@ final class BotUseCase
 
                         $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
-//                        $messageDto->command = 'list_events';
-//                        $this->telegramMessageRepository->create($messageDto);
+                        if (mb_strlen($this->dataEditMessageDto->text, '8bit') <= 4096) {
+                            $messageDto->command = 'list_events';
+                            $this->telegramMessageRepository->create($messageDto);
+                        }
 
                     return;
 
