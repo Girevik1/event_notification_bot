@@ -153,7 +153,7 @@ final class BotUseCase
                     $allTelegramMessageByUser = $this->telegramMessageRepository->getAllMessageByChatId($telegramUser->telegram_chat_id);
                     foreach ($allTelegramMessageByUser as $msg) {
                         if($msg == end($allTelegramMessageByUser)){
-                           continue;
+                           break;
                         }
                         $this->telegram::deleteMessage($msg->chat_id, $msg->message_id);
                         $this->telegramMessageRepository->deleteByMessageId($msg->message_id);
