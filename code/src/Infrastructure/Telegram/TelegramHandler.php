@@ -64,10 +64,10 @@ final class TelegramHandler implements TelegramHandlerInterface
     {
             $textArray = [];
             $start = 0;
-//            do {
+            do {
                 $textArray[] = mb_strcut($text, $start, 4096);
-//                $start += 4096;
-//            } while (mb_strlen($text, '8bit') > $start);
+                $start += 4096;
+            } while (mb_strlen($text, '8bit') > $start);
 
 
         foreach ($textArray as $textItem) {
