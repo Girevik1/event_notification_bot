@@ -195,8 +195,8 @@ final class BotUseCase
 
                         $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
-                        $messageDto->command = 'list_events';
-                        $this->telegramMessageRepository->create($messageDto);
+//                        $messageDto->command = 'list_events';
+//                        $this->telegramMessageRepository->create($messageDto);
 
                     return;
 
@@ -359,7 +359,7 @@ final class BotUseCase
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
-                $this->telegram::editMessageTextSend($this->dataEditMessageDto);
+                $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
                 return;
 
