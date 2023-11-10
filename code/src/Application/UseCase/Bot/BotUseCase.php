@@ -158,7 +158,7 @@ final class BotUseCase
                         $this->telegram::deleteMessage($msg->chat_id, $msg->message_id);
                         $this->telegramMessageRepository->deleteByMessageId($msg->message_id);
                     }
-                }//
+                } //
 
                 $this->telegram::editMessageTextSend($this->dataEditMessageDto);
                 $this->queueMessageRepository->deleteAllMessageByUser($telegramUser->id);

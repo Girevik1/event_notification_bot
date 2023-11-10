@@ -72,8 +72,10 @@ final class TelegramHandler implements TelegramHandlerInterface
 
         foreach ($textArray as $textItem) {
             $typeBtnForLastMsg = '';
+            $command = 'new_message';
             if ($textItem == end($textArray)) {
                 $typeBtnForLastMsg = $typeBtn;
+                $command = 'list_events';
             }
 
             $msg_id = self::sendMessage($chatId, $textItem, $typeBtnForLastMsg);
@@ -82,7 +84,7 @@ final class TelegramHandler implements TelegramHandlerInterface
             $telegramMessage->chat_id = $chatId;
             $telegramMessage->message_id = $msg_id;
             $telegramMessage->text = $textItem;
-            $telegramMessage->command = 'new_message';
+            $telegramMessage->command = $command;
             $telegramMessage->reply_to = 0;
 
             $telegramMessageRepository->create($telegramMessage);
