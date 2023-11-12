@@ -24,6 +24,8 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 
 final class BotUseCase
 {
+    const BOT_ID = 6598212367;
+
     private TextUseCase $textUseCase;
     private GroupUseCase $groupUseCase;
     private DataEditMessageDto $dataEditMessageDto;
@@ -75,9 +77,11 @@ final class BotUseCase
          * Create or remove a group in db (on added in group or left)
          * */
         if ($this->checkChatTitle($messageDto)) {
-            $this->botRequestDto->telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
-            $this->botRequestDto->message = $message;
-            $this->groupUseCase->groupHandlerByMessage($this->botRequestDto);
+            if($messageDto->new_chat_participant_id === self::BOT_ID){
+                $this->botRequestDto->telegramUser = $this->telegramUserRepository->firstByChatId($messageDto->from_id);
+                $this->botRequestDto->message = $message;
+                $this->groupUseCase->groupHandlerByMessage($this->botRequestDto);
+            }
 
             return;
         }
