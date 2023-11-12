@@ -70,7 +70,7 @@ final class BotUseCase
         if (!$this->checkMessage($messageDto) && !$this->checkChatTitle($messageDto)) {
             throw new TelegramMessageDataException('Some data is missing');
         };
-
+        $this->telegramMessageRepository->create($messageDto);
         /*
          * Create or remove a group in db (on added in group or left)
          * */
