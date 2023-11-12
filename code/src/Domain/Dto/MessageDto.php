@@ -16,7 +16,7 @@ class MessageDto
     public string $command;
     public int $is_deleted_from_chat;
     public ?string $data_test = '';
-    public int $new_chat_participant_id;
+    public mixed $new_chat_participant_id;
 
     public function __construct($message)
     {
