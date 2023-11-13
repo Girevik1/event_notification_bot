@@ -74,10 +74,12 @@ final class BotUseCase
         };
 
           // For test
-        $this->telegramMessageRepository->create($messageDto);
+//        $this->telegramMessageRepository->create($messageDto);
 
         /*
          * Create or remove a group in db (on added in group or left)
+         *
+         * P.S. Чтобы добавить бота нужно быть админом группы и выключить анонимность в настройках
          * */
         if ($this->checkChatTitle($messageDto)) {
             if($messageDto->new_chat_participant_id == self::BOT_ID){

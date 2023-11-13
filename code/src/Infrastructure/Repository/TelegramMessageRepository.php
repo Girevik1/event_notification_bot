@@ -25,7 +25,7 @@ class TelegramMessageRepository implements TelegramMessageRepositoryInterface
             'reply_to' => $message->reply_to,
             'command' => $message->command,
             'is_deleted_from_chat' => $message->is_deleted_from_chat,
-            'data_test' => $message->data_test
+//            'data_test' => $message->data_test // For test
         ]);
     }
 
