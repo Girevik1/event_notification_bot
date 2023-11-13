@@ -202,10 +202,10 @@ final class BotUseCase
 
                         $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
-//                        if (mb_strlen($this->dataEditMessageDto->text, '8bit') <= 7300) {
-//                            $messageDto->command = 'list_events';
-//                            $this->telegramMessageRepository->create($messageDto);
-//                        }
+                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
+                            $messageDto->command = 'list_events';
+                            $this->telegramMessageRepository->create($messageDto);
+                        }
 
                     return;
 
@@ -394,8 +394,6 @@ final class BotUseCase
                 $group = $this->telegramGroupRepository->getFirstById((int)$idGroup, $telegramUser->telegram_chat_id);
                 if (!$group) return;
 
-                $this->telegram->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
-
                 $result = $this->telegramGroupRepository->deleteById($group->id, $telegramUser->telegram_chat_id);
                 if (!$result) return;
 
@@ -411,6 +409,8 @@ final class BotUseCase
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
                 $this->telegram::editMessageTextSend($this->dataEditMessageDto);
+
+                $this->telegram->telegram->leaveChat(['chat_id' => $group->group_chat_id]);
 
                 return;
 
