@@ -74,7 +74,7 @@ final class BotUseCase
         };
 
           // For test
-//        $this->telegramMessageRepository->create($messageDto);
+        $this->telegramMessageRepository->create($messageDto);
 
         /*
          * Create or remove a group in db (on added in group or left)
