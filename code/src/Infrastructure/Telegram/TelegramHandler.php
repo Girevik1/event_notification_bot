@@ -286,12 +286,12 @@ final class TelegramHandler implements TelegramHandlerInterface
                                 'callback_data' => 'add_birthday',
                             ],
                         ],
-//                        [
-//                            [
-//                                'text' => '➕ Добавить годовщину',
-//                                'callback_data' => 'add_anniversary',
-//                            ],
-//                        ],
+                        [
+                            [
+                                'text' => '➕ Добавить годовщину',
+                                'callback_data' => 'add_anniversary',
+                            ],
+                        ],
 //                        [
 //                            [
 //                                'text' => ' ➕ Добавить заметку',

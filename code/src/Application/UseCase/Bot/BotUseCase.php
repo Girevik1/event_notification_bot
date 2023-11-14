@@ -212,6 +212,15 @@ final class BotUseCase
                     return;
 
                 case "add_anniversary":
+
+                    $this->botRequestDto->telegramUser = $telegramUser;
+                    $this->botRequestDto->messageId = $messageId;
+                    $anniversaryUseCase = new AnniversaryUseCase($this->botRequestDto);
+
+                    $anniversaryUseCase->addAnniversary();
+
+                    return;
+
                 case "add_birthday":
 
                 $this->botRequestDto->telegramUser = $telegramUser;
@@ -526,8 +535,8 @@ final class BotUseCase
         $listEventDto = new ListEventDto();
         foreach ($queueMessagesByUser as $queueMessage) {
             match ($queueMessage->type) {
-                "NANE_WHOSE_BIRTHDAY" => $listEventDto->name = $queueMessage->answer,
-                "DATE_OF_BIRTH" => $listEventDto->date_event_at = Carbon::parse($queueMessage->answer),
+                "NANE_WHOSE_BIRTHDAY", "NANE_EVENT" => $listEventDto->name = $queueMessage->answer,
+                "DATE_OF_BIRTH", "DATE_OF_EVENT" => $listEventDto->date_event_at = Carbon::parse($queueMessage->answer),
                 "NOTIFICATION_TYPE" => $listEventDto->notification_type = $queueMessage->answer,
                 "GROUP" => $listEventDto->group_id = (int)$queueMessage->answer,
                 "TIME_NOTIFICATION" => $listEventDto->notification_time_at = $queueMessage->answer,
@@ -564,7 +573,7 @@ final class BotUseCase
     private function getTextByEventType(QueueMessage $queueMessageByUser, string $chatId = ''): ?string
     {
         return match ($queueMessageByUser->event_type) {
-            "birthday" => QueueMessageUseCase::getMessageByType(
+            "birthday", "anniversary" => QueueMessageUseCase::getMessageByType(
                 $queueMessageByUser,
                 $this->queueMessageRepository,
                 $this->telegramGroupRepository,
@@ -615,6 +624,7 @@ final class BotUseCase
 
         switch ($queueMessageByUser->type) {
 
+            case "NANE_EVENT":
             case "NANE_WHOSE_BIRTHDAY":
 
                 $lengthText = mb_strlen($text);
@@ -628,6 +638,7 @@ final class BotUseCase
                 }
                 break;
 
+            case "DATE_OF_EVENT":
             case "DATE_OF_BIRTH":
 
                 $isValidFormat = preg_match('/^(0[1-9]|[12][0-9]|3[01])[\-\.](0[1-9]|1[012])[\-\.](19|20)\d\d$/', $text);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Art\Code\Application\UseCase\Message;
 
+use Art\Code\Application\UseCase\Bot\AnniversaryUseCase;
 use Art\Code\Application\UseCase\Bot\BirthdayUseCase;
 use Art\Code\Application\UseCase\Bot\GroupUseCase;
 use Art\Code\Domain\Contract\QueueMessageRepositoryInterface;
@@ -70,6 +71,7 @@ class QueueMessageUseCase
     {
         $message_texts = match ($message->event_type) {
             "birthday" => BirthdayUseCase::getMessagesQueueBirthday(),
+            "anniversary" => AnniversaryUseCase::getMessagesQueueImportantEvent(),
             "note" => ['NOTE_NAME' => 'in test..'],
             default => throw new EventNotFoundException($message->event_type . ' - такой вид эвента не существует')
         };
@@ -87,12 +89,20 @@ class QueueMessageUseCase
 
                 $queueMessagesByUser = $queueMessageRepository->getAllByUserId($message->telegram_user_id);
 
-                if ($message->event_type === 'birthday') {
+                if (
+                    $message->event_type === 'birthday' ||
+                    $message->event_type === 'anniversary'
+                ) {
                     foreach ($queueMessagesByUser as $queueMessage) {
                         if($queueMessage->type === 'GROUP' && $queueMessage->answer === '0'){
                             continue;
                         }
-                        $text .= self::getTextConfirmationBirthday($queueMessage, $groupRepository, $userChatId);
+                        if($message->event_type === 'birthday'){
+                            $text .= self::getTextConfirmationBirthday($queueMessage, $groupRepository, $userChatId);
+                        }
+                        if($message->event_type === 'anniversary'){
+                            $text .= self::getTextConfirmationAnniversary($queueMessage, $groupRepository, $userChatId);
+                        }
                     }
                 }
                 break;
@@ -114,6 +124,22 @@ class QueueMessageUseCase
         return match ($queueMessage->type) {
             "NANE_WHOSE_BIRTHDAY" => "\nИмя: <i>" . $queueMessage->answer . "</i>",
             "DATE_OF_BIRTH" => "\nДата рождения: <i>" . $queueMessage->answer . "</i>",
+            "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
+            "GROUP" => GroupUseCase::getNameGroup($queueMessage->answer, $groupRepository, $userChatId),
+            "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",
+            "CONFIRMATION" => "",
+            default => throw new QueueTypeException($queueMessage->type . ' - такой тип очереди не существует')
+        };
+    }
+
+    /**
+     * @throws QueueTypeException
+     */
+    private static function getTextConfirmationAnniversary(QueueMessage $queueMessage, ?TelegramGroupRepositoryInterface $groupRepository, string $userChatId): string
+    {
+        return match ($queueMessage->type) {
+            "NANE_EVENT" => "\nСобытие: <i>" . $queueMessage->answer . "</i>",
+            "DATE_OF_EVENT" => "\nДата начала события: <i>" . $queueMessage->answer . "</i>",
             "NOTIFICATION_TYPE" => self::getNotificationTypeByCondition($queueMessage->answer),
             "GROUP" => GroupUseCase::getNameGroup($queueMessage->answer, $groupRepository, $userChatId),
             "TIME_NOTIFICATION" => "\nВремя оповещения: <i>" . $queueMessage->answer . "</i>",

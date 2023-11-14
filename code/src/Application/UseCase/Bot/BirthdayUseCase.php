@@ -27,7 +27,7 @@ class BirthdayUseCase
      */
     public function addBirthday(): void
     {
-        $queueBirthday = $this->getMessagesQueueBirthday();
+        $queueBirthday = self::getMessagesQueueBirthday();
 
         $this->queueMessageUseCase->processQueueMessage(
             $queueBirthday,
@@ -59,7 +59,7 @@ class BirthdayUseCase
             "NOTIFICATION_TYPE" => "🔊 <b>Как уведомлять?</b>",
             "GROUP" => "👥 <b>Укажите номер группы для оповещения</b> (например: 1) \n",
             "TIME_NOTIFICATION" => "⏰  <b>Укажите время оповещения в день рождения</b> (формат: 12:00)",
-            "CONFIRMATION" => "<b>‼️ Подтвердите даннные:</b>",
+            "CONFIRMATION" => "<b>‼️ Подтвердите данные:</b>",
         ];
     }
 
