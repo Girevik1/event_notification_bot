@@ -34,7 +34,9 @@ class ListEventRepository implements ListEventRepositoryInterface
      */
     public function getListByUser(int $userId): Collection
     {
-        return ListEvent::where('telegram_user_id', '=', $userId)->get();
+        return ListEvent::where('telegram_user_id', '=', $userId)
+            ->orderBy('id','desc')
+            ->get();
     }
 
     /**

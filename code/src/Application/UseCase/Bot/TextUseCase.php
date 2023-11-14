@@ -108,6 +108,9 @@ class TextUseCase
         if ($type === 'birthday') {
             $text = "<b>🎉 День рождения добавлено!</b>";
         }
+        if ($type === 'anniversary') {
+            $text = "<b>🎉 Годовщина добавлена!</b>";
+        }
 
         return $text;
     }
