@@ -282,7 +282,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                     'inline_keyboard' => [
                         [
                             [
-                                'text' => '➕ Добавить день рождение',
+                                'text' => '➕ Добавить день рождения',
                                 'callback_data' => 'add_birthday',
                             ],
                         ],
