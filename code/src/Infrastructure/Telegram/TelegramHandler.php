@@ -113,7 +113,7 @@ final class TelegramHandler implements TelegramHandlerInterface
     {
         $thisObj = new self();
 
-        if (mb_strlen($dataEditMessage->text, '8bit') > 4096) {
+        if (mb_strlen($dataEditMessage->text, 'UTF-8') > 4096) {
             self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
 
             $thisObj->newMessage(
