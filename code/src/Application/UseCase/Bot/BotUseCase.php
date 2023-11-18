@@ -11,6 +11,7 @@ use Art\Code\Domain\Dto\ListEventDto;
 use Art\Code\Domain\Dto\MessageDto;
 use Art\Code\Domain\Dto\MessageSendDto;
 use Art\Code\Domain\Dto\TelegramUserDto;
+use Art\Code\Domain\Entity\ListEvent;
 use Art\Code\Domain\Entity\QueueMessage;
 use Art\Code\Domain\Entity\TelegramMessage;
 use Art\Code\Domain\Entity\TelegramUser;
@@ -191,7 +192,32 @@ final class BotUseCase
 
                     case "list_events":
 
-                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+//                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+//
+//                        $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
+//                            $listEvents,
+//                            $this->telegramGroupRepository,
+//                            $telegramUser->telegram_chat_id
+//                        );
+//                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+//                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//                    $this->dataEditMessageDto->message_id = $messageId;
+//
+//                        $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
+//
+//                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
+//                            $messageDto->command = 'list_events';
+//                            $this->telegramMessageRepository->create($messageDto);
+//                        }
+
+                    $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
+//                        ->where([['title','LIKE',"%".$text_val."%"]])
+                        ->orderBy('id','DESC')
+                        ->skip(0)
+                        ->take(20)
+                        ->get();
+
+//                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
 
                         $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
                             $listEvents,
