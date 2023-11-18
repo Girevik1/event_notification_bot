@@ -261,14 +261,31 @@ final class TelegramHandler implements TelegramHandlerInterface
                                 'text' => 'В личный кабинет',
                                 'callback_data' => 'settings_menu',
                             ],
-                        ],
-                        [
                             [
                                 'text' => '⏩',
                                 'callback_data' => 'next_event_' . $keyboardData,
                             ],
                         ],
-
+                    ],
+                ],
+            ),
+            "to_the_next_back_page" => json_encode(
+                [
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '⏪',
+                                'callback_data' => 'back_event_' . $keyboardData['back'],
+                            ],
+                            [
+                                'text' => 'В личный кабинет',
+                                'callback_data' => 'settings_menu',
+                            ],
+                            [
+                                'text' => '⏩',
+                                'callback_data' => 'next_event_' . $keyboardData['next'],
+                            ],
+                        ],
                     ],
                 ],
             ),
