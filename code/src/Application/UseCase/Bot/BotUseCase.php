@@ -193,7 +193,8 @@ final class BotUseCase
                 case (bool)preg_match('/^next_event_[0-9]{1,4}$/i', $inlineKeyboardData):
                     $rest = (int)substr($inlineKeyboardData, 11, 4);
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
-                        ->orderBy('id','ASC');
+//                        ->orderBy('id','ASC');
+                        ->latest();
                     $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents

@@ -263,7 +263,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                             ],
                             [
                                 'text' => '⏩',
-                                'callback_data' => 'next_event_' . $keyboardData,
+                                'callback_data' => 'next_event_' . $keyboardData['next'],
                             ],
                         ],
                     ],
