@@ -212,8 +212,10 @@ final class BotUseCase
 
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->where([['title','LIKE',"%".$text_val."%"]])
-                        ->orderBy('id','DESC')
-                        ->skip(0)
+                        ->orderBy('id','DESC');
+                    $count = $listEvents->count();
+
+                    $listEvents = $listEvents->skip(0)
                         ->take(17)
                         ->get();
 
