@@ -209,8 +209,8 @@ final class BotUseCase
 
 
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
-                        $this->dataEditMessageDto->keyboardData['next'] = $rest + 17;
-                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
+                        $this->dataEditMessageDto->keyboardData =  17;
+//                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
 
 //                        $this->dataEditMessageDto->keyboardData['next'] = 1;
 //                        $this->dataEditMessageDto->keyboardData['back'] = 1;
