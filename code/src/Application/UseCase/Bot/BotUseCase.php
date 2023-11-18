@@ -198,7 +198,7 @@ final class BotUseCase
 
                     $listEvents = $listEvents
 //                        ->skip($rest)
-                        ->stake(17)
+                        ->take(17)
                         ->get();
 
                     $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
@@ -249,7 +249,8 @@ final class BotUseCase
 
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->where([['title','LIKE',"%".$text_val."%"]])
-                        ->orderBy('id','ASC');
+//                        ->orderBy('id','ASC');
+                ->latest();
                     $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents->skip(0)
