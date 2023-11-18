@@ -191,7 +191,7 @@ final class BotUseCase
                     return;
 
                 case (bool)preg_match('/^next_event_[0-9]{1,4}$/i', $inlineKeyboardData):
-//                    $rest = (int)substr($inlineKeyboardData, 11, 4);
+                    $rest = (int)substr($inlineKeyboardData, 11, 4);
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
                         ->orderBy('id','ASC');
                     $countEvents = $listEvents->count();
@@ -209,11 +209,11 @@ final class BotUseCase
 
 
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
-//                        $this->dataEditMessageDto->keyboardData['next'] =  17;
-//                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
+                        $this->dataEditMessageDto->keyboardData['next'] =  17;
+                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
 
-                        $this->dataEditMessageDto->keyboardData['next'] = 1;
-                        $this->dataEditMessageDto->keyboardData['back'] = 1;
+//                        $this->dataEditMessageDto->keyboardData['next'] = 1;
+//                        $this->dataEditMessageDto->keyboardData['back'] = 1;
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
