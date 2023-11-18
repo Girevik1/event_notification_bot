@@ -197,8 +197,8 @@ final class BotUseCase
                     $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents
-                        ->skip(3)
-                        ->take(2)
+                        ->skip($rest)
+                        ->take(17)
                         ->get();
 
                     $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
