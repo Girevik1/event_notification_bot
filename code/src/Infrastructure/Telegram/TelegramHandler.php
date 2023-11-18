@@ -215,7 +215,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                         ],
                         [
                             [
-                                'text' => '👥 в группе (доступны: ' . $keyboardData . ')',
+                                'text' => '👥 в группе (доступны: ' . $keyboardData['count_group'] . ')',
                                 'callback_data' => 'group_notice',
                             ],
                         ],

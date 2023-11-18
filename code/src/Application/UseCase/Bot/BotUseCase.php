@@ -209,7 +209,7 @@ final class BotUseCase
 
 
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
-                        $this->dataEditMessageDto->keyboardData =  17;
+//                        $this->dataEditMessageDto->keyboardData['next'] =  17;
 //                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
 
                         $this->dataEditMessageDto->keyboardData['next'] = 1;
@@ -267,7 +267,7 @@ final class BotUseCase
 
                     if ($countEvents > 17) {
                         $this->dataEditMessageDto->keyboard = 'to_the_next_page';
-                        $this->dataEditMessageDto->keyboardData = 17;
+                        $this->dataEditMessageDto->keyboardData['next'] = 17;
                     } else {
                         $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                     }
@@ -392,7 +392,7 @@ final class BotUseCase
 
                         if($previousMessage->type === 'NOTIFICATION_TYPE'){
                             $this->dataEditMessageDto->keyboard = 'notification_type';
-                            $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+                            $this->dataEditMessageDto->keyboardData['count_group'] = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
                         }else{
                             $this->dataEditMessageDto->keyboard = 'process_set_event';
                         }
@@ -569,7 +569,7 @@ final class BotUseCase
         $this->dataEditMessageDto->keyboard = $this->gerKeyboardByQueueType($queueMessageByUser);
 
         if ($queueMessageByUser->type === "NOTIFICATION_TYPE") {
-            $this->dataEditMessageDto->keyboardData = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
+            $this->dataEditMessageDto->keyboardData['count_group'] = $this->telegramGroupRepository->getCountByUser($telegramUser->telegram_chat_id);
         }
 
         $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
