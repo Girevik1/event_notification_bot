@@ -113,17 +113,17 @@ final class TelegramHandler implements TelegramHandlerInterface
     {
         $thisObj = new self();
 
-        if (mb_strlen($dataEditMessage->text, 'UTF-8') > 4096) {
-            self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
-
-            $thisObj->newMessage(
-                $dataEditMessage->text,
-                $dataEditMessage->chat_id,
-                $dataEditMessage->keyboard,
-                $telegramMessageRepository
-            );
-
-        } else {
+//        if (mb_strlen($dataEditMessage->text, 'UTF-8') > 4096) {
+//            self::deleteMessage($dataEditMessage->chat_id, $dataEditMessage->message_id);
+//
+//            $thisObj->newMessage(
+//                $dataEditMessage->text,
+//                $dataEditMessage->chat_id,
+//                $dataEditMessage->keyboard,
+//                $telegramMessageRepository
+//            );
+//
+//        } else {
 
             $thisObj->telegram->editMessageText([
                 'chat_id' => $dataEditMessage->chat_id,
@@ -132,7 +132,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                 'reply_markup' => self::getKeyboard($dataEditMessage->keyboard, $dataEditMessage->keyboardData),
                 'parse_mode' => 'HTML',
             ]);
-        }
+//        }
     }
 
     /**
@@ -243,6 +243,31 @@ final class TelegramHandler implements TelegramHandlerInterface
                                 'callback_data' => 'settings_menu',
                             ],
                         ]
+
+                    ],
+                ],
+            ),
+            "to_the_next_page" => json_encode(
+                [
+                    'inline_keyboard' => [
+//                        [
+//                            [
+//                                'text' => '⏪',
+//                                'callback_data' => 'settings_menu',
+//                            ],
+//                        ],
+                        [
+                            [
+                                'text' => 'В личный кабинет',
+                                'callback_data' => 'settings_menu',
+                            ],
+                        ],
+                        [
+                            [
+                                'text' => '⏩',
+                                'callback_data' => 'next_event_' . $keyboardData,
+                            ],
+                        ],
 
                     ],
                 ],

@@ -213,7 +213,7 @@ final class BotUseCase
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->where([['title','LIKE',"%".$text_val."%"]])
                         ->orderBy('id','DESC');
-                    $count = $listEvents->count();
+                    $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents->skip(0)
                         ->take(17)
@@ -226,16 +226,22 @@ final class BotUseCase
                             $this->telegramGroupRepository,
                             $telegramUser->telegram_chat_id
                         );
-                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+
+                    if ($countEvents > 17) {
+                        $this->dataEditMessageDto->keyboard = 'to_the_next_page';
+                        $this->dataEditMessageDto->keyboardData = 17;
+                    } else {
+                        $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                    }
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
                         $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
-                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
-                            $messageDto->command = 'list_events';
-                            $this->telegramMessageRepository->create($messageDto);
-                        }
+//                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
+//                            $messageDto->command = 'list_events';
+//                            $this->telegramMessageRepository->create($messageDto);
+//                        }
 
                     return;
 
