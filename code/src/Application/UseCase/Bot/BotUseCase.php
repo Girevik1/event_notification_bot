@@ -212,8 +212,8 @@ final class BotUseCase
                         $this->dataEditMessageDto->keyboardData =  17;
 //                        $this->dataEditMessageDto->keyboardData['back'] = $rest;
 
-//                        $this->dataEditMessageDto->keyboardData['next'] = 1;
-//                        $this->dataEditMessageDto->keyboardData['back'] = 1;
+                        $this->dataEditMessageDto->keyboardData['next'] = 1;
+                        $this->dataEditMessageDto->keyboardData['back'] = 1;
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
