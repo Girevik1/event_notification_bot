@@ -244,7 +244,6 @@ final class BotUseCase
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->orderBy('id','ASC');
                         ->latest();
-                    $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents
                         ->skip($rest)
@@ -264,7 +263,7 @@ final class BotUseCase
                     } else {
 
                         $back = $rest - 10;
-                        $next = $back + 10;
+                        $next = $back + 20;
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
                     }
 
