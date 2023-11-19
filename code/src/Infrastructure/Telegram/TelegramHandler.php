@@ -250,20 +250,30 @@ final class TelegramHandler implements TelegramHandlerInterface
             "to_the_next_page" => json_encode(
                 [
                     'inline_keyboard' => [
-//                        [
-//                            [
-//                                'text' => '⏪',
-//                                'callback_data' => 'settings_menu',
-//                            ],
-//                        ],
                         [
                             [
-                                'text' => 'В личный кабинет',
+                                'text' => '🙅 отмена',
                                 'callback_data' => 'settings_menu',
                             ],
                             [
                                 'text' => '⏩',
                                 'callback_data' => 'next_event_' . $keyboardData['next'],
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+            "to_the_back_page" => json_encode(
+                [
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '⏪',
+                                'callback_data' => 'back_event_' . $keyboardData['back'],
+                            ],
+                            [
+                                'text' => '🙅 отмена',
+                                'callback_data' => 'settings_menu',
                             ],
                         ],
                     ],
@@ -278,7 +288,7 @@ final class TelegramHandler implements TelegramHandlerInterface
                                 'callback_data' => 'back_event_' . $keyboardData['back'],
                             ],
                             [
-                                'text' => 'В личный кабинет',
+                                'text' => '🙅 отмена',
                                 'callback_data' => 'settings_menu',
                             ],
                             [
