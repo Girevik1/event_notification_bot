@@ -329,8 +329,8 @@ final class BotUseCase
                         $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
 //                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
-//                            $messageDto->command = 'list_events';
-//                            $this->telegramMessageRepository->create($messageDto);
+                            $messageDto->command = 'list_events';
+                            $this->telegramMessageRepository->create($messageDto);
 //                        }
 
                     return;
@@ -491,31 +491,69 @@ final class BotUseCase
                     return;
                 }
 
-                $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_events');
 
-                $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+
+                $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
+//                        ->where([['title','LIKE',"%".$text_val."%"]])
+//                        ->orderBy('id','ASC');
+                    ->latest();
+                $countEvents = $listEvents->count();
+
+                $listEvents = $listEvents->skip(0)
+                    ->take(10)
+                    ->get();
+
+//                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+
                 $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
                     $listEvents,
                     $this->telegramGroupRepository,
                     $telegramUser->telegram_chat_id
                 );
-                $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+
+                if ($countEvents > 10) {
+                    $this->dataEditMessageDto->keyboard = 'to_the_next_page';
+                    $this->dataEditMessageDto->keyboardData['next'] = 10;
+                } else {
+                    $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+                }
                 $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+
+                $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_events');
+
                 $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
 
-
-                     // Удаляем все сообщения в чате по юзеру
-                    $allTelegramMessageByUser = $this->telegramMessageRepository->getAllMessageByChatId($telegramUser->telegram_chat_id);
-                    foreach ($allTelegramMessageByUser as $msg) {
-                        if($msg->message_id === $telegramMessage->message_id){
-                            break;
-                        }
-                        $this->telegram::deleteMessage($msg->chat_id, $msg->message_id);
-                        $this->telegramMessageRepository->deleteByMessageId($msg->message_id);
-                    } //
-
-
                 $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
+
+
+
+
+
+//                $telegramMessage = $this->telegramMessageRepository->getLastMessageByCommand($telegramUser->telegram_chat_id, 'list_events');
+//
+//                $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
+//                $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
+//                    $listEvents,
+//                    $this->telegramGroupRepository,
+//                    $telegramUser->telegram_chat_id
+//                );
+//                $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
+//                $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+//                $this->dataEditMessageDto->message_id = $telegramMessage->message_id ?? 0;
+//
+//
+//                     // Удаляем все сообщения в чате по юзеру
+//                    $allTelegramMessageByUser = $this->telegramMessageRepository->getAllMessageByChatId($telegramUser->telegram_chat_id);
+//                    foreach ($allTelegramMessageByUser as $msg) {
+//                        if($msg->message_id === $telegramMessage->message_id){
+//                            break;
+//                        }
+//                        $this->telegram::deleteMessage($msg->chat_id, $msg->message_id);
+//                        $this->telegramMessageRepository->deleteByMessageId($msg->message_id);
+//                    } //
+//
+//
+//                $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
 
                 return;
 
