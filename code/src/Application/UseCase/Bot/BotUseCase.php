@@ -190,8 +190,50 @@ final class BotUseCase
 
                     return;
 
-                case (bool)preg_match('/^back_event_[0-9]{1,4}$/i', $inlineKeyboardData):
                 case (bool)preg_match('/^next_event_[0-9]{1,4}$/i', $inlineKeyboardData):
+
+                    $rest = (int)substr($inlineKeyboardData, 11, 4);
+
+                    $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
+//                        ->orderBy('id','ASC');
+                        ->latest();
+                    $countEvents = $listEvents->count();
+
+                    $listEvents = $listEvents
+                        ->skip($rest)
+                        ->take(10)
+                        ->get();
+
+                    $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
+                        $listEvents,
+                        $this->telegramGroupRepository,
+                        $telegramUser->telegram_chat_id
+                    );
+
+
+//                    if ($rest === 0) {
+//                        $next = 10;
+//                        $back = 0;
+//                        $this->dataEditMessageDto->keyboard = 'to_the_next_page';
+//                    } else {
+                        $next = $rest + 10;
+                        $back = $rest - 10;
+                        $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
+//                    }
+
+                        $this->dataEditMessageDto->keyboardData['next'] = $next;
+                    $this->dataEditMessageDto->keyboardData['back'] = $back;
+
+
+                    $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
+                    $this->dataEditMessageDto->message_id = $messageId;
+
+                    $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
+
+                    return;
+
+                    case (bool)preg_match('/^back_event_[0-9]{1,4}$/i', $inlineKeyboardData):
+
                     $rest = (int)substr($inlineKeyboardData, 11, 4);
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->orderBy('id','ASC');
@@ -200,7 +242,7 @@ final class BotUseCase
 
                     $listEvents = $listEvents
                         ->skip($rest)
-                        ->take(17)
+                        ->take(10)
                         ->get();
 
                     $this->dataEditMessageDto->text = $this->textUseCase->getListEventText(
@@ -210,27 +252,24 @@ final class BotUseCase
                     );
 
                     if ($rest === 0) {
+                        $back = 0;
+                        $next = 10;
                         $this->dataEditMessageDto->keyboard = 'to_the_next_page';
                     } else {
-                        $rest -= 17;
+
+                        $back = $rest - 10;
+                        $next = $back + 10;
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
                     }
 
-                        $this->dataEditMessageDto->keyboardData['next'] =  17;
-                    $this->dataEditMessageDto->keyboardData['back'] = $rest;
+                        $this->dataEditMessageDto->keyboardData['next'] = $next;
+                    $this->dataEditMessageDto->keyboardData['back'] = $back;
 
-//                        $this->dataEditMessageDto->keyboardData['next'] = 1;
-//                        $this->dataEditMessageDto->keyboardData['back'] = 1;
 
                     $this->dataEditMessageDto->chat_id = $telegramUser->telegram_chat_id;
                     $this->dataEditMessageDto->message_id = $messageId;
 
                     $this->telegram::editMessageTextSend($this->dataEditMessageDto, $this->telegramMessageRepository);
-
-//                        if (mb_strlen($this->dataEditMessageDto->text, 'UTF-8') <= 4096) {
-//                            $messageDto->command = 'list_events';
-//                            $this->telegramMessageRepository->create($messageDto);
-//                        }
 
                     return;
 
@@ -261,7 +300,7 @@ final class BotUseCase
                     $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents->skip(0)
-                        ->take(17)
+                        ->take(10)
                         ->get();
 
 //                    $listEvents = $this->listEventRepository->getListByUser($telegramUser->id);
@@ -272,9 +311,9 @@ final class BotUseCase
                             $telegramUser->telegram_chat_id
                         );
 
-                    if ($countEvents > 17) {
+                    if ($countEvents > 10) {
                         $this->dataEditMessageDto->keyboard = 'to_the_next_page';
-                        $this->dataEditMessageDto->keyboardData['next'] = 17;
+                        $this->dataEditMessageDto->keyboardData['next'] = 10;
                     } else {
                         $this->dataEditMessageDto->keyboard = 'to_the_settings_menu';
                     }
