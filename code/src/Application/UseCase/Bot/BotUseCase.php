@@ -195,8 +195,8 @@ final class BotUseCase
                     $rest = (int)substr($inlineKeyboardData, 11, 4);
 
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
-//                        ->orderBy('id','ASC');
-                        ->latest();
+                        ->orderBy('date_event_at','ASC');
+//                        ->latest();
 //                    $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents
@@ -242,8 +242,8 @@ final class BotUseCase
 
                     $rest = (int)substr($inlineKeyboardData, 11, 4);
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
-//                        ->orderBy('id','ASC');
-                        ->latest();
+                        ->orderBy('date_event_at','ASC');
+//                        ->latest();
 
                     $listEvents = $listEvents
                         ->skip($rest)
@@ -300,8 +300,8 @@ final class BotUseCase
 
                     $listEvents = ListEvent::where('telegram_user_id','=',$telegramUser->id)
 //                        ->where([['title','LIKE',"%".$text_val."%"]])
-//                        ->orderBy('id','ASC');
-                ->latest();
+                        ->orderBy('date_event_at','ASC');
+//                ->latest();
                     $countEvents = $listEvents->count();
 
                     $listEvents = $listEvents->skip(0)
