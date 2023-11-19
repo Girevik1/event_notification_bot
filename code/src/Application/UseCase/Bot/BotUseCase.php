@@ -212,11 +212,12 @@ final class BotUseCase
                     if ($rest === 0) {
                         $this->dataEditMessageDto->keyboard = 'to_the_next_page';
                     } else {
+                        $rest -= 17;
                         $this->dataEditMessageDto->keyboard = 'to_the_next_back_page';
                     }
 
                         $this->dataEditMessageDto->keyboardData['next'] =  17;
-                    $this->dataEditMessageDto->keyboardData['back'] = $rest - 17;
+                    $this->dataEditMessageDto->keyboardData['back'] = $rest;
 
 //                        $this->dataEditMessageDto->keyboardData['next'] = 1;
 //                        $this->dataEditMessageDto->keyboardData['back'] = 1;
