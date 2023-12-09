@@ -636,6 +636,14 @@ final class BotUseCase
     }
 
     /**
+     * @throws TelegramSDKException
+     */
+    public function checkAnniversaryToday(): void
+    {
+        AnniversaryUseCase::checkAnniversaryByCron($this->botRequestDto);
+    }
+
+    /**
      * @throws EventNotFoundException
      * @throws TelegramSDKException
      * @throws QueueTypeException
@@ -878,5 +886,18 @@ final class BotUseCase
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $year
+     * @return string
+     */
+    public static function yearTextArg($year): string
+    {
+        $year = abs($year);
+        $t1 = $year % 10;
+        $t2 = $year % 100;
+
+        return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
     }
 }

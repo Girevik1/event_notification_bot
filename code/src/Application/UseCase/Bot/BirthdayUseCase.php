@@ -69,7 +69,7 @@ class BirthdayUseCase
     public static function checkBirthdayByCron(BotRequestDto $botRequestDto): void
     {
         $now = Carbon::now()->addHours(3);
-        $listBirthdayEvents = $botRequestDto->listEventRepository->findEventsToday(
+        $listBirthdayEvents = $botRequestDto->listEventRepository->findBirthdayToday(
             $now->format('m'),
             $now->format('d'),
             $now->format('H:i')
@@ -91,7 +91,7 @@ class BirthdayUseCase
 
             $dateOfBirth = Carbon::parse($event->date_event_at);
             $diffYears = $dateOfBirth->diffInYears($now);
-            $correctFormat = self::yearTextArg($diffYears);
+            $correctFormat = BotUseCase::yearTextArg($diffYears);
             $zodiac = self::getZodiacalSign($dateOfBirth->format('m'), $dateOfBirth->format('d'));
             $onEasternCalendar = self::getOnEasternCalendar((int)$dateOfBirth->format('Y'));
 
@@ -99,7 +99,7 @@ class BirthdayUseCase
             $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
             $messageSendDto->text .= "\n\n     " . $event->name . " <b>" . $diffYears . " " . $correctFormat . "!</b>";
             $messageSendDto->text .= "\n\n     Год рождения: <b>" . $dateOfBirth->format('Y') . "г.</b>";
-            $messageSendDto->text .= "\n     Знак задиака: <b>" . $zodiac . "</b>";
+            $messageSendDto->text .= "\n     Знак зодиака: <b>" . $zodiac . "</b>";
             $messageSendDto->text .= "\n     По восточному календарю: <b>" . $onEasternCalendar . "</b>";
             $messageSendDto->chat_id = $chat_id;
             $messageSendDto->command = 'cron_birthday';
@@ -108,19 +108,6 @@ class BirthdayUseCase
 
             TelegramMessage::newMessage($messageSendDto);
         }
-    }
-
-    /**
-     * @param $year
-     * @return string
-     */
-    private static function yearTextArg($year): string
-    {
-        $year = abs($year);
-        $t1 = $year % 10;
-        $t2 = $year % 100;
-
-        return ($t1 == 1 && $t2 != 11 ? "год" : ($t1 >= 2 && $t1 <= 4 && ($t2 < 10 || $t2 >= 20) ? "года" : "лет"));
     }
 
     /**

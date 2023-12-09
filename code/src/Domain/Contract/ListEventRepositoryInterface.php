@@ -17,5 +17,7 @@ interface ListEventRepositoryInterface
 
     public function updateAllByGroup(int $groupId, int $userId, string $field, mixed $value): int;
 
-    public function findEventsToday($month, $day, $notificationTime): Collection;
+    public function findBirthdayToday($month, $day, $notificationTime): Collection;
+
+    public function findAnniversaryToday($month, $day, $notificationTime): Collection;
 }

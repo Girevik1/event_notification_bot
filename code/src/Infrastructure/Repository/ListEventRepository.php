@@ -65,9 +65,18 @@ class ListEventRepository implements ListEventRepositoryInterface
             ->update([$field => $value]);
     }
 
-    public function findEventsToday($month, $day, $notificationTime): Collection
+    public function findBirthdayToday($month, $day, $notificationTime): Collection
     {
         return ListEvent::where('type', 'birthday')
+            ->whereMonth('date_event_at', $month)
+            ->whereDay('date_event_at', $day)
+            ->where('notification_time_at', $notificationTime)
+            ->get();
+    }
+
+    public function findAnniversaryToday($month, $day, $notificationTime): Collection
+    {
+        return ListEvent::where('type', 'anniversary')
             ->whereMonth('date_event_at', $month)
             ->whereDay('date_event_at', $day)
             ->where('notification_time_at', $notificationTime)
