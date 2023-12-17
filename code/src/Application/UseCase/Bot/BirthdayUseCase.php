@@ -98,7 +98,7 @@ class BirthdayUseCase
             $messageSendDto = new MessageSendDto();
             $messageSendDto->text = "🎂<b>Сегодня день рождения</b>!";
             $messageSendDto->text .= "\n\n     " . $event->name;
-            $messageSendDto->text .= "\n\n   Возраст: <b>" . $diffYears . " " . $correctFormat . "</b>";
+            $messageSendDto->text .= "\n\n     Возраст: <b>" . $diffYears . " " . $correctFormat . "</b>";
             $messageSendDto->text .= "\n     Год рождения: <b>" . $dateOfBirth->format('Y') . "г.</b>";
             $messageSendDto->text .= "\n     Знак зодиака: <b>" . $zodiac . "</b>";
             $messageSendDto->text .= "\n     По восточному календарю:";
