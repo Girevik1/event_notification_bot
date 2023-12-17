@@ -121,7 +121,8 @@ class BirthdayUseCase
         $signsStart = [0 => 21, 1 => 20, 2 => 20, 3 => 20, 4 => 20, 5 => 20, 6 => 21, 7 => 22, 8 => 23, 9 => 23, 10 => 23, 11 => 23];
 //        $signsStart = [1 => 21, 2 => 20, 3 => 20, 4 => 20, 5 => 20, 6 => 20, 7 => 21, 8 => 22, 9 => 23, 10 => 23, 11 => 23, 12 => 23];
 
-        return $day < $signsStart[$month + 1] ? $signs[$month - 1] : $signs[$month % 12];
+        return $day < $signsStart[$month] ? $signs[$month - 1] : $signs[$month % 12];
+//        return $day < $signsStart[$month + 1] ? $signs[$month - 1] : $signs[$month % 12];
     }
 
     /**
