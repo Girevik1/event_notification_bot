@@ -92,7 +92,7 @@ class BirthdayUseCase
             $dateOfBirth = Carbon::parse($event->date_event_at);
             $diffYears = $dateOfBirth->diffInYears($now);
             $correctFormat = BotUseCase::yearTextArg($diffYears);
-            $zodiac = self::getZodiacalSign($dateOfBirth->format('m'), $dateOfBirth->format('d'));
+            $zodiac = self::getZodiacalSign((int)$dateOfBirth->format('m'), (int)$dateOfBirth->format('d'));
             $onEasternCalendar = self::getOnEasternCalendar((int)$dateOfBirth->format('Y'));
 
             $messageSendDto = new MessageSendDto();
