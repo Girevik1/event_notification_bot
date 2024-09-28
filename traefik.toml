@@ -27,7 +27,7 @@ defaultEntryPoints = ["https","http"]
   exposedByDefault = false
 
 [acme]
-  email = "se1@rep.earth"
+  email = "se6@rep.earth"
   storage = "acme.json"
   entryPoint = "https"
   onHostRule = true
