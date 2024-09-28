@@ -64,7 +64,6 @@ final class BotUseCase
         $message = [];
 
         if ($_ENV['APP_ENV'] === 'prod') {
-            echo 444;
             $updates = $this->telegram->telegram->getWebhookUpdate();
             $message = $updates->getMessage();
         }
