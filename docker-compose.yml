@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     image: bot/nginx
     container_name: nginx
+    restart: always
     volumes:
       - ./code:/data/event_bot
     depends_on:
@@ -24,6 +25,7 @@ services:
     build:
       context: ./docker/php-fpm
       dockerfile: Dockerfile
+    restart: always
     image: bot/php-fpm
     container_name: php
     volumes:
@@ -52,6 +54,7 @@ services:
 
   traefik:
     image: traefik:1.7-alpine
+    restart: always
     depends_on:
       - php-fpm
       - nginx
